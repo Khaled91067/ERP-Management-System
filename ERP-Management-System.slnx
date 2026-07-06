@@ -1,1 +1,7 @@
-<Solution />
+<Solution>
+  <Folder Name="/Docs/" />
+  <Project Path="ERP.Api/ERP.Api.csproj" />
+  <Project Path="ERP.Application/ERP.Application.csproj" />
+  <Project Path="ERP.Domain/ERP.Domain.csproj" />
+  <Project Path="ERP.Infrastructure/ERP.Infrastructure.csproj" />
+</Solution>
