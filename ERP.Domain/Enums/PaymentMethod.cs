@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ERP.Domain.Enums
+namespace ERP.Domain.Enums;
+
+public enum PaymentMethod
 {
-    internal class Class1
-    {
-    }
+    Cash,
+    CreditCard,
+    MobilePayment,
 }

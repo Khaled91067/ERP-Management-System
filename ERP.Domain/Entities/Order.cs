@@ -9,7 +9,7 @@ public class Order
     public int CustomerId { get; set; }
     public DateTime OrderDate { get; set; }
     public OrderStatus Status { get; set; }
-    public string PaymentMethod { get; set; } = string.Empty;
+    public PaymentMethod PaymentMethod { get; set; }
     public string ShippingAddress { get; set; } = string.Empty;
     public decimal TotalAmount { get; set; }
 
