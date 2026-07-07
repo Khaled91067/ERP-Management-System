@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.OpenApi" Version="3.7.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\ERP.Application\ERP.Application.csproj" />
   </ItemGroup>
 
