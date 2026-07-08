@@ -1,3 +1,5 @@
+using ERP.Domain.Entities.Orders;
+
 namespace ERP.Domain.Entities;
 
 public class Customer

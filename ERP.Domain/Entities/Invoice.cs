@@ -1,4 +1,5 @@
 using System;
+using ERP.Domain.Entities.Orders;
 using ERP.Domain.Enums;
 
 namespace ERP.Domain.Entities;

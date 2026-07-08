@@ -1,4 +1,5 @@
 ﻿using ERP.Domain.Entities;
+using ERP.Domain.Entities.Orders;
 using Microsoft.EntityFrameworkCore;
 
 namespace ERP.Infrastructure.Persistence
