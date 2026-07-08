@@ -21,6 +21,11 @@ namespace ERP.Infrastructure.Persistence.Configurations
             builder.Property(o => o.PaymentMethod)
                 .HasConversion<string>()
                 .HasMaxLength(50);
+
+            builder.HasOne(o => o.Customer)
+                .WithMany(c => c.Orders)
+                .HasForeignKey(o => o.CustomerId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 

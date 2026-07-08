@@ -22,6 +22,11 @@ namespace ERP.Infrastructure.Persistence.Configurations
                    .HasCheckConstraint(
                     "CK_InvoiceLines_TaxRate",
                     "[TaxRate] >= 0 AND [TaxRate] <= 100"));
+
+            builder.HasOne(il => il.Invoice)
+                   .WithMany(i => i.InvoiceLines)
+                   .HasForeignKey(il => il.InvoiceId)
+                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

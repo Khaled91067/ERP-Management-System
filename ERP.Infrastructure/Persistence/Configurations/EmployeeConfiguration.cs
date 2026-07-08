@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ERP.Infrastructure.Persistence
+namespace ERP.Infrastructure.Persistence.Configurations
 {
     public class EmployeeConfiguration : IEntityTypeConfiguration<Employee>
     {
@@ -35,6 +35,11 @@ namespace ERP.Infrastructure.Persistence
 
             builder.HasIndex(e => e.Email)
                 .IsUnique();
+
+            builder.HasOne(e => e.Department)
+                .WithMany(d => d.Employees)
+                .HasForeignKey(e => e.DepartmentId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

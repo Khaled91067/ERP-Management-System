@@ -20,5 +20,14 @@ public class OrderLineConfiguration: IEntityTypeConfiguration<OrderLine>
             "[DiscountPercentage] >= 0 AND [DiscountPercentage] <= 100"
         ));
 
+        builder.HasOne(ol => ol.Order)
+            .WithMany(o => o.OrderLines)
+            .HasForeignKey(ol => ol.OrderId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasOne(ol => ol.Product)
+            .WithMany(p => p.OrderLines)
+            .HasForeignKey(ol => ol.ProductId)
+            .OnDelete(DeleteBehavior.NoAction);
     }
 }
