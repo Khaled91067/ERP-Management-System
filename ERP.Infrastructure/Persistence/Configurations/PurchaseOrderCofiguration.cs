@@ -14,6 +14,11 @@ namespace ERP.Infrastructure.Persistence.Configurations
             builder.Property(po => po.Status)
                 .HasConversion<string>()
                 .HasMaxLength(50);
+
+            builder.HasOne(po => po.Supplier)
+                .WithMany(s => s.PurchaseOrders)
+                .HasForeignKey(po => po.SupplierId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

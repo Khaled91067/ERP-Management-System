@@ -26,6 +26,10 @@ namespace ERP.Infrastructure.Persistence.Configurations
             builder.Property(p => p.CostPrice)
                    .HasPrecision(18, 2);
 
+            builder.HasOne(p => p.Category)
+                   .WithMany(c => c.Products)
+                   .HasForeignKey(p => p.CategoryId)
+                   .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

@@ -29,6 +29,11 @@ namespace ERP.Infrastructure.Persistence.Configurations
 
             builder.HasIndex(u => u.Email)
                 .IsUnique();
+
+            builder.HasOne(u => u.Role)
+                .WithMany(r => r.Users)
+                .HasForeignKey(u => u.RoleId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 
