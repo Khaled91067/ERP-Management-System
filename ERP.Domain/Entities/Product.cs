@@ -1,5 +1,5 @@
 using ERP.Domain.Entities.Orders;
-using ERP.Domain.Entities.Purchasing;
+using ERP.Domain.Entities;
 
 namespace ERP.Domain.Entities;
 
