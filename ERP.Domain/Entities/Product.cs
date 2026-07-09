@@ -1,3 +1,6 @@
+using ERP.Domain.Entities.Orders;
+using ERP.Domain.Entities.Purchasing;
+
 namespace ERP.Domain.Entities;
 
 public class Product

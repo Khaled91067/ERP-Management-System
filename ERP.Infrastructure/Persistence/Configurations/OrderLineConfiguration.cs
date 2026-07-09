@@ -1,4 +1,4 @@
-﻿using ERP.Domain.Entities;
+﻿using ERP.Domain.Entities.Orders;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

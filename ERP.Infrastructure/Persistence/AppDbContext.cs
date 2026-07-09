@@ -1,4 +1,6 @@
 ﻿using ERP.Domain.Entities;
+using ERP.Domain.Entities.Orders;
+using ERP.Domain.Entities.Purchasing;
 using Microsoft.EntityFrameworkCore;
 
 namespace ERP.Infrastructure.Persistence
