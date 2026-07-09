@@ -17,8 +17,7 @@ namespace ERP.Infrastructure.UnitOfWork
             _domainEventDispatcher = domainEventDispatcher;
         }
 
-        public async Task<int> SaveChangesAsync(
-            CancellationToken cancellationToken = default)
+        public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             var aggregates = _context.ChangeTracker
                 .Entries<AggregateRoot>()
@@ -30,12 +29,9 @@ namespace ERP.Infrastructure.UnitOfWork
                 .SelectMany(aggregate => aggregate.DomainEvents)
                 .ToList();
 
-            await _domainEventDispatcher.DispatchAsync(
-                domainEvents,
-                cancellationToken);
+            await _domainEventDispatcher.DispatchAsync(domainEvents, cancellationToken);
 
-            var result = await _context.SaveChangesAsync(
-                cancellationToken);
+            var result = await _context.SaveChangesAsync(cancellationToken);
 
             foreach (var aggregate in aggregates)
             {
