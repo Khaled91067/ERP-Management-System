@@ -1,6 +1,7 @@
 ﻿using ERP.Application.Abstractions;
 using ERP.Application.Abstractions.Repositories;
 using ERP.Infrastructure.Persistence;
+using ERP.Infrastructure.Persistence.Repositories;
 using ERP.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -21,7 +22,10 @@ namespace ERP.Infrastructure
 
             services.AddScoped<IUnitOfWork, UnitOfWork.UnitOfWork>();
 
+            services.AddScoped<IPurchaseOrderRepository, PurchaseOrderRepository>();
+
             return services;
+
         }
     }
 }

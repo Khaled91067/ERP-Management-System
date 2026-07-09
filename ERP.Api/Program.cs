@@ -1,4 +1,5 @@
 using ERP.Infrastructure;
+using ERP.Application;
 
 namespace ERP.Api
 {
@@ -10,6 +11,8 @@ namespace ERP.Api
 
             // Add services to the container.
             builder.Services.AddInfrastructure(builder.Configuration);
+            
+            builder.Services.AddApplication();
 
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
