@@ -43,23 +43,6 @@ public class OrderLine
         DiscountPercentage = discountPercentage;
     }
 
-    internal void ChangeQuantity(int quantity)
-    {
-        if (quantity <= 0)
-            throw new DomainException(
-                "Quantity must be greater than zero.");
-
-        Quantity = quantity;
-    }
-
-    internal decimal CalculateTotal()
-    {
-        var subtotal = UnitPrice * Quantity;
-        var discount = subtotal * DiscountPercentage / 100;
-
-        return subtotal - discount;
-    }
-
 
 }
 

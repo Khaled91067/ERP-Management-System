@@ -47,73 +47,8 @@ public class Order
         TotalAmount = 0;
     }
 
-    public void AddLine(
-        int productId,
-        int quantity,
-        decimal unitPrice,
-        decimal discountPercentage = 0)
-    {
-        EnsureOrderCanBeModified();
 
-        var line = new OrderLine(
-            productId,
-            quantity,
-            unitPrice,
-            discountPercentage);
-
-        _orderLines.Add(line);
-
-        RecalculateTotal();
-    }
-
-    private void RecalculateTotal()
-    {
-        TotalAmount = _orderLines.Sum(
-            line => line.CalculateTotal());
-    }
-
-    public void ChangeLineQuantity(
-    int productId,
-    int quantity)
-    {
-        EnsureOrderCanBeModified();
-
-        var line = _orderLines
-            .FirstOrDefault(line =>
-                line.ProductId == productId);
-
-        if (line is null)
-            throw new DomainException(
-                "Order line not found.");
-
-        line.ChangeQuantity(quantity);
-
-        RecalculateTotal();
-    }
-
-    public void RemoveLine(int productId)
-    {
-        EnsureOrderCanBeModified();
-
-        var line = _orderLines
-            .FirstOrDefault(line =>
-                line.ProductId == productId);
-
-        if (line is null)
-            throw new DomainException(
-                "Order line not found.");
-
-        _orderLines.Remove(line);
-
-        RecalculateTotal();
-    }
-
-    private void EnsureOrderCanBeModified()
-    {
-        if (Status != OrderStatus.Pending)
-            throw new DomainException(
-                "Only pending orders can be modified.");
-    }
+ 
 }
 
 

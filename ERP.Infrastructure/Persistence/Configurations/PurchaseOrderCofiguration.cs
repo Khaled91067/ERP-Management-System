@@ -1,12 +1,14 @@
-﻿using ERP.Domain.Entities;
+﻿using ERP.Domain.Entities.PurchaseOrder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ERP.Infrastructure.Persistence.Configurations
 {
-    public class PurchaseOrderConfiguration : IEntityTypeConfiguration<PurchaseOrder>
+    public class PurchaseOrderConfiguration
+    : IEntityTypeConfiguration<PurchaseOrder>
     {
-        public void Configure(EntityTypeBuilder<PurchaseOrder> builder)
+        public void Configure(
+            EntityTypeBuilder<PurchaseOrder> builder)
         {
             builder.Property(po => po.TotalAmount)
                 .HasPrecision(18, 2);
@@ -19,6 +21,15 @@ namespace ERP.Infrastructure.Persistence.Configurations
                 .WithMany(s => s.PurchaseOrders)
                 .HasForeignKey(po => po.SupplierId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            builder.HasMany(po => po.PurchaseLines)
+                .WithOne(pl => pl.PurchaseOrder)
+                .HasForeignKey(pl => pl.PurchaseOrderId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Navigation(po => po.PurchaseLines)
+                .UsePropertyAccessMode(
+                    PropertyAccessMode.Field);
         }
     }
 }
