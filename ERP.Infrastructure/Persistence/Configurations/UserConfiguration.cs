@@ -34,6 +34,35 @@ namespace ERP.Infrastructure.Persistence.Configurations
                 .WithMany(r => r.Users)
                 .HasForeignKey(u => u.RoleId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            builder.HasData(
+                new
+                {
+                    Id = 1,
+                    FirstName = "Omar",
+                    LastName = "Saleh",
+                    Email = "omar.saleh@erpco.com",
+                    PasswordHash = "$2a$11$k5X4wQb3G4z7kQv8Ff9M2O1hQ2rM5g7uN6p7v8w9x0y1z2a3b4c5d",
+                    RoleId = 1
+                },
+                new
+                {
+                    Id = 2,
+                    FirstName = "Sara",
+                    LastName = "Ibrahim",
+                    Email = "sara.ibrahim@erpco.com",
+                    PasswordHash = "$2a$11$g2H7nQp4R8s1tV6wX9y0zAaBbCcDdEeFfGgHhIiJjKkLlMmNnOoP",
+                    RoleId = 2
+                },
+                new
+                {
+                    Id = 3,
+                    FirstName = "Ahmed",
+                    LastName = "Nasser",
+                    Email = "ahmed.nasser@erpco.com",
+                    PasswordHash = "$2a$11$7uY2dK9mS1pQ4rT6vW8xZ0AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoQ",
+                    RoleId = 3
+                });
         }
     }
 
