@@ -12,7 +12,14 @@
 
   <ItemGroup>
     <Folder Include="DTOs\" />
+    <Folder Include="Features\PurchaseOrders\Commands\Validators\" />
+    <Folder Include="Features\PurchaseOrders\Queries\Models\" />
+    <Folder Include="Features\PurchaseOrders\Queries\Handlers\" />
     <Folder Include="Services\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="14.2.0" />
   </ItemGroup>
 
 </Project>
