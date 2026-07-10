@@ -1,4 +1,5 @@
-﻿using ERP.Application.Features.PurchaseOrders.Queries.Models;
+﻿using ERP.Application.Features.PurchaseOrders.Commands.Models;
+using ERP.Application.Features.PurchaseOrders.Queries.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,4 +28,18 @@ public sealed class PurchaseOrdersController : ControllerBase
 
         return Ok(result);
     }
+
+    [HttpPost]
+    public async Task<IActionResult> Create(CreatePurchaseOrderCommand command,CancellationToken cancellationToken)
+    {
+        var id = await _sender.Send(
+            command,
+            cancellationToken);
+
+        return CreatedAtAction(
+            nameof(GetById),
+            new { id },
+            new { id });
+    }
+
 }
