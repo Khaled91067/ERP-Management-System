@@ -17,6 +17,21 @@ namespace ERP.Infrastructure.Persistence.Configurations
 
             builder.Property(r => r.Permissions)
                 .IsRequired();
+
+            builder.HasData(
+            new Role
+            {
+                Id = 1,
+                Name = "Admin",
+                Permissions = "[]"
+            },
+            new Role
+            {
+                Id = 2,
+                Name = "User",
+                Permissions = "[]"
+            }
+        );
         }
     }
 }

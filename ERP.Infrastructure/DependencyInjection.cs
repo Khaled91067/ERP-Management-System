@@ -1,5 +1,7 @@
 ﻿using ERP.Application.Abstractions;
+using ERP.Application.Abstractions.Authentication;
 using ERP.Application.Abstractions.Repositories;
+using ERP.Infrastructure.Authentication;
 using ERP.Infrastructure.Persistence;
 using ERP.Infrastructure.Persistence.Repositories;
 using ERP.Infrastructure.Repositories;
@@ -23,7 +25,8 @@ namespace ERP.Infrastructure
             services.AddScoped<IUnitOfWork, UnitOfWork.UnitOfWork>();
 
             services.AddScoped<IPurchaseOrderRepository, PurchaseOrderRepository>();
-
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IPasswordHasher, PasswordHasher>();
             return services;
 
         }
