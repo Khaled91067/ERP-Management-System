@@ -5,9 +5,12 @@ using ERP.Infrastructure.Authentication;
 using ERP.Infrastructure.Persistence;
 using ERP.Infrastructure.Persistence.Repositories;
 using ERP.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 
 namespace ERP.Infrastructure
@@ -27,6 +30,43 @@ namespace ERP.Infrastructure
             services.AddScoped<IPurchaseOrderRepository, PurchaseOrderRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IPasswordHasher, PasswordHasher>();
+
+            services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
+
+
+
+            services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+
+
+            var jwtSettings = configuration.GetSection("Jwt")
+                .Get<JwtSettings>() ?? throw new InvalidOperationException("JWT settings are missing.");
+
+            services
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters =
+                        new TokenValidationParameters
+                        {
+                            ValidateIssuer = true,
+                            ValidateAudience = true,
+                            ValidateLifetime = true,
+                            ValidateIssuerSigningKey = true,
+            
+                            ValidIssuer = jwtSettings.Issuer,
+                            ValidAudience = jwtSettings.Audience,
+            
+                            IssuerSigningKey =
+                                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret))
+                        };
+                });
+
+            services.AddAuthorization();
+
+
+
+
+
             return services;
 
         }

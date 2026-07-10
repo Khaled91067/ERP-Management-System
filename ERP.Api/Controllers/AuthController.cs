@@ -24,4 +24,15 @@ public sealed class AuthController : ControllerBase
 
         return Ok(new { id = userId });
     }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(LoginCommand command,CancellationToken cancellationToken)
+    {
+        var response = await _sender.Send(
+            command,
+            cancellationToken);
+
+        return Ok(response);
+    }
+
 }
