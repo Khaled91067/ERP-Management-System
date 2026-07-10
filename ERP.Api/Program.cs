@@ -9,6 +9,9 @@ namespace ERP.Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+
             // Add services to the container.
             builder.Services.AddInfrastructure(builder.Configuration);
             
@@ -24,6 +27,8 @@ namespace ERP.Api
             if (app.Environment.IsDevelopment())
             {
                 app.MapOpenApi();
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
 
             app.UseHttpsRedirection();
