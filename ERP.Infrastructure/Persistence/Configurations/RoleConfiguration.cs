@@ -19,19 +19,24 @@ namespace ERP.Infrastructure.Persistence.Configurations
                 .IsRequired();
 
             builder.HasData(
-            new Role
-            {
-                Id = 1,
-                Name = "Admin",
-                Permissions = "[]"
-            },
-            new Role
-            {
-                Id = 2,
-                Name = "User",
-                Permissions = "[]"
-            }
-        );
+                new
+                {
+                    Id = 1,
+                    Name = "Administrator",
+                    Permissions = "[\"Users.Read\",\"Users.Write\",\"Orders.Read\",\"Orders.Write\",\"Reports.Read\",\"Reports.Write\"]"
+                },
+                new
+                {
+                    Id = 2,
+                    Name = "Sales Manager",
+                    Permissions = "[\"Customers.Read\",\"Customers.Write\",\"Orders.Read\",\"Orders.Write\",\"Invoices.Read\"]"
+                },
+                new
+                {
+                    Id = 3,
+                    Name = "Warehouse Clerk",
+                    Permissions = "[\"Products.Read\",\"PurchaseOrders.Read\",\"PurchaseOrders.Write\",\"Inventory.Update\"]"
+                });
         }
     }
 }
