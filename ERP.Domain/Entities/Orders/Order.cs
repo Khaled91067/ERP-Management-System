@@ -47,8 +47,79 @@ public class Order
         TotalAmount = 0;
     }
 
+    public void AddLine(
+        int productId,
+        int quantity,
+        decimal unitPrice,
+        decimal discountPercentage = 0)
+    {
+        EnsurePending();
 
- 
+        if (_orderLines.Any(x => x.ProductId == productId))
+            throw new DomainException("Product already exists in this order.");
+
+        var line = new OrderLine(
+            productId,
+            quantity,
+            unitPrice,
+            discountPercentage);
+
+        _orderLines.Add(line);
+
+        RecalculateTotal();
+    }
+
+    public void RemoveLine(int productId)
+    {
+        EnsurePending();
+
+        var line = _orderLines.SingleOrDefault(x => x.ProductId == productId)
+                   ?? throw new DomainException("Order line was not found.");
+
+        _orderLines.Remove(line);
+
+        RecalculateTotal();
+    }
+
+    private void RecalculateTotal()
+    {
+        TotalAmount = _orderLines.Sum(x => 
+            (x.Quantity * x.UnitPrice) * (1 - x.DiscountPercentage / 100));
+    }
+
+    private void EnsurePending()
+    {
+        if (Status != OrderStatus.Pending)
+            throw new DomainException("Only pending orders can be modified.");
+    }
+
+    public void Ship()
+    {
+        if (Status != OrderStatus.Pending)
+            throw new DomainException("Only pending orders can be shipped.");
+
+        if (_orderLines.Count == 0)
+            throw new DomainException("Cannot ship an empty order.");
+
+        Status = OrderStatus.Shipped;
+    }
+
+    public void Deliver()
+    {
+        if (Status != OrderStatus.Shipped)
+            throw new DomainException("Only shipped orders can be delivered.");
+
+        Status = OrderStatus.Delivered;
+    }
+
+    public void Cancel()
+    {
+        if (Status == OrderStatus.Delivered)
+            throw new DomainException("Delivered orders cannot be cancelled.");
+
+        if (Status == OrderStatus.Cancelled)
+            throw new DomainException("Order is already cancelled.");
+
+        Status = OrderStatus.Cancelled;
+    }
 }
-
-

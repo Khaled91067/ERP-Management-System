@@ -27,4 +27,17 @@ public class Product
 
         StockQuantity += quantity;
     }
+
+    public void DecreaseStock(int quantity)
+    {
+        if (quantity <= 0)
+            throw new DomainException(
+                "Stock decrease quantity must be greater than zero.");
+
+        if (StockQuantity < quantity)
+            throw new DomainException(
+                $"Insufficient stock for product {Name}. Available: {StockQuantity}, Requested: {quantity}");
+
+        StockQuantity -= quantity;
+    }
 }
