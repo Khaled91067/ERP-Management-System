@@ -1,4 +1,4 @@
-﻿using ERP.Application.Abstractions;
+using ERP.Application.Abstractions;
 using ERP.Application.Abstractions.Authentication;
 using ERP.Application.Abstractions.Repositories;
 using ERP.Infrastructure.Authentication;
@@ -28,8 +28,11 @@ namespace ERP.Infrastructure
             services.AddScoped<IUnitOfWork, UnitOfWork.UnitOfWork>();
 
             services.AddScoped<IPurchaseOrderRepository, PurchaseOrderRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IPasswordHasher, PasswordHasher>();
 
             services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
