@@ -29,6 +29,7 @@ namespace ERP.Infrastructure
 
             services.AddScoped<IPurchaseOrderRepository, PurchaseOrderRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IPasswordHasher, PasswordHasher>();
 
             services.Configure<JwtSettings>(configuration.GetSection("Jwt"));

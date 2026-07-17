@@ -33,9 +33,7 @@ namespace ERP.Api
 
                 {
 
-                    [new OpenApiSecuritySchemeReference("foo", document)] = [],
-
-                    [new OpenApiSecuritySchemeReference("bar", document)] = []
+                    [new OpenApiSecuritySchemeReference("Bearer", document)] = [],
 
                 });
 

@@ -3,7 +3,7 @@ using ERP.Application.Features.PurchaseOrders.Dtos;
 using ERP.Application.Features.PurchaseOrders.Queries.Models;
 using MediatR;
 
-namespace ERP.Application.Features.PurchaseOrders.Queries.Handlers;
+namespace ERP.Application.Features.PurchaseOrders.Handlers;
 
 public sealed class GetPurchaseOrderByIdQueryHandler: IRequestHandler<GetPurchaseOrderByIdQuery, PurchaseOrderDto?>
 {

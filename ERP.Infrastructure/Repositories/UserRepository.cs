@@ -26,4 +26,26 @@ public sealed class UserRepository: GenericRepository<User>, IUserRepository
         return await _context.Set<User>()
             .AnyAsync( user => user.Email == email,cancellationToken);
     }
+
+    public async Task<bool> EmailExistsExceptAsync(string email, int userId, CancellationToken cancellationToken = default)
+    {
+        return await _context.Set<User>()
+            .AnyAsync(user => user.Email == email && user.Id != userId, cancellationToken);
+    }
+
+    public async Task<User?> GetByIdWithRoleAsync(int id, CancellationToken cancellationToken = default)
+    {
+        return await _context.Set<User>()
+            .Include(user => user.Role)
+            .FirstOrDefaultAsync(user => user.Id == id, cancellationToken);
+    }
+
+    public async Task<IReadOnlyList<User>> GetAllWithRolesAsync(CancellationToken cancellationToken = default)
+    {
+        return await _context.Set<User>()
+            .Include(user => user.Role)
+            .OrderBy(user => user.FirstName)
+            .ThenBy(user => user.LastName)
+            .ToListAsync(cancellationToken);
+    }
 }

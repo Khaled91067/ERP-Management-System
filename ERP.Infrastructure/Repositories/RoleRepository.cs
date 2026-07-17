@@ -19,7 +19,13 @@ namespace ERP.Infrastructure.Repositories
             return await _context.Set<Role>()
                 .FirstOrDefaultAsync(
                     role => role.Name == name,
-                    cancellationToken);
+                cancellationToken);
+        }
+
+        public async Task<bool> HasUsersAsync(int roleId, CancellationToken cancellationToken = default)
+        {
+            return await _context.Set<User>()
+                .AnyAsync(user => user.RoleId == roleId, cancellationToken);
         }
     }
 }

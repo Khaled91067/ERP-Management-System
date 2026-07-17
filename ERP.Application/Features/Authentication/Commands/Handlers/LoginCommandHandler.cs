@@ -6,8 +6,7 @@ using MediatR;
 
 namespace ERP.Application.Features.Authentication.Commands.Handlers;
 
-public sealed class LoginCommandHandler
-    : IRequestHandler<LoginCommand, LoginResponse>
+public sealed class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponse>
 {
     private readonly IUserRepository _userRepository;
     private readonly IPasswordHasher _passwordHasher;
