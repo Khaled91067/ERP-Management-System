@@ -1,0 +1,48 @@
+using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Features.Sales.Dtos;
+using ERP.Application.Features.Sales.Queries.Models;
+using MediatR;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace ERP.Application.Features.Sales.Handlers;
+
+public sealed class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, IEnumerable<OrderDto>>
+{
+    private readonly IOrderRepository _orderRepository;
+
+    public GetOrdersQueryHandler(IOrderRepository orderRepository)
+    {
+        _orderRepository = orderRepository;
+    }
+
+    public async Task<IEnumerable<OrderDto>> Handle(GetOrdersQuery request, CancellationToken cancellationToken)
+    {
+        var orders = await _orderRepository.GetOrdersWithCustomerAsync(request.CustomerId, cancellationToken);
+
+        // Apply Search Term filter in-memory if provided
+        if (!string.IsNullOrWhiteSpace(request.SearchTerm))
+        {
+            var search = request.SearchTerm.ToLower();
+            orders = orders.Where(x => 
+                (x.Customer?.Name != null && x.Customer.Name.ToLower().Contains(search)) ||
+                x.ShippingAddress.ToLower().Contains(search)
+            ).ToList();
+        }
+
+        return orders.Select(order => new OrderDto(
+            order.Id,
+            order.CustomerId,
+            order.Customer?.Name ?? string.Empty,
+            order.OrderDate,
+            order.Status.ToString(),
+            order.PaymentMethod.ToString(),
+            order.ShippingAddress,
+            order.TotalAmount,
+            new List<OrderLineDto>() // Return empty list for overview list queries to keep payload small
+        )).ToList();
+    }
+}
