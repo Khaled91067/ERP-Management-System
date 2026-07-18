@@ -23,8 +23,8 @@ namespace ERP.Infrastructure.Persistence
         public DbSet<Role> Roles { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<User> Users { get; set; }
-
-
+        public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+       
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

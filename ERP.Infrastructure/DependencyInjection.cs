@@ -39,11 +39,13 @@ namespace ERP.Infrastructure
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<IPasswordHasher, PasswordHasher>();
 
+            services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+
             services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
 
 
 
-            services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+            services.AddScoped<ITokenService, TokenService>();
 
 
             var jwtSettings = configuration.GetSection("Jwt")

@@ -2,7 +2,9 @@
 
 namespace ERP.Application.Abstractions.Authentication;
 
-public interface IJwtTokenGenerator
+public interface ITokenService
 {
     string GenerateToken(User user);
+
+    string GenerateRefreshToken();
 }
