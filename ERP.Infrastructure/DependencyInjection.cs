@@ -37,6 +37,7 @@ namespace ERP.Infrastructure
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             services.AddScoped<IDepartmentRepository, DepartmentRepository>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
+            services.AddScoped<ISupplierRepository, SupplierRepository>();
             services.AddScoped<IPasswordHasher, PasswordHasher>();
 
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();

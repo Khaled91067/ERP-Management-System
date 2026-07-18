@@ -63,5 +63,30 @@ public sealed class InvoicesController : ControllerBase
         var result = await _sender.Send(command, cancellationToken);
         return result ? NoContent() : NotFound();
     }
+
+    [HttpPost]
+    public async Task<IActionResult> Create(CreateInvoiceCommand command, CancellationToken cancellationToken)
+    {
+        var id = await _sender.Send(command, cancellationToken);
+        return CreatedAtAction(nameof(GetById), new { id }, new { id });
+    }
+
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update(int id, UpdateInvoiceCommand command, CancellationToken cancellationToken)
+    {
+        if (id != command.Id)
+            return BadRequest("Invoice ID mismatch between request URL and body.");
+
+        var result = await _sender.Send(command, cancellationToken);
+        return result ? NoContent() : NotFound();
+    }
+
+    [HttpGet("{id:int}/pdf")]
+    public async Task<IActionResult> GetPdf(int id, CancellationToken cancellationToken)
+    {
+        var query = new GetInvoicePdfQuery(id);
+        var pdfBytes = await _sender.Send(query, cancellationToken);
+        return File(pdfBytes, "application/pdf", $"invoice_{id}.pdf");
+    }
 }
 
