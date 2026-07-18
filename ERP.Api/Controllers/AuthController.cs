@@ -1,5 +1,6 @@
 ﻿using ERP.Application.Features.Authentication.Commands.Models;
 using MediatR;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ERP.Api.Controllers;
@@ -34,5 +35,18 @@ public sealed class AuthController : ControllerBase
 
         return Ok(response);
     }
+    [HttpPost("refresh")]
+    public async Task<IActionResult> Refresh(RefreshTokenCommand command)
+    {
+        var response = await _sender.Send(command);
 
+        return Ok(response);
+    }
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout(LogoutCommand command)
+    {
+        await _sender.Send(command);
+
+        return NoContent();
+    }
 }
