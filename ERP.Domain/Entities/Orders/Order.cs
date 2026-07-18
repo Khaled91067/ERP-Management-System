@@ -81,6 +81,26 @@ public class Order
         RecalculateTotal();
     }
 
+    public void UpdateDetails(
+        PaymentMethod paymentMethod,
+        string shippingAddress)
+    {
+        EnsurePending();
+
+        if (string.IsNullOrWhiteSpace(shippingAddress))
+            throw new DomainException("Shipping address is required.");
+
+        PaymentMethod = paymentMethod;
+        ShippingAddress = shippingAddress.Trim();
+    }
+
+    public void ClearLines()
+    {
+        EnsurePending();
+        _orderLines.Clear();
+        RecalculateTotal();
+    }
+
     private void RecalculateTotal()
     {
         TotalAmount = _orderLines.Sum(x => 

@@ -84,6 +84,30 @@ public sealed class OrdersController : ControllerBase
         var result = await _sender.Send(command, cancellationToken);
         return result ? NoContent() : NotFound();
     }
+
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update(int id, UpdateOrderRequest request, CancellationToken cancellationToken)
+    {
+        if (!Enum.TryParse<PaymentMethod>(request.PaymentMethod, true, out var paymentMethod))
+        {
+            return BadRequest("Invalid payment method. Allowed values: Cash, CreditCard, MobilePayment");
+        }
+
+        var command = new UpdateOrderCommand(
+            id,
+            paymentMethod,
+            request.ShippingAddress,
+            request.Lines.Select(l => new UpdateOrderLineCommand(
+                l.ProductId,
+                l.Quantity,
+                l.UnitPrice,
+                l.DiscountPercentage
+            )).ToList()
+        );
+
+        var result = await _sender.Send(command, cancellationToken);
+        return result ? NoContent() : NotFound();
+    }
 }
 
 public sealed record CreateOrderRequest(
@@ -97,3 +121,15 @@ public sealed record CreateOrderLineRequest(
     int Quantity,
     decimal UnitPrice,
     decimal DiscountPercentage = 0);
+
+public sealed record UpdateOrderRequest(
+    string PaymentMethod,
+    string ShippingAddress,
+    List<UpdateOrderLineRequest> Lines);
+
+public sealed record UpdateOrderLineRequest(
+    int ProductId,
+    int Quantity,
+    decimal UnitPrice,
+    decimal DiscountPercentage = 0);
+
