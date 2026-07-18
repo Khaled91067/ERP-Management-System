@@ -76,6 +76,14 @@ public sealed class OrdersController : ControllerBase
         var result = await _sender.Send(command, cancellationToken);
         return result ? NoContent() : NotFound();
     }
+
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
+    {
+        var command = new DeleteOrderCommand(id);
+        var result = await _sender.Send(command, cancellationToken);
+        return result ? NoContent() : NotFound();
+    }
 }
 
 public sealed record CreateOrderRequest(

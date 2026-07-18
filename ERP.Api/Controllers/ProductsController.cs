@@ -43,6 +43,13 @@ public sealed class ProductsController(ISender sender) : ControllerBase
         var deleted = await sender.Send(new DeleteProductCommand(id), cancellationToken);
         return deleted ? NoContent() : NotFound();
     }
+
+    [HttpPatch("{id:int}/stock")]
+    public async Task<IActionResult> AdjustStock(int id, [FromBody] AdjustStockRequest request, CancellationToken cancellationToken)
+    {
+        var result = await sender.Send(new AdjustStockCommand(id, request.QuantityChange), cancellationToken);
+        return result ? NoContent() : NotFound();
+    }
 }
 
 public sealed record UpdateProductRequest(
@@ -52,3 +59,5 @@ public sealed record UpdateProductRequest(
     decimal UnitPrice,
     decimal CostPrice,
     int ReorderLevel);
+
+public sealed record AdjustStockRequest(int QuantityChange);
