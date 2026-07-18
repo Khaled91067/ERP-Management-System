@@ -62,6 +62,34 @@ public sealed class PurchaseOrdersController : ControllerBase
         var result = await _sender.Send(command, cancellationToken);
         return result ? NoContent() : NotFound();
     }
+
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update(int id, UpdatePurchaseOrderRequest request, CancellationToken cancellationToken)
+    {
+        var command = new UpdatePurchaseOrderCommand(
+            id,
+            request.SupplierId,
+            request.ExpectedDelivery,
+            request.Lines.Select(l => new UpdatePurchaseOrderLineCommand(
+                l.ProductId,
+                l.Quantity,
+                l.UnitCost
+            )).ToList()
+        );
+
+        var result = await _sender.Send(command, cancellationToken);
+        return result ? NoContent() : NotFound();
+    }
 }
 
 public sealed record UpdatePurchaseOrderStatusRequest(string Status);
+
+public sealed record UpdatePurchaseOrderRequest(
+    int SupplierId,
+    DateTime ExpectedDelivery,
+    List<UpdatePurchaseOrderLineRequest> Lines);
+
+public sealed record UpdatePurchaseOrderLineRequest(
+    int ProductId,
+    int Quantity,
+    decimal UnitCost);

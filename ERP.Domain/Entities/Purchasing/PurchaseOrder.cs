@@ -46,6 +46,29 @@ public class PurchaseOrder : AggregateRoot
         TotalAmount = 0;
     }
 
+    public void UpdateDetails(
+        int supplierId,
+        DateTime expectedDelivery)
+    {
+        EnsureDraft();
+
+        if (supplierId <= 0)
+            throw new DomainException("Supplier id must be valid.");
+
+        if (expectedDelivery < OrderDate)
+            throw new DomainException("Expected delivery cannot be before order date.");
+
+        SupplierId = supplierId;
+        ExpectedDelivery = expectedDelivery;
+    }
+
+    public void ClearLines()
+    {
+        EnsureDraft();
+        _purchaseLines.Clear();
+        RecalculateTotal();
+    }
+
     public void AddLine(
         int productId,
         int quantity,
