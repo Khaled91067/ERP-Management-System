@@ -4,4 +4,4 @@ using System.Text;
 
 namespace ERP.Application.Features.Authentication.DTOs;
 
-public sealed record LoginResponse(string AccessToken);
+public sealed record TokenResponse(string AccessToken,string RefreshToken);

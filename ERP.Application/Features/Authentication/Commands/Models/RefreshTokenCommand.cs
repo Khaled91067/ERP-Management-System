@@ -3,4 +3,4 @@ using MediatR;
 
 namespace ERP.Application.Features.Authentication.Commands.Models;
 
-public sealed record LoginCommand(string Email,string Password) : IRequest<TokenResponse>;
+public sealed record RefreshTokenCommand(string RefreshToken) : IRequest<TokenResponse>;
