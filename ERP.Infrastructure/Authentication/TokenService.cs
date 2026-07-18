@@ -1,21 +1,23 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using ERP.Application.Abstractions.Authentication;
+﻿using ERP.Application.Abstractions.Authentication;
 using ERP.Domain.Entities;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace ERP.Infrastructure.Authentication;
 
-public sealed class JwtTokenGenerator : IJwtTokenGenerator
+public sealed class TokenService : ITokenService
 {
     private readonly JwtSettings _settings;
 
-    public JwtTokenGenerator(IOptions<JwtSettings> options)
+    public TokenService(IOptions<JwtSettings> options)
     {
         _settings = options.Value;
     }
+
 
     public string GenerateToken(User user)
     {
@@ -39,7 +41,14 @@ public sealed class JwtTokenGenerator : IJwtTokenGenerator
             expires: DateTime.UtcNow.AddMinutes(_settings.ExpiryMinutes),
             signingCredentials: credentials);
 
-        return new JwtSecurityTokenHandler()
-            .WriteToken(token);
+        return new JwtSecurityTokenHandler().WriteToken(token);
     }
+
+    public string GenerateRefreshToken()
+    {
+        var randomBytes = RandomNumberGenerator.GetBytes(64);
+
+        return Convert.ToBase64String(randomBytes);
+    }
+
 }
