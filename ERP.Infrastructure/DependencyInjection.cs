@@ -36,6 +36,7 @@ namespace ERP.Infrastructure
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<IPasswordHasher, PasswordHasher>();
 
             services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
