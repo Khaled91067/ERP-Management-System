@@ -1,4 +1,4 @@
-﻿using ERP.Domain.Entities;
+using ERP.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -34,7 +34,8 @@ namespace ERP.Infrastructure.Persistence.Configurations
                 .HasPrecision(18, 2);
 
             builder.HasIndex(e => e.Email)
-                .IsUnique();
+                .IsUnique()
+                .HasFilter("[IsDeleted] = 0");
 
             builder.HasOne(e => e.Department)
                 .WithMany(d => d.Employees)
@@ -52,7 +53,8 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     DepartmentId = 1,
                     Position = "Sales Executive",
                     HireDate = new DateTime(2023, 3, 12),
-                    Salary = 14500m
+                    Salary = 14500m,
+                    IsDeleted = false
                 },
                 new
                 {
@@ -64,7 +66,8 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     DepartmentId = 2,
                     Position = "Operations Supervisor",
                     HireDate = new DateTime(2022, 8, 1),
-                    Salary = 16800m
+                    Salary = 16800m,
+                    IsDeleted = false
                 },
                 new
                 {
@@ -76,7 +79,8 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     DepartmentId = 3,
                     Position = "Finance Specialist",
                     HireDate = new DateTime(2021, 11, 18),
-                    Salary = 15500m
+                    Salary = 15500m,
+                    IsDeleted = false
                 },
                 new
                 {
@@ -88,7 +92,8 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     DepartmentId = 4,
                     Position = "Procurement Officer",
                     HireDate = new DateTime(2024, 2, 5),
-                    Salary = 13200m
+                    Salary = 13200m,
+                    IsDeleted = false
                 });
         }
     }

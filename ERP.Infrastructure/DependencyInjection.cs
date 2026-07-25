@@ -40,6 +40,9 @@ namespace ERP.Infrastructure
             services.AddScoped<ISupplierRepository, SupplierRepository>();
             services.AddScoped<IPasswordHasher, PasswordHasher>();
 
+            services.AddHttpContextAccessor();
+            services.AddScoped<ERP.Application.Abstractions.Common.ICurrentUserService, ERP.Infrastructure.Services.CurrentUserService>();
+
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
             services.Configure<JwtSettings>(configuration.GetSection("Jwt"));

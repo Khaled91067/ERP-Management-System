@@ -1,4 +1,4 @@
-﻿using ERP.Domain.Entities;
+using ERP.Domain.Entities;
 using ERP.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -40,7 +40,8 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     OrderDate = new DateTime(2025, 5, 20),
                     ExpectedDelivery = new DateTime(2025, 5, 28),
                     Status = PurchaseOrderStatus.Received,
-                    TotalAmount = 5200m
+                    TotalAmount = 5200m,
+                    IsDeleted = false
                 },
                 new
                 {
@@ -49,7 +50,8 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     OrderDate = new DateTime(2025, 6, 1),
                     ExpectedDelivery = new DateTime(2025, 6, 10),
                     Status = PurchaseOrderStatus.Approved,
-                    TotalAmount = 1880m
+                    TotalAmount = 1880m,
+                    IsDeleted = false
                 },
                 new
                 {
@@ -58,7 +60,8 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     OrderDate = new DateTime(2025, 6, 5),
                     ExpectedDelivery = new DateTime(2025, 6, 20),
                     Status = PurchaseOrderStatus.Draft,
-                    TotalAmount = 1700m
+                    TotalAmount = 1700m,
+                    IsDeleted = false
                 });
         }
     }

@@ -1,4 +1,4 @@
-﻿using ERP.Domain.Entities;
+using ERP.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -18,7 +18,8 @@ namespace ERP.Infrastructure.Persistence.Configurations
                    .HasMaxLength(50);
 
             builder.HasIndex(p => p.Sku)
-                   .IsUnique();
+                   .IsUnique()
+                   .HasFilter("[IsDeleted] = 0");
 
             builder.Property(p => p.UnitPrice)
                    .HasPrecision(18, 2);
@@ -41,7 +42,8 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     UnitPrice = 850m,
                     CostPrice = 620m,
                     StockQuantity = 18,
-                    ReorderLevel = 5
+                    ReorderLevel = 5,
+                    IsDeleted = false
                 },
                 new
                 {
@@ -52,7 +54,8 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     UnitPrice = 240m,
                     CostPrice = 145m,
                     StockQuantity = 30,
-                    ReorderLevel = 10
+                    ReorderLevel = 10,
+                    IsDeleted = false
                 },
                 new
                 {
@@ -63,7 +66,8 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     UnitPrice = 320m,
                     CostPrice = 210m,
                     StockQuantity = 14,
-                    ReorderLevel = 6
+                    ReorderLevel = 6,
+                    IsDeleted = false
                 },
                 new
                 {
@@ -74,7 +78,8 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     UnitPrice = 180m,
                     CostPrice = 110m,
                     StockQuantity = 40,
-                    ReorderLevel = 12
+                    ReorderLevel = 12,
+                    IsDeleted = false
                 },
                 new
                 {
@@ -85,7 +90,8 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     UnitPrice = 35m,
                     CostPrice = 18m,
                     StockQuantity = 150,
-                    ReorderLevel = 50
+                    ReorderLevel = 50,
+                    IsDeleted = false
                 },
                 new
                 {
@@ -96,7 +102,8 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     UnitPrice = 55m,
                     CostPrice = 30m,
                     StockQuantity = 80,
-                    ReorderLevel = 20
+                    ReorderLevel = 20,
+                    IsDeleted = false
                 });
         }
     }

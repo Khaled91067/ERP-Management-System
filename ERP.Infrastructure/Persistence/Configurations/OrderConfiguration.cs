@@ -1,4 +1,4 @@
-﻿using ERP.Domain.Entities.Orders;
+using ERP.Domain.Entities.Orders;
 using ERP.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -37,7 +37,8 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     Status = OrderStatus.Shipped,
                     PaymentMethod = PaymentMethod.CreditCard,
                     ShippingAddress = "1200 Market Street, Suite 800, New York, NY",
-                    TotalAmount = 2004m
+                    TotalAmount = 2004m,
+                    IsDeleted = false
                 },
                 new
                 {
@@ -47,7 +48,8 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     Status = OrderStatus.Delivered,
                     PaymentMethod = PaymentMethod.Cash,
                     ShippingAddress = "44 King William Street, London",
-                    TotalAmount = 1100m
+                    TotalAmount = 1100m,
+                    IsDeleted = false
                 },
                 new
                 {
@@ -57,7 +59,8 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     Status = OrderStatus.Processing,
                     PaymentMethod = PaymentMethod.MobilePayment,
                     ShippingAddress = "Business Bay Tower 18, Dubai",
-                    TotalAmount = 470m
+                    TotalAmount = 470m,
+                    IsDeleted = false
                 });
         }
     }

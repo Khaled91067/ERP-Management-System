@@ -1,4 +1,4 @@
-﻿using ERP.Domain.Entities;
+using ERP.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -40,7 +40,8 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     Address = "1200 Market Street, Suite 800",
                     City = "New York",
                     Country = "USA",
-                    TaxId = "US-TAX-100245"
+                    TaxId = "US-TAX-100245",
+                    IsDeleted = false
                 },
                 new
                 {
@@ -51,7 +52,8 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     Address = "44 King William Street",
                     City = "London",
                     Country = "UK",
-                    TaxId = "GB-TAX-778845"
+                    TaxId = "GB-TAX-778845",
+                    IsDeleted = false
                 },
                 new
                 {
@@ -62,7 +64,8 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     Address = "Business Bay Tower 18",
                     City = "Dubai",
                     Country = "UAE",
-                    TaxId = "AE-TAX-442110"
+                    TaxId = "AE-TAX-442110",
+                    IsDeleted = false
                 });
         }
     }

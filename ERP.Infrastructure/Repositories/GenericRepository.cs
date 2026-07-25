@@ -1,4 +1,4 @@
-﻿using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Abstractions.Repositories;
 using ERP.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -32,6 +32,11 @@ namespace ERP.Infrastructure.Repositories
 
             if(options != null)
             {
+                if (options.IncludeDeleted)
+                {
+                    query = query.IgnoreQueryFilters();
+                }
+
                 if(options.Filter != null)
                 {
                     query = query.Where(options.Filter);

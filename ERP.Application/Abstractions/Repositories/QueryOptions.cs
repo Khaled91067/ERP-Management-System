@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
@@ -14,5 +14,7 @@ namespace ERP.Application.Abstractions.Repositories
         public int? Skip { get; set; }
 
         public int? Take { get; set; }
+
+        public bool IncludeDeleted { get; set; } = false;
     }
 }
