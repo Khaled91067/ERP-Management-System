@@ -12,8 +12,12 @@ namespace ERP.Api.Controllers;
 public sealed class AdminRolesController(ISender sender) : ControllerBase
 {
     [HttpGet]
-    public async Task<IActionResult> GetAll(CancellationToken cancellationToken) =>
-        Ok(await sender.Send(new GetRolesQuery(), cancellationToken));
+    public async Task<IActionResult> GetAll(
+        [FromQuery] string? search,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 20,
+        CancellationToken cancellationToken = default) =>
+        Ok(await sender.Send(new GetRolesQuery(search, page, pageSize), cancellationToken));
 
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)

@@ -23,10 +23,14 @@ public sealed class EmployeesController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll(
         [FromQuery] int? departmentId,
+        [FromQuery] string? search,
         [FromQuery] string? searchTerm,
-        CancellationToken cancellationToken)
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 20,
+        CancellationToken cancellationToken = default)
     {
-        var query = new GetEmployeesQuery(departmentId, searchTerm);
+        var effectiveSearch = !string.IsNullOrWhiteSpace(search) ? search : searchTerm;
+        var query = new GetEmployeesQuery(departmentId, effectiveSearch, page, pageSize);
         var result = await _sender.Send(query, cancellationToken);
         return Ok(result);
     }

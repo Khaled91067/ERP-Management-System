@@ -1,4 +1,4 @@
-﻿using ERP.Domain.Entities;
+using ERP.Domain.Entities;
 using ERP.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -38,7 +38,8 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     DueDate = new DateTime(2025, 6, 26),
                     Status = InvoiceStatus.Sent,
                     TotalAmount = 2004m,
-                    PaidAt = (DateTime?)null
+                    PaidAt = (DateTime?)null,
+                    IsDeleted = false
                 },
                 new
                 {
@@ -49,7 +50,8 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     DueDate = new DateTime(2025, 6, 28),
                     Status = InvoiceStatus.Paid,
                     TotalAmount = 1100m,
-                    PaidAt = new DateTime(2025, 6, 15)
+                    PaidAt = new DateTime(2025, 6, 15),
+                    IsDeleted = false
                 },
                 new
                 {
@@ -60,7 +62,8 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     DueDate = new DateTime(2025, 6, 30),
                     Status = InvoiceStatus.Draft,
                     TotalAmount = 470m,
-                    PaidAt = (DateTime?)null
+                    PaidAt = (DateTime?)null,
+                    IsDeleted = false
                 });
         }
     }

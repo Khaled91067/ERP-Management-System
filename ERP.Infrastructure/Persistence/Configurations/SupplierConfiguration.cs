@@ -1,4 +1,4 @@
-﻿using ERP.Domain.Entities;
+using ERP.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -35,7 +35,8 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     ContactName = "Maya Peterson",
                     Email = "sales@globaltechdist.com",
                     Phone = "+1-646-555-0133",
-                    PaymentTerms = "Net 30"
+                    PaymentTerms = "Net 30",
+                    IsDeleted = false
                 },
                 new
                 {
@@ -44,7 +45,8 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     ContactName = "Daniel Cooper",
                     Email = "orders@metroofficesupply.com",
                     Phone = "+44-20-5550-3344",
-                    PaymentTerms = "Net 15"
+                    PaymentTerms = "Net 15",
+                    IsDeleted = false
                 },
                 new
                 {
@@ -53,7 +55,8 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     ContactName = "Nadia Rahman",
                     Email = "procurement@primeindustrialparts.com",
                     Phone = "+971-4-555-0220",
-                    PaymentTerms = "Due on receipt"
+                    PaymentTerms = "Due on receipt",
+                    IsDeleted = false
                 });
         }
     }

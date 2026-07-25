@@ -22,10 +22,14 @@ public sealed class CustomersController : ControllerBase
 
     [HttpGet]
     public async Task<IActionResult> GetAll(
+        [FromQuery] string? search,
         [FromQuery] string? searchTerm,
-        CancellationToken cancellationToken)
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 20,
+        CancellationToken cancellationToken = default)
     {
-        var query = new GetCustomersQuery(searchTerm);
+        var effectiveSearch = !string.IsNullOrWhiteSpace(search) ? search : searchTerm;
+        var query = new GetCustomersQuery(effectiveSearch, page, pageSize);
         var result = await _sender.Send(query, cancellationToken);
         return Ok(result);
     }

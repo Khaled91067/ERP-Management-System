@@ -1,4 +1,4 @@
-﻿using ERP.Domain.Entities;
+using ERP.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -16,13 +16,14 @@ namespace ERP.Infrastructure.Persistence.Configurations
                 .HasMaxLength(100);
 
             builder.HasIndex(c => c.Name)
-                .IsUnique();
+                .IsUnique()
+                .HasFilter("[IsDeleted] = 0");
 
             builder.HasData(
-                new { Id = 1, Name = "Electronics" },
-                new { Id = 2, Name = "Office Supplies" },
-                new { Id = 3, Name = "Industrial Equipment" },
-                new { Id = 4, Name = "Packaging" });
+                new { Id = 1, Name = "Electronics", IsDeleted = false },
+                new { Id = 2, Name = "Office Supplies", IsDeleted = false },
+                new { Id = 3, Name = "Industrial Equipment", IsDeleted = false },
+                new { Id = 4, Name = "Packaging", IsDeleted = false });
         }
     }
 }

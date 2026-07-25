@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ERP.Domain.Common;
 using ERP.Domain.Entities.Orders;
 using ERP.Domain.Enums;
 using ERP.Domain.Exceptions;
 
 namespace ERP.Domain.Entities;
 
-public class Invoice
+public class Invoice : ISoftDeletable
 {
     private readonly List<InvoiceLine> _invoiceLines = [];
 
@@ -19,6 +20,9 @@ public class Invoice
     public InvoiceStatus Status { get; private set; }
     public decimal TotalAmount { get; private set; }
     public DateTime? PaidAt { get; private set; }
+    public bool IsDeleted { get; set; }
+    public DateTimeOffset? DeletedAt { get; set; }
+    public string? DeletedBy { get; set; }
 
     public Order? Order { get; private set; }
     public Customer? Customer { get; private set; }

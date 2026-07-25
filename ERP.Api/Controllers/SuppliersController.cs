@@ -14,8 +14,10 @@ public sealed class SuppliersController(ISender sender) : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll(
         [FromQuery] string? search,
-        CancellationToken cancellationToken) =>
-        Ok(await sender.Send(new GetSuppliersQuery(search), cancellationToken));
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 20,
+        CancellationToken cancellationToken = default) =>
+        Ok(await sender.Send(new GetSuppliersQuery(search, page, pageSize), cancellationToken));
 
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)

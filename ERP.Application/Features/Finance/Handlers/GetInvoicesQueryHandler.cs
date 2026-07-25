@@ -1,16 +1,15 @@
 using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Common.Models;
 using ERP.Application.Features.Finance.Dtos;
 using ERP.Application.Features.Finance.Queries.Models;
+using ERP.Domain.Entities;
 using MediatR;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ERP.Application.Features.Finance.Handlers;
 
-public sealed class GetInvoicesQueryHandler : IRequestHandler<GetInvoicesQuery, IEnumerable<InvoiceDto>>
+public sealed class GetInvoicesQueryHandler : IRequestHandler<GetInvoicesQuery, PagedResult<InvoiceDto>>
 {
     private readonly IInvoiceRepository _invoiceRepository;
 
@@ -19,20 +18,33 @@ public sealed class GetInvoicesQueryHandler : IRequestHandler<GetInvoicesQuery, 
         _invoiceRepository = invoiceRepository;
     }
 
-    public async Task<IEnumerable<InvoiceDto>> Handle(GetInvoicesQuery request, CancellationToken cancellationToken)
+    public async Task<PagedResult<InvoiceDto>> Handle(GetInvoicesQuery request, CancellationToken cancellationToken)
     {
-        var invoices = await _invoiceRepository.GetInvoicesByCustomerAsync(request.CustomerId, cancellationToken);
+        var options = new QueryOptions<Invoice>();
+        options.Includes.Add(i => i.Customer);
 
-        // Apply Status filter in-memory if provided
-        if (!string.IsNullOrWhiteSpace(request.Status))
+        if (request.CustomerId.HasValue)
         {
-            var statusStr = request.Status.Trim();
-            invoices = invoices.Where(x => 
-                string.Equals(x.Status.ToString(), statusStr, StringComparison.OrdinalIgnoreCase)
-            ).ToList();
+            options.Filter = i => i.CustomerId == request.CustomerId.Value;
         }
 
-        return invoices.Select(invoice => new InvoiceDto(
+        if (!string.IsNullOrWhiteSpace(request.Status) && Enum.TryParse<ERP.Domain.Enums.InvoiceStatus>(request.Status, true, out var statusEnum))
+        {
+            var existingFilter = options.Filter;
+            options.Filter = i => (existingFilter == null || existingFilter.Compile()(i)) && i.Status == statusEnum;
+        }
+
+        if (!string.IsNullOrWhiteSpace(request.Search))
+        {
+            var search = request.Search.Trim().ToLower();
+            var existingFilter = options.Filter;
+            options.Filter = i => (existingFilter == null || existingFilter.Compile()(i)) &&
+                                  (i.Customer != null && i.Customer.Name.ToLower().Contains(search));
+        }
+
+        var pagedInvoices = await _invoiceRepository.GetPagedAsync(options, request.Page, request.PageSize);
+
+        return pagedInvoices.Map(invoice => new InvoiceDto(
             invoice.Id,
             invoice.OrderId,
             invoice.CustomerId,
@@ -42,7 +54,7 @@ public sealed class GetInvoicesQueryHandler : IRequestHandler<GetInvoicesQuery, 
             invoice.Status.ToString(),
             invoice.TotalAmount,
             invoice.PaidAt,
-            new List<InvoiceLineDto>() // Return empty list for overview list queries to keep payload small
-        )).ToList();
+            new List<InvoiceLineDto>()
+        ));
     }
 }

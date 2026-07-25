@@ -6,7 +6,7 @@ using System;
 
 namespace ERP.Domain.Entities;
 
-public class PurchaseOrder : AggregateRoot
+public class PurchaseOrder : AggregateRoot, ISoftDeletable
 
 {
     private readonly List<PurchaseLine> _purchaseLines = [];
@@ -17,6 +17,9 @@ public class PurchaseOrder : AggregateRoot
     public DateTime ExpectedDelivery { get; private set; }
     public PurchaseOrderStatus Status { get; private set; }
     public decimal TotalAmount { get; private set; }
+    public bool IsDeleted { get; set; }
+    public DateTimeOffset? DeletedAt { get; set; }
+    public string? DeletedBy { get; set; }
 
     public Supplier? Supplier { get; private set; }
 

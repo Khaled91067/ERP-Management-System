@@ -21,9 +21,13 @@ public sealed class DepartmentsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAll(
+        [FromQuery] string? search,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 20,
+        CancellationToken cancellationToken = default)
     {
-        var query = new GetDepartmentsQuery();
+        var query = new GetDepartmentsQuery(search, page, pageSize);
         var result = await _sender.Send(query, cancellationToken);
         return Ok(result);
     }

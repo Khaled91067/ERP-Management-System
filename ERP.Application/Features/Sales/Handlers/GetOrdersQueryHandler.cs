@@ -1,16 +1,15 @@
 using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Common.Models;
 using ERP.Application.Features.Sales.Dtos;
 using ERP.Application.Features.Sales.Queries.Models;
+using ERP.Domain.Entities.Orders;
 using MediatR;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ERP.Application.Features.Sales.Handlers;
 
-public sealed class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, IEnumerable<OrderDto>>
+public sealed class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, PagedResult<OrderDto>>
 {
     private readonly IOrderRepository _orderRepository;
 
@@ -19,21 +18,34 @@ public sealed class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, IEnu
         _orderRepository = orderRepository;
     }
 
-    public async Task<IEnumerable<OrderDto>> Handle(GetOrdersQuery request, CancellationToken cancellationToken)
+    public async Task<PagedResult<OrderDto>> Handle(GetOrdersQuery request, CancellationToken cancellationToken)
     {
-        var orders = await _orderRepository.GetOrdersWithCustomerAsync(request.CustomerId, cancellationToken);
+        var options = new QueryOptions<Order>();
+        options.Includes.Add(o => o.Customer);
 
-        // Apply Search Term filter in-memory if provided
-        if (!string.IsNullOrWhiteSpace(request.SearchTerm))
+        if (request.CustomerId.HasValue)
         {
-            var search = request.SearchTerm.ToLower();
-            orders = orders.Where(x => 
-                (x.Customer?.Name != null && x.Customer.Name.ToLower().Contains(search)) ||
-                x.ShippingAddress.ToLower().Contains(search)
-            ).ToList();
+            options.Filter = o => o.CustomerId == request.CustomerId.Value;
         }
 
-        return orders.Select(order => new OrderDto(
+        if (!string.IsNullOrWhiteSpace(request.Status) && Enum.TryParse<ERP.Domain.Enums.OrderStatus>(request.Status, true, out var statusEnum))
+        {
+            var existingFilter = options.Filter;
+            options.Filter = o => (existingFilter == null || existingFilter.Compile()(o)) && o.Status == statusEnum;
+        }
+
+        if (!string.IsNullOrWhiteSpace(request.Search))
+        {
+            var search = request.Search.Trim().ToLower();
+            var existingFilter = options.Filter;
+            options.Filter = o => (existingFilter == null || existingFilter.Compile()(o)) &&
+                                  ((o.Customer != null && o.Customer.Name.ToLower().Contains(search)) ||
+                                   o.ShippingAddress.ToLower().Contains(search));
+        }
+
+        var pagedOrders = await _orderRepository.GetPagedAsync(options, request.Page, request.PageSize);
+
+        return pagedOrders.Map(order => new OrderDto(
             order.Id,
             order.CustomerId,
             order.Customer?.Name ?? string.Empty,
@@ -42,7 +54,7 @@ public sealed class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, IEnu
             order.PaymentMethod.ToString(),
             order.ShippingAddress,
             order.TotalAmount,
-            new List<OrderLineDto>() // Return empty list for overview list queries to keep payload small
-        )).ToList();
+            new List<OrderLineDto>()
+        ));
     }
 }

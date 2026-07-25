@@ -1,5 +1,6 @@
 using ERP.Application.Abstractions;
 using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Common.Models;
 using ERP.Application.Features.Identity.Commands;
 using ERP.Application.Features.Identity.DTOs;
 using ERP.Application.Features.Identity.Queries;
@@ -8,14 +9,20 @@ using MediatR;
 
 namespace ERP.Application.Features.Identity.Handlers;
 
-public sealed class GetRolesQueryHandler(IRoleRepository roleRepository): IRequestHandler<GetRolesQuery, IReadOnlyList<RoleDto>>
+public sealed class GetRolesQueryHandler(IRoleRepository roleRepository) : IRequestHandler<GetRolesQuery, PagedResult<RoleDto>>
 {
-    public async Task<IReadOnlyList<RoleDto>> Handle(GetRolesQuery request, CancellationToken cancellationToken)
+    public async Task<PagedResult<RoleDto>> Handle(GetRolesQuery request, CancellationToken cancellationToken)
     {
-        var roles = await roleRepository.GetAllAsync();
-        return roles.OrderBy(role => role.Name)
-            .Select(role => new RoleDto(role.Id, role.Name, role.Permissions))
-            .ToList();
+        var options = new QueryOptions<Role>();
+
+        if (!string.IsNullOrWhiteSpace(request.Search))
+        {
+            var search = request.Search.Trim().ToLower();
+            options.Filter = r => r.Name.ToLower().Contains(search);
+        }
+
+        var pagedRoles = await roleRepository.GetPagedAsync(options, request.Page, request.PageSize);
+        return pagedRoles.Map(role => new RoleDto(role.Id, role.Name, role.Permissions));
     }
 }
 

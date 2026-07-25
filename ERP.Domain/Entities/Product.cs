@@ -1,10 +1,11 @@
+using ERP.Domain.Common;
 using ERP.Domain.Entities;
 using ERP.Domain.Entities.Orders;
 using ERP.Domain.Exceptions;
 
 namespace ERP.Domain.Entities;
 
-public class Product
+public class Product : ISoftDeletable
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
@@ -14,6 +15,9 @@ public class Product
     public decimal CostPrice { get; set; }
     public int StockQuantity { get; private set; }
     public int ReorderLevel { get; set; }
+    public bool IsDeleted { get; set; }
+    public DateTimeOffset? DeletedAt { get; set; }
+    public string? DeletedBy { get; set; }
 
     public Category? Category { get; set; }
     public ICollection<OrderLine> OrderLines { get; set; } = new List<OrderLine>();

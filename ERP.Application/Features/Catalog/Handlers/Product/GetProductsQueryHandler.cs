@@ -1,4 +1,5 @@
 using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Common.Models;
 using ERP.Application.Features.Catalog.DTOs;
 using ERP.Application.Features.Catalog.Queries;
 using ERP.Domain.Entities;
@@ -7,12 +8,28 @@ using MediatR;
 namespace ERP.Application.Features.Catalog.Handlers;
 
 public sealed class GetProductsQueryHandler(IProductRepository productRepository)
-    : IRequestHandler<GetProductsQuery, IReadOnlyList<ProductDto>>
+    : IRequestHandler<GetProductsQuery, PagedResult<ProductDto>>
 {
-    public async Task<IReadOnlyList<ProductDto>> Handle(GetProductsQuery request, CancellationToken cancellationToken)
+    public async Task<PagedResult<ProductDto>> Handle(GetProductsQuery request, CancellationToken cancellationToken)
     {
-        var products = await productRepository.GetAllWithCategoriesAsync(cancellationToken);
-        return products.Select(ToDto).ToList();
+        var options = new QueryOptions<Product>();
+        options.Includes.Add(p => p.Category);
+
+        if (request.CategoryId.HasValue)
+        {
+            options.Filter = p => p.CategoryId == request.CategoryId.Value;
+        }
+
+        if (!string.IsNullOrWhiteSpace(request.Search))
+        {
+            var search = request.Search.Trim().ToLower();
+            var existingFilter = options.Filter;
+            options.Filter = p => (existingFilter == null || existingFilter.Compile()(p)) &&
+                                  (p.Name.ToLower().Contains(search) || p.Sku.ToLower().Contains(search));
+        }
+
+        var pagedProducts = await productRepository.GetPagedAsync(options, request.Page, request.PageSize);
+        return pagedProducts.Map(ToDto);
     }
 
     private static ProductDto ToDto(Product product) => new(product.Id, product.Name, product.Sku,

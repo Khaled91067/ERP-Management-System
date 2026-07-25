@@ -24,9 +24,12 @@ public sealed class InvoicesController : ControllerBase
     public async Task<IActionResult> GetAll(
         [FromQuery] int? customerId,
         [FromQuery] string? status,
-        CancellationToken cancellationToken)
+        [FromQuery] string? search,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 20,
+        CancellationToken cancellationToken = default)
     {
-        var query = new GetInvoicesQuery(customerId, status);
+        var query = new GetInvoicesQuery(customerId, status, search, page, pageSize);
         var result = await _sender.Send(query, cancellationToken);
         return Ok(result);
     }

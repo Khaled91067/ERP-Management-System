@@ -1,15 +1,13 @@
 using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Common.Models;
 using ERP.Application.Features.Sales.Dtos;
 using ERP.Application.Features.Sales.Queries.Models;
+using ERP.Domain.Entities;
 using MediatR;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ERP.Application.Features.Sales.Handlers;
 
-public sealed class GetCustomersQueryHandler : IRequestHandler<GetCustomersQuery, IEnumerable<CustomerDto>>
+public sealed class GetCustomersQueryHandler : IRequestHandler<GetCustomersQuery, PagedResult<CustomerDto>>
 {
     private readonly ICustomerRepository _customerRepository;
 
@@ -18,24 +16,23 @@ public sealed class GetCustomersQueryHandler : IRequestHandler<GetCustomersQuery
         _customerRepository = customerRepository;
     }
 
-    public async Task<IEnumerable<CustomerDto>> Handle(GetCustomersQuery request, CancellationToken cancellationToken)
+    public async Task<PagedResult<CustomerDto>> Handle(GetCustomersQuery request, CancellationToken cancellationToken)
     {
-        var customers = await _customerRepository.GetAllAsync();
+        var options = new QueryOptions<Customer>();
 
-        // Apply Search Term filter in-memory if provided
-        if (!string.IsNullOrWhiteSpace(request.SearchTerm))
+        if (!string.IsNullOrWhiteSpace(request.Search))
         {
-            var search = request.SearchTerm.ToLower();
-            customers = customers.Where(x => 
-                x.Name.ToLower().Contains(search) ||
-                x.Email.ToLower().Contains(search) ||
-                x.Phone.ToLower().Contains(search) ||
-                x.TaxId.ToLower().Contains(search) ||
-                x.City.ToLower().Contains(search)
-            ).ToList();
+            var search = request.Search.Trim().ToLower();
+            options.Filter = x => x.Name.ToLower().Contains(search) ||
+                                  x.Email.ToLower().Contains(search) ||
+                                  x.Phone.ToLower().Contains(search) ||
+                                  x.TaxId.ToLower().Contains(search) ||
+                                  x.City.ToLower().Contains(search);
         }
 
-        return customers.Select(customer => new CustomerDto(
+        var pagedCustomers = await _customerRepository.GetPagedAsync(options, request.Page, request.PageSize);
+
+        return pagedCustomers.Map(customer => new CustomerDto(
             customer.Id,
             customer.Name,
             customer.Email,
@@ -43,6 +40,6 @@ public sealed class GetCustomersQueryHandler : IRequestHandler<GetCustomersQuery
             customer.Address,
             customer.City,
             customer.Country,
-            customer.TaxId)).ToList();
+            customer.TaxId));
     }
 }

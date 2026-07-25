@@ -1,3 +1,4 @@
+using ERP.Domain.Common;
 using ERP.Domain.Enums;
 using ERP.Domain.Exceptions;
 using System;
@@ -5,7 +6,7 @@ using System.Collections.ObjectModel;
 
 namespace ERP.Domain.Entities.Orders;
 
-public class Order
+public class Order : ISoftDeletable
 {
     private readonly List<OrderLine> _orderLines = new();
 
@@ -16,6 +17,9 @@ public class Order
     public PaymentMethod PaymentMethod { get; private set; }
     public string ShippingAddress { get; private set; } = string.Empty;
     public decimal TotalAmount { get; private set; }
+    public bool IsDeleted { get; set; }
+    public DateTimeOffset? DeletedAt { get; set; }
+    public string? DeletedBy { get; set; }
 
     public Customer? Customer { get; private set; }
 
