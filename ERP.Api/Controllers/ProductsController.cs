@@ -12,8 +12,13 @@ namespace ERP.Api.Controllers;
 public sealed class ProductsController(ISender sender) : ControllerBase
 {
     [HttpGet]
-    public async Task<IActionResult> GetAll(CancellationToken cancellationToken) =>
-        Ok(await sender.Send(new GetProductsQuery(), cancellationToken));
+    public async Task<IActionResult> GetAll(
+        [FromQuery] int? categoryId,
+        [FromQuery] string? search,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 20,
+        CancellationToken cancellationToken = default) =>
+        Ok(await sender.Send(new GetProductsQuery(categoryId, search, page, pageSize), cancellationToken));
 
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)

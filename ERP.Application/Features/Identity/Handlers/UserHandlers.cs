@@ -1,6 +1,7 @@
 using ERP.Application.Abstractions;
 using ERP.Application.Abstractions.Authentication;
 using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Common.Models;
 using ERP.Application.Features.Identity.Commands;
 using ERP.Application.Features.Identity.DTOs;
 using ERP.Application.Features.Identity.Queries;
@@ -10,12 +11,23 @@ using MediatR;
 namespace ERP.Application.Features.Identity.Handlers;
 
 public sealed class GetUsersQueryHandler(IUserRepository userRepository)
-    : IRequestHandler<GetUsersQuery, IReadOnlyList<UserDto>>
+    : IRequestHandler<GetUsersQuery, PagedResult<UserDto>>
 {
-    public async Task<IReadOnlyList<UserDto>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
+    public async Task<PagedResult<UserDto>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
     {
-        var users = await userRepository.GetAllWithRolesAsync(cancellationToken);
-        return users.Select(ToDto).ToList();
+        var options = new QueryOptions<User>();
+        options.Includes.Add(u => u.Role);
+
+        if (!string.IsNullOrWhiteSpace(request.Search))
+        {
+            var search = request.Search.Trim().ToLower();
+            options.Filter = u => u.FirstName.ToLower().Contains(search) ||
+                                  u.LastName.ToLower().Contains(search) ||
+                                  u.Email.ToLower().Contains(search);
+        }
+
+        var pagedUsers = await userRepository.GetPagedAsync(options, request.Page, request.PageSize);
+        return pagedUsers.Map(ToDto);
     }
 
     private static UserDto ToDto(User user) => new(user.Id, user.FirstName, user.LastName, user.Email,

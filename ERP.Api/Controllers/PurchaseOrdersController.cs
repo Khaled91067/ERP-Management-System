@@ -22,9 +22,12 @@ public sealed class PurchaseOrdersController : ControllerBase
     public async Task<IActionResult> GetAll(
         [FromQuery] int? supplierId,
         [FromQuery] string? status,
-        CancellationToken cancellationToken)
+        [FromQuery] string? search,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 20,
+        CancellationToken cancellationToken = default)
     {
-        var query = new GetPurchaseOrdersQuery(supplierId, status);
+        var query = new GetPurchaseOrdersQuery(supplierId, status, search, page, pageSize);
         var result = await _sender.Send(query, cancellationToken);
         return Ok(result);
     }

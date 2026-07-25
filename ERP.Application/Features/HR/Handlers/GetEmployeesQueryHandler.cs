@@ -1,15 +1,14 @@
 using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Common.Models;
 using ERP.Application.Features.HR.Dtos;
 using ERP.Application.Features.HR.Queries.Models;
+using ERP.Domain.Entities;
 using MediatR;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace ERP.Application.Features.HR.Handlers;
 
-public sealed class GetEmployeesQueryHandler : IRequestHandler<GetEmployeesQuery, IEnumerable<EmployeeDto>>
+public sealed class GetEmployeesQueryHandler : IRequestHandler<GetEmployeesQuery, PagedResult<EmployeeDto>>
 {
     private readonly IEmployeeRepository _employeeRepository;
 
@@ -18,23 +17,30 @@ public sealed class GetEmployeesQueryHandler : IRequestHandler<GetEmployeesQuery
         _employeeRepository = employeeRepository;
     }
 
-    public async Task<IEnumerable<EmployeeDto>> Handle(GetEmployeesQuery request, CancellationToken cancellationToken)
+    public async Task<PagedResult<EmployeeDto>> Handle(GetEmployeesQuery request, CancellationToken cancellationToken)
     {
-        var employees = await _employeeRepository.GetEmployeesWithDepartmentAsync(request.DepartmentId, cancellationToken);
+        var options = new QueryOptions<Employee>();
+        options.Includes.Add(e => e.Department);
 
-        // Apply Search Term filter in-memory if provided
-        if (!string.IsNullOrWhiteSpace(request.SearchTerm))
+        if (request.DepartmentId.HasValue)
         {
-            var search = request.SearchTerm.ToLower();
-            employees = employees.Where(x => 
-                x.FirstName.ToLower().Contains(search) ||
-                x.LastName.ToLower().Contains(search) ||
-                x.Email.ToLower().Contains(search) ||
-                x.Position.ToLower().Contains(search)
-            ).ToList();
+            options.Filter = e => e.DepartmentId == request.DepartmentId.Value;
         }
 
-        return employees.Select(employee => new EmployeeDto(
+        if (!string.IsNullOrWhiteSpace(request.Search))
+        {
+            var search = request.Search.Trim().ToLower();
+            var existingFilter = options.Filter;
+            options.Filter = e => (existingFilter == null || existingFilter.Compile()(e)) &&
+                                  (e.FirstName.ToLower().Contains(search) ||
+                                   e.LastName.ToLower().Contains(search) ||
+                                   e.Email.ToLower().Contains(search) ||
+                                   e.Position.ToLower().Contains(search));
+        }
+
+        var pagedEmployees = await _employeeRepository.GetPagedAsync(options, request.Page, request.PageSize);
+
+        return pagedEmployees.Map(employee => new EmployeeDto(
             employee.Id,
             employee.FirstName,
             employee.LastName,
@@ -44,6 +50,6 @@ public sealed class GetEmployeesQueryHandler : IRequestHandler<GetEmployeesQuery
             employee.Department?.Name ?? string.Empty,
             employee.Position,
             employee.HireDate,
-            employee.Salary)).ToList();
+            employee.Salary));
     }
 }

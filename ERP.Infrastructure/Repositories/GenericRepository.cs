@@ -53,6 +53,37 @@ namespace ERP.Infrastructure.Repositories
             return await query.ToListAsync();
         }
 
+        public async Task<ERP.Application.Common.Models.PagedResult<T>> GetPagedAsync(QueryOptions<T>? options = null, int page = 1, int pageSize = 20)
+        {
+            IQueryable<T> query = _dbSet;
+
+            if (options != null)
+            {
+                if (options.IncludeDeleted)
+                {
+                    query = query.IgnoreQueryFilters();
+                }
+
+                if (options.Filter != null)
+                {
+                    query = query.Where(options.Filter);
+                }
+
+                foreach (var include in options.Includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+
+            var totalCount = await query.CountAsync();
+            var items = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return new ERP.Application.Common.Models.PagedResult<T>(items, totalCount, page, pageSize);
+        }
+
         public async Task<T?> GetByIdAsync(int id)
         {
             return await _dbSet.FindAsync(id);

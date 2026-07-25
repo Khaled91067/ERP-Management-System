@@ -1,11 +1,14 @@
 using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Common.Models;
 using ERP.Application.Features.Suppliers.DTOs;
 using ERP.Application.Features.Suppliers.Queries;
+using ERP.Domain.Entities;
 using MediatR;
+using System.Collections.Generic;
 
 namespace ERP.Application.Features.Suppliers.Handlers;
 
-public sealed class GetSuppliersQueryHandler : IRequestHandler<GetSuppliersQuery, IEnumerable<SupplierDto>>
+public sealed class GetSuppliersQueryHandler : IRequestHandler<GetSuppliersQuery, PagedResult<SupplierDto>>
 {
     private readonly ISupplierRepository _supplierRepository;
 
@@ -14,22 +17,22 @@ public sealed class GetSuppliersQueryHandler : IRequestHandler<GetSuppliersQuery
         _supplierRepository = supplierRepository;
     }
 
-    public async Task<IEnumerable<SupplierDto>> Handle(GetSuppliersQuery request, CancellationToken cancellationToken)
+    public async Task<PagedResult<SupplierDto>> Handle(GetSuppliersQuery request, CancellationToken cancellationToken)
     {
-        var options = new QueryOptions<Domain.Entities.Supplier>();
+        var options = new QueryOptions<Supplier>();
 
-        if (!string.IsNullOrWhiteSpace(request.SearchTerm))
+        if (!string.IsNullOrWhiteSpace(request.Search))
         {
-            var term = request.SearchTerm.Trim().ToLower();
+            var term = request.Search.Trim().ToLower();
             options.Filter = s =>
                 s.CompanyName.ToLower().Contains(term) ||
                 s.ContactName.ToLower().Contains(term) ||
                 s.Email.ToLower().Contains(term);
         }
 
-        var suppliers = await _supplierRepository.GetAllAsync(options);
+        var pagedSuppliers = await _supplierRepository.GetPagedAsync(options, request.Page, request.PageSize);
 
-        return suppliers.Select(s => new SupplierDto(
+        return pagedSuppliers.Map(s => new SupplierDto(
             s.Id,
             s.CompanyName,
             s.ContactName,
