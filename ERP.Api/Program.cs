@@ -8,6 +8,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using System.Text;
 
+using Serilog;
+
 namespace ERP.Api
 {
     public class Program
@@ -15,6 +17,9 @@ namespace ERP.Api
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Host.UseSerilog((context, configuration) =>
+                configuration.ReadFrom.Configuration(context.Configuration));
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(options =>
@@ -48,6 +53,8 @@ namespace ERP.Api
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             var app = builder.Build();
+
+            app.UseSerilogRequestLogging();
 
             app.UseMiddleware<ExceptionHandlingMiddleware>();
 

@@ -1,4 +1,4 @@
-﻿using ERP.Application.Common.Exceptions;
+using ERP.Application.Common.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ERP.Api.Middleware;
@@ -15,7 +15,12 @@ public sealed class ExceptionHandlingMiddleware(
         }
         catch (Exception exception)
         {
-            logger.LogError(exception, "An unhandled exception occurred.");
+            logger.LogError(
+                exception, 
+                "An unhandled exception occurred while processing the request {RequestMethod} {RequestPath}. TraceId: {TraceId}", 
+                context.Request.Method, 
+                context.Request.Path,
+                context.TraceIdentifier);
 
             await HandleExceptionAsync(context, exception);
         }
