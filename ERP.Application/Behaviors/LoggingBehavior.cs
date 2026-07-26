@@ -30,10 +30,10 @@ public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
             
             return response;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             timer.Stop();
-            _logger.LogError(ex, "Request: {RequestName} failed after {ElapsedMilliseconds}ms", requestName, timer.ElapsedMilliseconds);
+            _logger.LogWarning("Request: {RequestName} failed after {ElapsedMilliseconds}ms", requestName, timer.ElapsedMilliseconds);
             throw;
         }
     }

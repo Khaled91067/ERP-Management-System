@@ -32,7 +32,7 @@ public sealed class UpdateEmployeeCommandHandler : IRequestHandler<UpdateEmploye
 
         var department = await _departmentRepository.GetByIdAsync(request.DepartmentId);
         if (department is null)
-            throw new DomainException($"Department with ID {request.DepartmentId} was not found.");
+            throw new NotFoundException("Department", request.DepartmentId);
 
         employee.FirstName = request.FirstName.Trim();
         employee.LastName = request.LastName.Trim();

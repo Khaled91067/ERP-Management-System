@@ -1,4 +1,4 @@
-using ERP.Api.Middleware;
+using ERP.Api.Infrastructure;
 using ERP.Application;
 using ERP.Infrastructure;
 using ERP.Infrastructure.Authentication;
@@ -50,13 +50,16 @@ namespace ERP.Api
 
             builder.Services.AddApplication();
 
+            builder.Services.AddProblemDetails();
+            builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             var app = builder.Build();
 
             app.UseSerilogRequestLogging();
 
-            app.UseMiddleware<ExceptionHandlingMiddleware>();
+            app.UseExceptionHandler();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

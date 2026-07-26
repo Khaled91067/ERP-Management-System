@@ -31,7 +31,7 @@ public sealed class DeleteDepartmentCommandHandler : IRequestHandler<DeleteDepar
         // Verify if department is empty before allowing deletion
         if (department.Employees.Any())
         {
-            throw new DomainException($"Cannot delete department '{department.Name}' because it has active employees.");
+            throw new BusinessRuleValidationException($"Cannot delete department '{department.Name}' because it has active employees.");
         }
 
         _departmentRepository.Delete(department);

@@ -30,7 +30,7 @@ public class Product : ISoftDeletable, IAuditable
     public void IncreaseStock(int quantity)
     {
         if (quantity <= 0)
-            throw new DomainException(
+            throw new BusinessRuleValidationException(
                 "Stock increase quantity must be greater than zero.");
 
         StockQuantity += quantity;
@@ -39,11 +39,11 @@ public class Product : ISoftDeletable, IAuditable
     public void DecreaseStock(int quantity)
     {
         if (quantity <= 0)
-            throw new DomainException(
+            throw new BusinessRuleValidationException(
                 "Stock decrease quantity must be greater than zero.");
 
         if (StockQuantity < quantity)
-            throw new DomainException(
+            throw new BusinessRuleValidationException(
                 $"Insufficient stock for product {Name}. Available: {StockQuantity}, Requested: {quantity}");
 
         StockQuantity -= quantity;

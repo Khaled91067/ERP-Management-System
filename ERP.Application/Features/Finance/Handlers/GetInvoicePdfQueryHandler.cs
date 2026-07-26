@@ -20,7 +20,7 @@ public sealed class GetInvoicePdfQueryHandler : IRequestHandler<GetInvoicePdfQue
         var invoice = await _invoiceRepository.GetByIdWithLinesAsync(request.Id, cancellationToken);
 
         if (invoice is null)
-            throw new DomainException($"Invoice with ID {request.Id} was not found.");
+            throw new NotFoundException("Invoice", request.Id);
 
         // In a real application, you would use a library like iText7, DinkToPdf, or QuestPDF to generate a PDF.
         // For this example, we're returning a dummy text file encoded as bytes.

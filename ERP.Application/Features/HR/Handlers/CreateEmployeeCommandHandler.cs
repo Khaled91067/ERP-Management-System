@@ -29,7 +29,7 @@ public sealed class CreateEmployeeCommandHandler : IRequestHandler<CreateEmploye
     {
         var department = await _departmentRepository.GetByIdAsync(request.DepartmentId);
         if (department is null)
-            throw new DomainException($"Department with ID {request.DepartmentId} was not found.");
+            throw new NotFoundException("Department", request.DepartmentId);
 
         var employee = new Employee
         {

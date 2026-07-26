@@ -38,11 +38,11 @@ public class PurchaseOrder : AggregateRoot, ISoftDeletable, IAuditable
         var orderDate = DateTime.UtcNow;
 
         if (supplierId <= 0)
-            throw new DomainException(
+            throw new BusinessRuleValidationException(
                 "Supplier id must be valid.");
 
         if (expectedDelivery < orderDate)
-            throw new DomainException(
+            throw new BusinessRuleValidationException(
                 "Expected delivery cannot be before order date.");
 
         SupplierId = supplierId;
@@ -60,7 +60,7 @@ public class PurchaseOrder : AggregateRoot, ISoftDeletable, IAuditable
         EnsureDraft();
 
         if (_purchaseLines.Any(x => x.ProductId == productId))
-            throw new DomainException(
+            throw new ConflictException(
                 "Product already exists in this purchase order.");
 
         var line = new PurchaseLine(
@@ -114,7 +114,7 @@ public class PurchaseOrder : AggregateRoot, ISoftDeletable, IAuditable
     {
         return _purchaseLines.SingleOrDefault(
                    x => x.ProductId == productId)
-               ?? throw new DomainException(
+               ?? throw new NotFoundException(
                    "Purchase line was not found.");
     }
 
@@ -127,18 +127,18 @@ public class PurchaseOrder : AggregateRoot, ISoftDeletable, IAuditable
     private void EnsureDraft()
     {
         if (Status != PurchaseOrderStatus.Draft)
-            throw new DomainException(
+            throw new BusinessRuleValidationException(
                 "Only draft purchase orders can be modified.");
     }
 
     public void Submit()
     {
         if (Status != PurchaseOrderStatus.Draft)
-            throw new DomainException(
+            throw new BusinessRuleValidationException(
                 "Only draft purchase orders can be submitted.");
 
         if (_purchaseLines.Count == 0)
-            throw new DomainException(
+            throw new BusinessRuleValidationException(
                 "Cannot submit an empty purchase order.");
 
         Status = PurchaseOrderStatus.Submitted;
@@ -147,11 +147,11 @@ public class PurchaseOrder : AggregateRoot, ISoftDeletable, IAuditable
     public void Approve()
     {
         if (Status != PurchaseOrderStatus.Draft)
-            throw new DomainException(
+            throw new BusinessRuleValidationException(
                 "Only draft purchase orders can be approved.");
 
         if (_purchaseLines.Count == 0)
-            throw new DomainException(
+            throw new BusinessRuleValidationException(
                 "Cannot approve an empty purchase order.");
 
         Status = PurchaseOrderStatus.Approved;
@@ -160,7 +160,7 @@ public class PurchaseOrder : AggregateRoot, ISoftDeletable, IAuditable
     public void Receive()
     {
         if (Status != PurchaseOrderStatus.Approved)
-            throw new DomainException(
+            throw new BusinessRuleValidationException(
                 "Only approved purchase orders can be received.");
 
         Status = PurchaseOrderStatus.Received;
@@ -171,11 +171,11 @@ public class PurchaseOrder : AggregateRoot, ISoftDeletable, IAuditable
     public void Cancel()
     {
         if (Status == PurchaseOrderStatus.Received)
-            throw new DomainException(
+            throw new BusinessRuleValidationException(
                 "Received purchase orders cannot be cancelled.");
 
         if (Status == PurchaseOrderStatus.Cancelled)
-            throw new DomainException(
+            throw new BusinessRuleValidationException(
                 "Purchase order is already cancelled.");
 
         Status = PurchaseOrderStatus.Cancelled;

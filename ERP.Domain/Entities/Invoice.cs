@@ -37,13 +37,13 @@ public class Invoice : ISoftDeletable, IAuditable
     public Invoice(int orderId, int customerId, DateTime dueDate)
     {
         if (orderId <= 0)
-            throw new DomainException("Order ID must be valid.");
+            throw new BusinessRuleValidationException("Order ID must be valid.");
 
         if (customerId <= 0)
-            throw new DomainException("Customer ID must be valid.");
+            throw new BusinessRuleValidationException("Customer ID must be valid.");
 
         if (dueDate < DateTime.UtcNow.Date)
-            throw new DomainException("Due date cannot be in the past.");
+            throw new BusinessRuleValidationException("Due date cannot be in the past.");
 
         OrderId = orderId;
         CustomerId = customerId;
@@ -56,7 +56,7 @@ public class Invoice : ISoftDeletable, IAuditable
     public void AddLine(string description, int quantity, decimal unitPrice, decimal taxRate = 0)
     {
         if (Status != InvoiceStatus.Draft)
-            throw new DomainException("Lines can only be added to draft invoices.");
+            throw new BusinessRuleValidationException("Lines can only be added to draft invoices.");
 
         var line = new InvoiceLine(description, quantity, unitPrice, taxRate);
         _invoiceLines.Add(line);
@@ -73,10 +73,10 @@ public class Invoice : ISoftDeletable, IAuditable
     public void Send()
     {
         if (Status != InvoiceStatus.Draft)
-            throw new DomainException("Only draft invoices can be sent.");
+            throw new BusinessRuleValidationException("Only draft invoices can be sent.");
 
         if (_invoiceLines.Count == 0)
-            throw new DomainException("Cannot send an empty invoice.");
+            throw new BusinessRuleValidationException("Cannot send an empty invoice.");
 
         Status = InvoiceStatus.Sent;
     }
@@ -84,7 +84,7 @@ public class Invoice : ISoftDeletable, IAuditable
     public void Pay()
     {
         if (Status != InvoiceStatus.Sent)
-            throw new DomainException("Only sent invoices can be marked as paid.");
+            throw new BusinessRuleValidationException("Only sent invoices can be marked as paid.");
 
         Status = InvoiceStatus.Paid;
         PaidAt = DateTime.UtcNow;
@@ -93,10 +93,10 @@ public class Invoice : ISoftDeletable, IAuditable
     public void Cancel()
     {
         if (Status == InvoiceStatus.Paid)
-            throw new DomainException("Paid invoices cannot be cancelled.");
+            throw new BusinessRuleValidationException("Paid invoices cannot be cancelled.");
 
         if (Status == InvoiceStatus.Cancelled)
-            throw new DomainException("Invoice is already cancelled.");
+            throw new BusinessRuleValidationException("Invoice is already cancelled.");
 
         Status = InvoiceStatus.Cancelled;
     }

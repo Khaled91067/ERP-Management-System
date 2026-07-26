@@ -41,7 +41,7 @@ public sealed class UpdateOrderStatusCommandHandler : IRequestHandler<UpdateOrde
                 order.Cancel();
                 break;
             default:
-                throw new DomainException($"Unsupported status transition to {request.Status}");
+                throw new BusinessRuleValidationException($"Unsupported status transition to {request.Status}");
         }
 
         _orderRepository.Update(order);

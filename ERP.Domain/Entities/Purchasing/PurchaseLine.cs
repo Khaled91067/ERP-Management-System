@@ -21,15 +21,15 @@ public class PurchaseLine
         decimal unitCost)
     {
         if (productId <= 0)
-            throw new DomainException(
+            throw new BusinessRuleValidationException(
                 "Product id must be valid.");
 
         if (quantity <= 0)
-            throw new DomainException(
+            throw new BusinessRuleValidationException(
                 "Quantity must be greater than zero.");
 
         if (unitCost < 0)
-            throw new DomainException(
+            throw new BusinessRuleValidationException(
                 "Unit cost cannot be negative.");
 
         ProductId = productId;
@@ -40,7 +40,7 @@ public class PurchaseLine
     internal void ChangeQuantity(int quantity)
     {
         if (quantity <= 0)
-            throw new DomainException(
+            throw new BusinessRuleValidationException(
                 "Quantity must be greater than zero.");
 
         Quantity = quantity;
@@ -49,7 +49,7 @@ public class PurchaseLine
     internal void ChangeUnitCost(decimal unitCost)
     {
         if (unitCost < 0)
-            throw new DomainException(
+            throw new BusinessRuleValidationException(
                 "Unit cost cannot be negative.");
 
         UnitCost = unitCost;

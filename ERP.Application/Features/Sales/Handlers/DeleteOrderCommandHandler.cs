@@ -28,7 +28,7 @@ public sealed class DeleteOrderCommandHandler : IRequestHandler<DeleteOrderComma
             return false;
 
         if (order.Status != OrderStatus.Pending)
-            throw new DomainException("Only pending orders can be deleted.");
+            throw new BusinessRuleValidationException("Only pending orders can be deleted.");
 
         order.Cancel();
         await _unitOfWork.SaveChangesAsync(cancellationToken);

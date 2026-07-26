@@ -31,7 +31,7 @@ public sealed class DeleteCustomerCommandHandler : IRequestHandler<DeleteCustome
         // Check if customer has orders or invoices
         if (customer.Orders.Any() || customer.Invoices.Any())
         {
-            throw new DomainException($"Cannot delete customer '{customer.Name}' because they have associated orders or invoices.");
+            throw new BusinessRuleValidationException($"Cannot delete customer '{customer.Name}' because they have associated orders or invoices.");
         }
 
         _customerRepository.Delete(customer);

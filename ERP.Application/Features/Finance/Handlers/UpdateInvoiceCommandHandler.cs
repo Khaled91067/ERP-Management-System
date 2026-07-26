@@ -28,7 +28,7 @@ public sealed class UpdateInvoiceCommandHandler : IRequestHandler<UpdateInvoiceC
             return false;
 
         if (invoice.Status != InvoiceStatus.Draft)
-            throw new DomainException("Only draft invoices can be updated.");
+            throw new BusinessRuleValidationException("Only draft invoices can be updated.");
 
         // DueDate is private set in domain, so we track the entity as modified
         _invoiceRepository.Update(invoice);

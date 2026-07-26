@@ -29,7 +29,7 @@ public sealed class DeleteInvoiceCommandHandler : IRequestHandler<DeleteInvoiceC
             return false;
 
         if (invoice.Status == InvoiceStatus.Paid)
-            throw new DomainException("Paid invoices cannot be deleted.");
+            throw new BusinessRuleValidationException("Paid invoices cannot be deleted.");
 
         _invoiceRepository.Delete(invoice);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

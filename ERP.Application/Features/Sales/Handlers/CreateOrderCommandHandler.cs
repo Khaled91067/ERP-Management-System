@@ -35,7 +35,7 @@ public sealed class CreateOrderCommandHandler : IRequestHandler<CreateOrderComma
     {
         var customer = await _customerRepository.GetByIdAsync(request.CustomerId);
         if (customer is null)
-            throw new DomainException($"Customer with ID {request.CustomerId} was not found.");
+            throw new NotFoundException("Customer", request.CustomerId);
 
         var order = new Order(
             request.CustomerId,
@@ -46,7 +46,7 @@ public sealed class CreateOrderCommandHandler : IRequestHandler<CreateOrderComma
         {
             var product = await _productRepository.GetByIdAsync(line.ProductId);
             if (product is null)
-                throw new DomainException($"Product with ID {line.ProductId} was not found.");
+                throw new NotFoundException("Product", line.ProductId);
 
             // Deduct stock
             product.DecreaseStock(line.Quantity);

@@ -31,10 +31,10 @@ public sealed class GenerateInvoiceCommandHandler : IRequestHandler<GenerateInvo
     {
         var order = await _orderRepository.GetByIdWithLinesAsync(request.OrderId, cancellationToken);
         if (order is null)
-            throw new DomainException($"Order with ID {request.OrderId} was not found.");
+            throw new NotFoundException("Order", request.OrderId);
 
         if (order.Status == OrderStatus.Cancelled)
-            throw new DomainException("Cannot generate an invoice for a cancelled order.");
+            throw new BusinessRuleValidationException("Cannot generate an invoice for a cancelled order.");
 
         // Create the Invoice aggregate
         var invoice = new Invoice(

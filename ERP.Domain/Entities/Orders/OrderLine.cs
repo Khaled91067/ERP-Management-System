@@ -25,16 +25,16 @@ public class OrderLine
         decimal discountPercentage = 0)
     {
         if (productId <= 0)
-            throw new DomainException("Product id must be valid.");
+            throw new BusinessRuleValidationException("Product id must be valid.");
 
         if (quantity <= 0)
-            throw new DomainException("Quantity must be greater than zero.");
+            throw new BusinessRuleValidationException("Quantity must be greater than zero.");
 
         if (unitPrice < 0)
-            throw new DomainException("Unit price cannot be negative.");
+            throw new BusinessRuleValidationException("Unit price cannot be negative.");
 
         if (discountPercentage < 0 || discountPercentage > 100)
-            throw new DomainException(
+            throw new BusinessRuleValidationException(
                 "Discount percentage must be between 0 and 100.");
 
         ProductId = productId;

@@ -32,7 +32,7 @@ public sealed class CreateDepartmentCommandHandler : IRequestHandler<CreateDepar
 
         var existing = await _departmentRepository.GetAllAsync(options);
         if (existing.Any())
-            throw new DomainException($"Department with name '{request.Name}' already exists.");
+            throw new ConflictException($"Department with name '{request.Name}' already exists.");
 
         var department = new Department
         {

@@ -41,10 +41,10 @@ public class Order : ISoftDeletable, IAuditable
         string shippingAddress)
     {
         if (customerId <= 0)
-            throw new DomainException("Customer id must be valid.");
+            throw new BusinessRuleValidationException("Customer id must be valid.");
 
         if (string.IsNullOrWhiteSpace(shippingAddress))
-            throw new DomainException("Shipping address is required.");
+            throw new BusinessRuleValidationException("Shipping address is required.");
 
         CustomerId = customerId;
         PaymentMethod = paymentMethod;
@@ -64,7 +64,7 @@ public class Order : ISoftDeletable, IAuditable
         EnsurePending();
 
         if (_orderLines.Any(x => x.ProductId == productId))
-            throw new DomainException("Product already exists in this order.");
+            throw new ConflictException("Product already exists in this order.");
 
         var line = new OrderLine(
             productId,
@@ -82,7 +82,7 @@ public class Order : ISoftDeletable, IAuditable
         EnsurePending();
 
         var line = _orderLines.SingleOrDefault(x => x.ProductId == productId)
-                   ?? throw new DomainException("Order line was not found.");
+                   ?? throw new NotFoundException("Order line was not found.");
 
         _orderLines.Remove(line);
 
@@ -98,16 +98,16 @@ public class Order : ISoftDeletable, IAuditable
     private void EnsurePending()
     {
         if (Status != OrderStatus.Pending)
-            throw new DomainException("Only pending orders can be modified.");
+            throw new BusinessRuleValidationException("Only pending orders can be modified.");
     }
 
     public void Ship()
     {
         if (Status != OrderStatus.Pending)
-            throw new DomainException("Only pending orders can be shipped.");
+            throw new BusinessRuleValidationException("Only pending orders can be shipped.");
 
         if (_orderLines.Count == 0)
-            throw new DomainException("Cannot ship an empty order.");
+            throw new BusinessRuleValidationException("Cannot ship an empty order.");
 
         Status = OrderStatus.Shipped;
     }
@@ -115,7 +115,7 @@ public class Order : ISoftDeletable, IAuditable
     public void Deliver()
     {
         if (Status != OrderStatus.Shipped)
-            throw new DomainException("Only shipped orders can be delivered.");
+            throw new BusinessRuleValidationException("Only shipped orders can be delivered.");
 
         Status = OrderStatus.Delivered;
     }
@@ -123,10 +123,10 @@ public class Order : ISoftDeletable, IAuditable
     public void Cancel()
     {
         if (Status == OrderStatus.Delivered)
-            throw new DomainException("Delivered orders cannot be cancelled.");
+            throw new BusinessRuleValidationException("Delivered orders cannot be cancelled.");
 
         if (Status == OrderStatus.Cancelled)
-            throw new DomainException("Order is already cancelled.");
+            throw new BusinessRuleValidationException("Order is already cancelled.");
 
         Status = OrderStatus.Cancelled;
     }

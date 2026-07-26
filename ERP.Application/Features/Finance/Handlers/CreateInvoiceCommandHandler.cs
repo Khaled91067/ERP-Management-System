@@ -27,10 +27,10 @@ public sealed class CreateInvoiceCommandHandler : IRequestHandler<CreateInvoiceC
     {
         var customer = await _customerRepository.GetByIdAsync(request.CustomerId);
         if (customer is null)
-            throw new DomainException($"Customer with ID {request.CustomerId} was not found.");
+            throw new NotFoundException("Customer", request.CustomerId);
 
         if (request.Lines is null || request.Lines.Count == 0)
-            throw new DomainException("Invoice must have at least one line item.");
+            throw new BusinessRuleValidationException("Invoice must have at least one line item.");
 
         // For manual invoices not linked to an order, we create a placeholder order reference
         var invoice = new Invoice(

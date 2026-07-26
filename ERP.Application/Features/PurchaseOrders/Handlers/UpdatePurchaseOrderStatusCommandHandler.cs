@@ -28,7 +28,7 @@ public sealed class UpdatePurchaseOrderStatusCommandHandler : IRequestHandler<Up
             return false;
 
         if (!Enum.TryParse<PurchaseOrderStatus>(request.Status, true, out var newStatus))
-            throw new DomainException($"Invalid status: {request.Status}. Valid values: Draft, Submitted, Approved, Received, Cancelled.");
+            throw new BusinessRuleValidationException($"Invalid status: {request.Status}. Valid values: Draft, Submitted, Approved, Received, Cancelled.");
 
         switch (newStatus)
         {
@@ -45,7 +45,7 @@ public sealed class UpdatePurchaseOrderStatusCommandHandler : IRequestHandler<Up
                 purchaseOrder.Cancel();
                 break;
             default:
-                throw new DomainException($"Cannot transition to status: {newStatus}");
+                throw new BusinessRuleValidationException($"Cannot transition to status: {newStatus}");
         }
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);

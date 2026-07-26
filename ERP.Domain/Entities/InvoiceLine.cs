@@ -18,16 +18,16 @@ public class InvoiceLine
     internal InvoiceLine(string description, int quantity, decimal unitPrice, decimal taxRate = 0)
     {
         if (string.IsNullOrWhiteSpace(description))
-            throw new DomainException("Invoice line description is required.");
+            throw new BusinessRuleValidationException("Invoice line description is required.");
 
         if (quantity <= 0)
-            throw new DomainException("Quantity must be greater than zero.");
+            throw new BusinessRuleValidationException("Quantity must be greater than zero.");
 
         if (unitPrice < 0)
-            throw new DomainException("Unit price cannot be negative.");
+            throw new BusinessRuleValidationException("Unit price cannot be negative.");
 
         if (taxRate < 0 || taxRate > 100)
-            throw new DomainException("Tax rate must be between 0 and 100.");
+            throw new BusinessRuleValidationException("Tax rate must be between 0 and 100.");
 
         Description = description.Trim();
         Quantity = quantity;
