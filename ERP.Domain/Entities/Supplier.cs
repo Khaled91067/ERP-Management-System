@@ -2,7 +2,7 @@ using ERP.Domain.Common;
 
 namespace ERP.Domain.Entities;
 
-public class Supplier : ISoftDeletable
+public class Supplier : ISoftDeletable, IAuditable
 {
     public int Id { get; set; }
     public string CompanyName { get; set; } = string.Empty;
@@ -14,5 +14,9 @@ public class Supplier : ISoftDeletable
     public DateTimeOffset? DeletedAt { get; set; }
     public string? DeletedBy { get; set; }
 
+    public DateTimeOffset CreatedAt { get; set; }
+    public string? CreatedBy { get; set; }
+    public DateTimeOffset? LastModifiedAt { get; set; }
+    public string? LastModifiedBy { get; set; }
     public ICollection<PurchaseOrder> PurchaseOrders { get; set; } = new List<PurchaseOrder>();
 }

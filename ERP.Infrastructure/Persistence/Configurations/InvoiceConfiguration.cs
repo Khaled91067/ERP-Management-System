@@ -39,7 +39,7 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     Status = InvoiceStatus.Sent,
                     TotalAmount = 2004m,
                     PaidAt = (DateTime?)null,
-                    IsDeleted = false
+                    IsDeleted = false, CreatedAt = DateTimeOffset.Parse("2024-01-01T00:00:00Z"), CreatedBy = "System"
                 },
                 new
                 {
@@ -51,7 +51,7 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     Status = InvoiceStatus.Paid,
                     TotalAmount = 1100m,
                     PaidAt = new DateTime(2025, 6, 15),
-                    IsDeleted = false
+                    IsDeleted = false, CreatedAt = DateTimeOffset.Parse("2024-01-01T00:00:00Z"), CreatedBy = "System"
                 },
                 new
                 {
@@ -63,7 +63,7 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     Status = InvoiceStatus.Draft,
                     TotalAmount = 470m,
                     PaidAt = (DateTime?)null,
-                    IsDeleted = false
+                    IsDeleted = false, CreatedAt = DateTimeOffset.Parse("2024-01-01T00:00:00Z"), CreatedBy = "System"
                 });
         }
     }

@@ -8,7 +8,7 @@ using ERP.Domain.Exceptions;
 
 namespace ERP.Domain.Entities;
 
-public class Invoice : ISoftDeletable
+public class Invoice : ISoftDeletable, IAuditable
 {
     private readonly List<InvoiceLine> _invoiceLines = [];
 
@@ -24,6 +24,10 @@ public class Invoice : ISoftDeletable
     public DateTimeOffset? DeletedAt { get; set; }
     public string? DeletedBy { get; set; }
 
+    public DateTimeOffset CreatedAt { get; set; }
+    public string? CreatedBy { get; set; }
+    public DateTimeOffset? LastModifiedAt { get; set; }
+    public string? LastModifiedBy { get; set; }
     public Order? Order { get; private set; }
     public Customer? Customer { get; private set; }
     public IReadOnlyCollection<InvoiceLine> InvoiceLines => _invoiceLines.AsReadOnly();

@@ -43,7 +43,7 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     CostPrice = 620m,
                     StockQuantity = 18,
                     ReorderLevel = 5,
-                    IsDeleted = false
+                    IsDeleted = false, CreatedAt = DateTimeOffset.Parse("2024-01-01T00:00:00Z"), CreatedBy = "System"
                 },
                 new
                 {
@@ -55,7 +55,7 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     CostPrice = 145m,
                     StockQuantity = 30,
                     ReorderLevel = 10,
-                    IsDeleted = false
+                    IsDeleted = false, CreatedAt = DateTimeOffset.Parse("2024-01-01T00:00:00Z"), CreatedBy = "System"
                 },
                 new
                 {
@@ -67,7 +67,7 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     CostPrice = 210m,
                     StockQuantity = 14,
                     ReorderLevel = 6,
-                    IsDeleted = false
+                    IsDeleted = false, CreatedAt = DateTimeOffset.Parse("2024-01-01T00:00:00Z"), CreatedBy = "System"
                 },
                 new
                 {
@@ -79,7 +79,7 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     CostPrice = 110m,
                     StockQuantity = 40,
                     ReorderLevel = 12,
-                    IsDeleted = false
+                    IsDeleted = false, CreatedAt = DateTimeOffset.Parse("2024-01-01T00:00:00Z"), CreatedBy = "System"
                 },
                 new
                 {
@@ -91,7 +91,7 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     CostPrice = 18m,
                     StockQuantity = 150,
                     ReorderLevel = 50,
-                    IsDeleted = false
+                    IsDeleted = false, CreatedAt = DateTimeOffset.Parse("2024-01-01T00:00:00Z"), CreatedBy = "System"
                 },
                 new
                 {
@@ -103,7 +103,7 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     CostPrice = 30m,
                     StockQuantity = 80,
                     ReorderLevel = 20,
-                    IsDeleted = false
+                    IsDeleted = false, CreatedAt = DateTimeOffset.Parse("2024-01-01T00:00:00Z"), CreatedBy = "System"
                 });
         }
     }

@@ -5,7 +5,7 @@ using ERP.Domain.Exceptions;
 
 namespace ERP.Domain.Entities;
 
-public class Product : ISoftDeletable
+public class Product : ISoftDeletable, IAuditable
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
@@ -19,6 +19,10 @@ public class Product : ISoftDeletable
     public DateTimeOffset? DeletedAt { get; set; }
     public string? DeletedBy { get; set; }
 
+    public DateTimeOffset CreatedAt { get; set; }
+    public string? CreatedBy { get; set; }
+    public DateTimeOffset? LastModifiedAt { get; set; }
+    public string? LastModifiedBy { get; set; }
     public Category? Category { get; set; }
     public ICollection<OrderLine> OrderLines { get; set; } = new List<OrderLine>();
     public ICollection<PurchaseLine> PurchaseLines { get; set; } = new List<PurchaseLine>();

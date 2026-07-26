@@ -41,7 +41,7 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     ExpectedDelivery = new DateTime(2025, 5, 28),
                     Status = PurchaseOrderStatus.Received,
                     TotalAmount = 5200m,
-                    IsDeleted = false
+                    IsDeleted = false, CreatedAt = DateTimeOffset.Parse("2024-01-01T00:00:00Z"), CreatedBy = "System"
                 },
                 new
                 {
@@ -51,7 +51,7 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     ExpectedDelivery = new DateTime(2025, 6, 10),
                     Status = PurchaseOrderStatus.Approved,
                     TotalAmount = 1880m,
-                    IsDeleted = false
+                    IsDeleted = false, CreatedAt = DateTimeOffset.Parse("2024-01-01T00:00:00Z"), CreatedBy = "System"
                 },
                 new
                 {
@@ -61,7 +61,7 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     ExpectedDelivery = new DateTime(2025, 6, 20),
                     Status = PurchaseOrderStatus.Draft,
                     TotalAmount = 1700m,
-                    IsDeleted = false
+                    IsDeleted = false, CreatedAt = DateTimeOffset.Parse("2024-01-01T00:00:00Z"), CreatedBy = "System"
                 });
         }
     }

@@ -41,7 +41,7 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     City = "New York",
                     Country = "USA",
                     TaxId = "US-TAX-100245",
-                    IsDeleted = false
+                    IsDeleted = false, CreatedAt = DateTimeOffset.Parse("2024-01-01T00:00:00Z"), CreatedBy = "System"
                 },
                 new
                 {
@@ -53,7 +53,7 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     City = "London",
                     Country = "UK",
                     TaxId = "GB-TAX-778845",
-                    IsDeleted = false
+                    IsDeleted = false, CreatedAt = DateTimeOffset.Parse("2024-01-01T00:00:00Z"), CreatedBy = "System"
                 },
                 new
                 {
@@ -65,7 +65,7 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     City = "Dubai",
                     Country = "UAE",
                     TaxId = "AE-TAX-442110",
-                    IsDeleted = false
+                    IsDeleted = false, CreatedAt = DateTimeOffset.Parse("2024-01-01T00:00:00Z"), CreatedBy = "System"
                 });
         }
     }
