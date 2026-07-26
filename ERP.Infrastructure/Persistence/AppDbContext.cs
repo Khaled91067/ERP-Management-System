@@ -70,13 +70,30 @@ namespace ERP.Infrastructure.Persistence
         private void OnBeforeSaving()
         {
             var currentUserId = _currentUserService?.UserId ?? _currentUserService?.UserName;
+            var now = DateTimeOffset.UtcNow;
+
+            foreach (var entry in ChangeTracker.Entries<IAuditable>())
+            {
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        entry.Entity.CreatedAt = now;
+                        entry.Entity.CreatedBy = currentUserId;
+                        break;
+                    case EntityState.Modified:
+                        entry.Entity.LastModifiedAt = now;
+                        entry.Entity.LastModifiedBy = currentUserId;
+                        break;
+                }
+            }
+
             foreach (var entry in ChangeTracker.Entries<ISoftDeletable>())
             {
                 if (entry.State == EntityState.Deleted)
                 {
                     entry.State = EntityState.Modified;
                     entry.Entity.IsDeleted = true;
-                    entry.Entity.DeletedAt = DateTimeOffset.UtcNow;
+                    entry.Entity.DeletedAt = now;
                     entry.Entity.DeletedBy = currentUserId;
                 }
             }

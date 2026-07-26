@@ -36,7 +36,7 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     Email = "sales@globaltechdist.com",
                     Phone = "+1-646-555-0133",
                     PaymentTerms = "Net 30",
-                    IsDeleted = false
+                    IsDeleted = false, CreatedAt = DateTimeOffset.Parse("2024-01-01T00:00:00Z"), CreatedBy = "System"
                 },
                 new
                 {
@@ -46,7 +46,7 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     Email = "orders@metroofficesupply.com",
                     Phone = "+44-20-5550-3344",
                     PaymentTerms = "Net 15",
-                    IsDeleted = false
+                    IsDeleted = false, CreatedAt = DateTimeOffset.Parse("2024-01-01T00:00:00Z"), CreatedBy = "System"
                 },
                 new
                 {
@@ -56,7 +56,7 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     Email = "procurement@primeindustrialparts.com",
                     Phone = "+971-4-555-0220",
                     PaymentTerms = "Due on receipt",
-                    IsDeleted = false
+                    IsDeleted = false, CreatedAt = DateTimeOffset.Parse("2024-01-01T00:00:00Z"), CreatedBy = "System"
                 });
         }
     }

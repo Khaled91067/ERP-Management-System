@@ -38,7 +38,7 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     PaymentMethod = PaymentMethod.CreditCard,
                     ShippingAddress = "1200 Market Street, Suite 800, New York, NY",
                     TotalAmount = 2004m,
-                    IsDeleted = false
+                    IsDeleted = false, CreatedAt = DateTimeOffset.Parse("2024-01-01T00:00:00Z"), CreatedBy = "System"
                 },
                 new
                 {
@@ -49,7 +49,7 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     PaymentMethod = PaymentMethod.Cash,
                     ShippingAddress = "44 King William Street, London",
                     TotalAmount = 1100m,
-                    IsDeleted = false
+                    IsDeleted = false, CreatedAt = DateTimeOffset.Parse("2024-01-01T00:00:00Z"), CreatedBy = "System"
                 },
                 new
                 {
@@ -60,7 +60,7 @@ namespace ERP.Infrastructure.Persistence.Configurations
                     PaymentMethod = PaymentMethod.MobilePayment,
                     ShippingAddress = "Business Bay Tower 18, Dubai",
                     TotalAmount = 470m,
-                    IsDeleted = false
+                    IsDeleted = false, CreatedAt = DateTimeOffset.Parse("2024-01-01T00:00:00Z"), CreatedBy = "System"
                 });
         }
     }

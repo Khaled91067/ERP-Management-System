@@ -6,8 +6,7 @@ using System;
 
 namespace ERP.Domain.Entities;
 
-public class PurchaseOrder : AggregateRoot, ISoftDeletable
-
+public class PurchaseOrder : AggregateRoot, ISoftDeletable, IAuditable
 {
     private readonly List<PurchaseLine> _purchaseLines = [];
 
@@ -21,6 +20,10 @@ public class PurchaseOrder : AggregateRoot, ISoftDeletable
     public DateTimeOffset? DeletedAt { get; set; }
     public string? DeletedBy { get; set; }
 
+    public DateTimeOffset CreatedAt { get; set; }
+    public string? CreatedBy { get; set; }
+    public DateTimeOffset? LastModifiedAt { get; set; }
+    public string? LastModifiedBy { get; set; }
     public Supplier? Supplier { get; private set; }
 
     public IReadOnlyCollection<PurchaseLine> PurchaseLines =>

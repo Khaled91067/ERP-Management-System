@@ -6,7 +6,7 @@ using System.Collections.ObjectModel;
 
 namespace ERP.Domain.Entities.Orders;
 
-public class Order : ISoftDeletable
+public class Order : ISoftDeletable, IAuditable
 {
     private readonly List<OrderLine> _orderLines = new();
 
@@ -21,6 +21,10 @@ public class Order : ISoftDeletable
     public DateTimeOffset? DeletedAt { get; set; }
     public string? DeletedBy { get; set; }
 
+    public DateTimeOffset CreatedAt { get; set; }
+    public string? CreatedBy { get; set; }
+    public DateTimeOffset? LastModifiedAt { get; set; }
+    public string? LastModifiedBy { get; set; }
     public Customer? Customer { get; private set; }
 
     public IReadOnlyCollection<OrderLine> OrderLines => _orderLines.AsReadOnly();
