@@ -11,6 +11,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using ERP.Application.Abstractions.Caching;
+using ERP.Infrastructure.Caching;
+using StackExchange.Redis;
 
 
 namespace ERP.Infrastructure
@@ -22,6 +25,15 @@ namespace ERP.Infrastructure
             services.AddDbContext<AppDbContext>(options => options
                     .UseSqlServer(configuration
                     .GetConnectionString("DefaultConnection")));
+
+            var redisConnectionString = configuration.GetConnectionString("RedisConnection");
+            if (!string.IsNullOrEmpty(redisConnectionString))
+            {
+                var multiplexer = ConnectionMultiplexer.Connect(redisConnectionString);
+                services.AddSingleton<IConnectionMultiplexer>(multiplexer);
+            }
+            services.Configure<CacheSettings>(configuration.GetSection("Cache"));
+            services.AddSingleton<ICacheService, RedisCacheService>();
 
             services.AddScoped(typeof(IGenericRepository<> ),typeof(GenericRepository<> ));
 

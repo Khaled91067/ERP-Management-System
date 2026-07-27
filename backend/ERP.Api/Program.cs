@@ -53,6 +53,16 @@ namespace ERP.Api
             builder.Services.AddProblemDetails();
             builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowFrontend", policy =>
+                {
+                    policy.AllowAnyOrigin()
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+            });
+
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             var app = builder.Build();
@@ -68,11 +78,12 @@ namespace ERP.Api
                 app.UseSwaggerUI();
             }
 
+            app.UseCors("AllowFrontend");
+
             app.UseHttpsRedirection();
             
             app.UseAuthentication();
             app.UseAuthorization();
-
 
             app.MapControllers();
 
