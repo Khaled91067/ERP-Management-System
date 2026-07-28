@@ -35,43 +35,7 @@ namespace ERP.Infrastructure.Persistence.Configurations
             builder.Property(c => c.TaxId)
                 .HasMaxLength(100);
 
-            builder.HasData(
-                new
-                {
-                    Id = 1,
-                    Name = "Al Noor Trading Co.",
-                    Email = "purchasing@alnoortrading.com",
-                    Phone = "+1-212-555-0148",
-                    Address = "1200 Market Street, Suite 800",
-                    City = "New York",
-                    Country = "USA",
-                    TaxId = "US-TAX-100245",
-                    IsDeleted = false, CreatedAt = DateTimeOffset.Parse("2024-01-01T00:00:00Z"), CreatedBy = "System"
-                },
-                new
-                {
-                    Id = 2,
-                    Name = "BlueWave Retail Ltd.",
-                    Email = "accounts@bluewaveretail.com",
-                    Phone = "+44-20-5550-2211",
-                    Address = "44 King William Street",
-                    City = "London",
-                    Country = "UK",
-                    TaxId = "GB-TAX-778845",
-                    IsDeleted = false, CreatedAt = DateTimeOffset.Parse("2024-01-01T00:00:00Z"), CreatedBy = "System"
-                },
-                new
-                {
-                    Id = 3,
-                    Name = "Horizon Construction LLC",
-                    Email = "billing@horizonconstruction.com",
-                    Phone = "+971-4-555-0198",
-                    Address = "Business Bay Tower 18",
-                    City = "Dubai",
-                    Country = "UAE",
-                    TaxId = "AE-TAX-442110",
-                    IsDeleted = false, CreatedAt = DateTimeOffset.Parse("2024-01-01T00:00:00Z"), CreatedBy = "System"
-                });
+
         }
     }
 }

@@ -1,0 +1,7 @@
+[
+  { "Id": 1, "CompanyName": "Global Tech Distributors", "ContactName": "Maya Peterson", "Email": "sales@globaltechdist.com", "Phone": "+1-646-555-0133", "PaymentTerms": "Net 30" },
+  { "Id": 2, "CompanyName": "Metro Office Supply", "ContactName": "Daniel Cooper", "Email": "orders@metroofficesupply.com", "Phone": "+44-20-5550-3344", "PaymentTerms": "Net 15" },
+  { "Id": 3, "CompanyName": "Prime Industrial Parts", "ContactName": "Nadia Rahman", "Email": "procurement@primeindustrialparts.com", "Phone": "+971-4-555-0220", "PaymentTerms": "Due on receipt" },
+  { "Id": 4, "CompanyName": "Apex Logistics Systems", "ContactName": "James Wu", "Email": "sales@apexlogistics.com", "Phone": "+1-415-555-0844", "PaymentTerms": "Net 60" },
+  { "Id": 5, "CompanyName": "Vanguard Security Solutions", "ContactName": "Sarah Jenkins", "Email": "orders@vanguardsec.com", "Phone": "+44-20-5550-9988", "PaymentTerms": "Net 30" }
+]

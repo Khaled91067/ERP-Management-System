@@ -7,7 +7,7 @@ using ERP.Domain.Shared.Abstractions;
 using ERP.Domain.Shared.Exceptions;
 using ERP.Domain.Shared.ValueObjects;
 
-public class Employee : BaseEntity, ISoftDeletable
+public class Employee : SoftDeletableEntity
 {
     public string FirstName { get; private set; } = string.Empty;
     public string LastName { get; private set; } = string.Empty;
@@ -18,9 +18,6 @@ public class Employee : BaseEntity, ISoftDeletable
     public DateTime HireDate { get; private set; }
     public Money Salary { get; private set; } = null!;
 
-    public bool IsDeleted { get; set; }
-    public DateTimeOffset? DeletedAt { get; set; }
-    public string? DeletedBy { get; set; }
 
     public Department? Department { get; private set; }
 

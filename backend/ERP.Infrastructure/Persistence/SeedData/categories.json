@@ -1,0 +1,7 @@
+[
+  { "Id": 1, "Name": "Electronics" },
+  { "Id": 2, "Name": "Office Supplies" },
+  { "Id": 3, "Name": "Industrial Equipment" },
+  { "Id": 4, "Name": "Packaging" },
+  { "Id": 5, "Name": "IT Hardware" }
+]

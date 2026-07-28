@@ -1,0 +1,6 @@
+[
+  { "Id": 1, "FirstName": "Omar", "LastName": "Saleh", "Email": "omar.saleh@erpco.com", "Password": "Password123!", "RoleName": "Administrator" },
+  { "Id": 2, "FirstName": "Sara", "LastName": "Ibrahim", "Email": "sara.ibrahim@erpco.com", "Password": "Password123!", "RoleName": "Sales Manager" },
+  { "Id": 3, "FirstName": "Ahmed", "LastName": "Nasser", "Email": "ahmed.nasser@erpco.com", "Password": "Password123!", "RoleName": "Warehouse Clerk" },
+  { "Id": 4, "FirstName": "Admin", "LastName": "User", "Email": "admin@erpco.com", "Password": "Admin123456", "RoleName": "Administrator" }
+]

@@ -1,0 +1,8 @@
+[
+  { "Id": 1, "PurchaseOrderId": 1, "ProductId": 1, "Quantity": 5, "UnitCost": 620 },
+  { "Id": 2, "PurchaseOrderId": 1, "ProductId": 3, "Quantity": 10, "UnitCost": 210 },
+  { "Id": 3, "PurchaseOrderId": 2, "ProductId": 2, "Quantity": 8, "UnitCost": 145 },
+  { "Id": 4, "PurchaseOrderId": 2, "ProductId": 5, "Quantity": 40, "UnitCost": 18 },
+  { "Id": 5, "PurchaseOrderId": 3, "ProductId": 4, "Quantity": 10, "UnitCost": 110 },
+  { "Id": 6, "PurchaseOrderId": 3, "ProductId": 6, "Quantity": 20, "UnitCost": 30 }
+]

@@ -1,0 +1,5 @@
+[
+  { "Id": 1, "OrderId": 1, "CustomerId": 1, "InvoiceDate": "2025-06-11T00:00:00Z", "DueDate": "2025-06-26T00:00:00Z", "Status": "Sent", "TotalAmount": 2004, "PaidAt": null },
+  { "Id": 2, "OrderId": 2, "CustomerId": 2, "InvoiceDate": "2025-06-13T00:00:00Z", "DueDate": "2025-06-28T00:00:00Z", "Status": "Paid", "TotalAmount": 1100, "PaidAt": "2025-06-15T00:00:00Z" },
+  { "Id": 3, "OrderId": 3, "CustomerId": 3, "InvoiceDate": "2025-06-15T00:00:00Z", "DueDate": "2025-06-30T00:00:00Z", "Status": "Draft", "TotalAmount": 470, "PaidAt": null }
+]

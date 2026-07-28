@@ -6,15 +6,12 @@ using ERP.Domain.Shared.Base;
 using ERP.Domain.Shared.Abstractions;
 using ERP.Domain.Shared.Exceptions;
 
-public class Category : BaseEntity, ISoftDeletable
+public class Category : SoftDeletableEntity
 {
     private readonly List<Product> _products = [];
 
     public string Name { get; private set; } = string.Empty;
 
-    public bool IsDeleted { get; set; }
-    public DateTimeOffset? DeletedAt { get; set; }
-    public string? DeletedBy { get; set; }
 
     public IReadOnlyCollection<Product> Products => _products.AsReadOnly();
 

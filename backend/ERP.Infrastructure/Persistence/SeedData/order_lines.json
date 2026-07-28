@@ -1,0 +1,8 @@
+[
+  { "Id": 1, "OrderId": 1, "ProductId": 1, "Quantity": 2, "UnitPrice": 850, "DiscountPercentage": 0 },
+  { "Id": 2, "OrderId": 1, "ProductId": 3, "Quantity": 1, "UnitPrice": 320, "DiscountPercentage": 5 },
+  { "Id": 3, "OrderId": 2, "ProductId": 2, "Quantity": 4, "UnitPrice": 240, "DiscountPercentage": 0 },
+  { "Id": 4, "OrderId": 2, "ProductId": 5, "Quantity": 4, "UnitPrice": 35, "DiscountPercentage": 0 },
+  { "Id": 5, "OrderId": 3, "ProductId": 4, "Quantity": 2, "UnitPrice": 180, "DiscountPercentage": 0 },
+  { "Id": 6, "OrderId": 3, "ProductId": 6, "Quantity": 2, "UnitPrice": 55, "DiscountPercentage": 0 }
+]

@@ -3,7 +3,9 @@ namespace ERP.Domain.Identity.Users;
 using System;
 using ERP.Domain.Shared.Exceptions;
 
-public class RefreshToken
+using ERP.Domain.Shared.Base;
+
+public class RefreshToken : BaseEntity
 {
     public string Token { get; private set; } = string.Empty;
     public DateTime ExpiresAt { get; private set; }

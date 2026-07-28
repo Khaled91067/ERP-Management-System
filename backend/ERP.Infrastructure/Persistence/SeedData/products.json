@@ -1,0 +1,9 @@
+[
+  { "Id": 1, "Name": "Laser Printer", "Sku": "PRN-LP850", "CategoryId": 2, "UnitPrice": 850, "CostPrice": 620, "StockQuantity": 18, "ReorderLevel": 5 },
+  { "Id": 2, "Name": "Ergonomic Office Chair", "Sku": "CHR-OC240", "CategoryId": 2, "UnitPrice": 240, "CostPrice": 145, "StockQuantity": 30, "ReorderLevel": 10 },
+  { "Id": 3, "Name": "Wireless Barcode Scanner", "Sku": "SCN-WBS320", "CategoryId": 1, "UnitPrice": 320, "CostPrice": 210, "StockQuantity": 14, "ReorderLevel": 6 },
+  { "Id": 4, "Name": "Industrial Sensor", "Sku": "SNS-IS180", "CategoryId": 3, "UnitPrice": 180, "CostPrice": 110, "StockQuantity": 40, "ReorderLevel": 12 },
+  { "Id": 5, "Name": "Heavy Duty Carton Box Pack", "Sku": "BOX-HD035", "CategoryId": 4, "UnitPrice": 35, "CostPrice": 18, "StockQuantity": 150, "ReorderLevel": 50 },
+  { "Id": 6, "Name": "Safety Helmet", "Sku": "SFT-HM055", "CategoryId": 3, "UnitPrice": 55, "CostPrice": 30, "StockQuantity": 80, "ReorderLevel": 20 },
+  { "Id": 7, "Name": "Server Rack 42U", "Sku": "RACK-42U", "CategoryId": 5, "UnitPrice": 1500, "CostPrice": 900, "StockQuantity": 5, "ReorderLevel": 2 }
+]

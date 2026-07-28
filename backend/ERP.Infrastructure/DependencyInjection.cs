@@ -12,6 +12,7 @@ namespace ERP.Infrastructure
     using ERP.Infrastructure.Caching;
     using ERP.Infrastructure.Persistence;
     using ERP.Infrastructure.Persistence.Repositories;
+    using ERP.Infrastructure.Persistence.Seeding;
     using ERP.Infrastructure.Repositories;
 
     using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -96,6 +97,15 @@ namespace ERP.Infrastructure
 
 
 
+            services.AddScoped<DbInitializer>();
+            services.AddScoped<ISeeder, RoleSeeder>();
+            services.AddScoped<ISeeder, UserSeeder>();
+            services.AddScoped<ISeeder, CategorySeeder>();
+            services.AddScoped<ISeeder, ProductSeeder>();
+            services.AddScoped<ISeeder, DepartmentSeeder>();
+            services.AddScoped<ISeeder, EmployeeSeeder>();
+            services.AddScoped<ISeeder, CustomerSeeder>();
+            services.AddScoped<ISeeder, SupplierSeeder>();
 
             return services;
 

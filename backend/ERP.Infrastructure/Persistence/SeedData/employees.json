@@ -1,0 +1,8 @@
+[
+  { "Id": 1, "FirstName": "Layla", "LastName": "Hassan", "Email": "layla.hassan@erpco.com", "Phone": "+1-212-555-0101", "DepartmentId": 1, "Position": "Sales Executive", "HireDate": "2023-03-12T00:00:00Z", "Salary": 14500 },
+  { "Id": 2, "FirstName": "Omar", "LastName": "Farouk", "Email": "omar.farouk@erpco.com", "Phone": "+1-212-555-0102", "DepartmentId": 2, "Position": "Operations Supervisor", "HireDate": "2022-08-01T00:00:00Z", "Salary": 16800 },
+  { "Id": 3, "FirstName": "Rania", "LastName": "Khaled", "Email": "rania.khaled@erpco.com", "Phone": "+1-212-555-0103", "DepartmentId": 3, "Position": "Finance Specialist", "HireDate": "2021-11-18T00:00:00Z", "Salary": 15500 },
+  { "Id": 4, "FirstName": "Tarek", "LastName": "Youssef", "Email": "tarek.youssef@erpco.com", "Phone": "+1-212-555-0104", "DepartmentId": 4, "Position": "Procurement Officer", "HireDate": "2024-02-05T00:00:00Z", "Salary": 13200 },
+  { "Id": 5, "FirstName": "Mona", "LastName": "Zaki", "Email": "mona.zaki@erpco.com", "Phone": "+1-212-555-0105", "DepartmentId": 5, "Position": "HR Manager", "HireDate": "2021-05-15T00:00:00Z", "Salary": 18000 },
+  { "Id": 6, "FirstName": "Sami", "LastName": "Ali", "Email": "sami.ali@erpco.com", "Phone": "+1-212-555-0106", "DepartmentId": 6, "Position": "IT Specialist", "HireDate": "2023-09-01T00:00:00Z", "Salary": 15000 }
+]

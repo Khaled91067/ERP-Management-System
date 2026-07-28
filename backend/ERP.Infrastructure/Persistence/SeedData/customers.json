@@ -1,0 +1,7 @@
+[
+  { "Id": 1, "Name": "Al Noor Trading Co.", "Email": "purchasing@alnoortrading.com", "Phone": "+1-212-555-0148", "Address": "1200 Market Street, Suite 800", "City": "New York", "Country": "USA", "TaxId": "US-TAX-100245" },
+  { "Id": 2, "Name": "BlueWave Retail Ltd.", "Email": "accounts@bluewaveretail.com", "Phone": "+44-20-5550-2211", "Address": "44 King William Street", "City": "London", "Country": "UK", "TaxId": "GB-TAX-778845" },
+  { "Id": 3, "Name": "Horizon Construction LLC", "Email": "billing@horizonconstruction.com", "Phone": "+971-4-555-0198", "Address": "Business Bay Tower 18", "City": "Dubai", "Country": "UAE", "TaxId": "AE-TAX-442110" },
+  { "Id": 4, "Name": "Nexus Enterprises", "Email": "info@nexusenterprises.com", "Phone": "+1-310-555-0199", "Address": "100 Wilshire Blvd", "City": "Los Angeles", "Country": "USA", "TaxId": "US-TAX-334211" },
+  { "Id": 5, "Name": "Crestview Holdings", "Email": "finance@crestviewholdings.com", "Phone": "+44-161-555-0345", "Address": "22 Piccadilly", "City": "Manchester", "Country": "UK", "TaxId": "GB-TAX-889922" }
+]

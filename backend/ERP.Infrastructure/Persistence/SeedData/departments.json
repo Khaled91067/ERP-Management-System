@@ -1,0 +1,8 @@
+[
+  { "Id": 1, "Name": "Sales" },
+  { "Id": 2, "Name": "Operations" },
+  { "Id": 3, "Name": "Finance" },
+  { "Id": 4, "Name": "Procurement" },
+  { "Id": 5, "Name": "Human Resources" },
+  { "Id": 6, "Name": "IT Support" }
+]

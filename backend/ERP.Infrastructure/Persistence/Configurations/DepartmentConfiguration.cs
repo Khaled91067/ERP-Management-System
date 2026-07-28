@@ -19,11 +19,7 @@ namespace ERP.Infrastructure.Persistence.Configurations
                 .IsUnique()
                 .HasFilter("[IsDeleted] = 0");
 
-            builder.HasData(
-                new { Id = 1, Name = "Sales", IsDeleted = false },
-                new { Id = 2, Name = "Operations", IsDeleted = false },
-                new { Id = 3, Name = "Finance", IsDeleted = false },
-                new { Id = 4, Name = "Procurement", IsDeleted = false });
+
         }
     }
 }

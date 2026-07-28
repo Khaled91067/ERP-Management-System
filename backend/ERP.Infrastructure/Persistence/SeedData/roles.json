@@ -1,0 +1,5 @@
+[
+  { "Id": 1, "Name": "Administrator", "Permissions": "[\"Users.Read\",\"Users.Write\",\"Orders.Read\",\"Orders.Write\",\"Reports.Read\",\"Reports.Write\"]" },
+  { "Id": 2, "Name": "Sales Manager", "Permissions": "[\"Customers.Read\",\"Customers.Write\",\"Orders.Read\",\"Orders.Write\",\"Invoices.Read\"]" },
+  { "Id": 3, "Name": "Warehouse Clerk", "Permissions": "[\"Products.Read\",\"PurchaseOrders.Read\",\"PurchaseOrders.Write\",\"Inventory.Update\"]" }
+]

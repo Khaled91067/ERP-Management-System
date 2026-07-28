@@ -1,0 +1,5 @@
+[
+  { "Id": 1, "CustomerId": 1, "OrderDate": "2025-06-10T00:00:00Z", "Status": "Shipped", "PaymentMethod": "CreditCard", "ShippingAddress": "1200 Market Street, Suite 800, New York, NY", "TotalAmount": 2004 },
+  { "Id": 2, "CustomerId": 2, "OrderDate": "2025-06-12T00:00:00Z", "Status": "Delivered", "PaymentMethod": "Cash", "ShippingAddress": "44 King William Street, London", "TotalAmount": 1100 },
+  { "Id": 3, "CustomerId": 3, "OrderDate": "2025-06-14T00:00:00Z", "Status": "Processing", "PaymentMethod": "MobilePayment", "ShippingAddress": "Business Bay Tower 18, Dubai", "TotalAmount": 470 }
+]
