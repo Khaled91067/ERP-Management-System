@@ -1,9 +1,10 @@
-
 namespace ERP.Domain.Tests.Entities;
 
+using System;
 using ERP.Domain.Identity.Users;
 
 using FluentAssertions;
+using Xunit;
 
 public class RefreshTokenTests
 {
@@ -15,12 +16,7 @@ public class RefreshTokenTests
     public void IsExpired_WhenExpiryIsInTheFuture_ReturnsFalse()
     {
         // Arrange
-        var token = new RefreshToken
-        {
-            Token = "abc123",
-            ExpiresAt = DateTime.UtcNow.AddDays(7),
-            CreatedAt = DateTime.UtcNow
-        };
+        var token = new RefreshToken("abc123", 1, DateTime.UtcNow.AddDays(7));
 
         // Act & Assert
         token.IsExpired.Should().BeFalse();
@@ -30,12 +26,7 @@ public class RefreshTokenTests
     public void IsExpired_WhenExpiryIsInThePast_ReturnsTrue()
     {
         // Arrange
-        var token = new RefreshToken
-        {
-            Token = "abc123",
-            ExpiresAt = DateTime.UtcNow.AddDays(-1),
-            CreatedAt = DateTime.UtcNow.AddDays(-8)
-        };
+        var token = new RefreshToken("abc123", 1, DateTime.UtcNow.AddDays(-1));
 
         // Act & Assert
         token.IsExpired.Should().BeTrue();
@@ -49,31 +40,22 @@ public class RefreshTokenTests
     public void IsRevoked_WhenRevokedAtIsNull_ReturnsFalse()
     {
         // Arrange
-        var token = new RefreshToken
-        {
-            Token = "abc123",
-            ExpiresAt = DateTime.UtcNow.AddDays(7),
-            CreatedAt = DateTime.UtcNow,
-            RevokedAt = null
-        };
+        var token = new RefreshToken("abc123", 1, DateTime.UtcNow.AddDays(7));
 
         // Act & Assert
         token.IsRevoked.Should().BeFalse();
     }
 
     [Fact]
-    public void IsRevoked_WhenRevokedAtIsSet_ReturnsTrue()
+    public void IsRevoked_WhenRevoked_ReturnsTrue()
     {
         // Arrange
-        var token = new RefreshToken
-        {
-            Token = "abc123",
-            ExpiresAt = DateTime.UtcNow.AddDays(7),
-            CreatedAt = DateTime.UtcNow,
-            RevokedAt = DateTime.UtcNow
-        };
+        var token = new RefreshToken("abc123", 1, DateTime.UtcNow.AddDays(7));
 
-        // Act & Assert
+        // Act
+        token.Revoke();
+
+        // Assert
         token.IsRevoked.Should().BeTrue();
     }
 
@@ -85,13 +67,7 @@ public class RefreshTokenTests
     public void IsActive_WhenNotExpiredAndNotRevoked_ReturnsTrue()
     {
         // Arrange
-        var token = new RefreshToken
-        {
-            Token = "abc123",
-            ExpiresAt = DateTime.UtcNow.AddDays(7),
-            CreatedAt = DateTime.UtcNow,
-            RevokedAt = null
-        };
+        var token = new RefreshToken("abc123", 1, DateTime.UtcNow.AddDays(7));
 
         // Act & Assert
         token.IsActive.Should().BeTrue();
@@ -101,13 +77,7 @@ public class RefreshTokenTests
     public void IsActive_WhenExpired_ReturnsFalse()
     {
         // Arrange
-        var token = new RefreshToken
-        {
-            Token = "abc123",
-            ExpiresAt = DateTime.UtcNow.AddDays(-1),
-            CreatedAt = DateTime.UtcNow.AddDays(-8),
-            RevokedAt = null
-        };
+        var token = new RefreshToken("abc123", 1, DateTime.UtcNow.AddDays(-1));
 
         // Act & Assert
         token.IsActive.Should().BeFalse();
@@ -117,15 +87,12 @@ public class RefreshTokenTests
     public void IsActive_WhenRevoked_ReturnsFalse()
     {
         // Arrange
-        var token = new RefreshToken
-        {
-            Token = "abc123",
-            ExpiresAt = DateTime.UtcNow.AddDays(7),
-            CreatedAt = DateTime.UtcNow,
-            RevokedAt = DateTime.UtcNow.AddMinutes(-5)
-        };
+        var token = new RefreshToken("abc123", 1, DateTime.UtcNow.AddDays(7));
 
-        // Act & Assert
+        // Act
+        token.Revoke();
+
+        // Assert
         token.IsActive.Should().BeFalse();
     }
 
@@ -133,15 +100,12 @@ public class RefreshTokenTests
     public void IsActive_WhenExpiredAndRevoked_ReturnsFalse()
     {
         // Arrange
-        var token = new RefreshToken
-        {
-            Token = "abc123",
-            ExpiresAt = DateTime.UtcNow.AddDays(-1),
-            CreatedAt = DateTime.UtcNow.AddDays(-8),
-            RevokedAt = DateTime.UtcNow.AddDays(-2)
-        };
+        var token = new RefreshToken("abc123", 1, DateTime.UtcNow.AddDays(-1));
 
-        // Act & Assert
+        // Act
+        token.Revoke();
+
+        // Assert
         token.IsActive.Should().BeFalse();
     }
 }
