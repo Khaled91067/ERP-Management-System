@@ -2,6 +2,7 @@
 namespace ERP.Infrastructure.Persistence.Configurations;
 
 using ERP.Domain.Sales.Orders;
+using ERP.Domain.Shared.ValueObjects;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -11,6 +12,7 @@ public class OrderLineConfiguration: IEntityTypeConfiguration<OrderLine>
     public void Configure(EntityTypeBuilder<OrderLine> builder)
     {
         builder.Property(ol => ol.UnitPrice)
+            .HasConversion(m => m.Amount, v => new Money(v))
             .HasPrecision(18, 2);
 
         builder.Property(ol => ol.DiscountPercentage)

@@ -4,6 +4,7 @@ namespace ERP.Infrastructure.Persistence.Configurations
     using System;
 
     using ERP.Domain.HR.Employees;
+    using ERP.Domain.Shared.ValueObjects;
 
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -21,8 +22,9 @@ namespace ERP.Infrastructure.Persistence.Configurations
                 .HasMaxLength(100);
 
             builder.Property(e => e.Email)
-                .IsRequired()
-                .HasMaxLength(256);
+                   .HasConversion(e => e.Value, v => new Email(v))
+                   .IsRequired()
+                   .HasMaxLength(256);
 
             builder.Property(e => e.Phone)
                 .HasMaxLength(30);
@@ -32,7 +34,8 @@ namespace ERP.Infrastructure.Persistence.Configurations
                 .HasMaxLength(150);
 
             builder.Property(e => e.Salary)
-                .HasPrecision(18, 2);
+                   .HasConversion(m => m.Amount, v => new Money(v))
+                   .HasPrecision(18, 2);
 
             builder.HasIndex(e => e.Email)
                 .IsUnique()

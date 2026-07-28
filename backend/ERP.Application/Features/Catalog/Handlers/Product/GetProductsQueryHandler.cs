@@ -1,4 +1,3 @@
-
 namespace ERP.Application.Features.Catalog.Handlers;
 
 using ERP.Application.Abstractions.Repositories;
@@ -35,6 +34,6 @@ public sealed class GetProductsQueryHandler(IProductRepository productRepository
     }
 
     private static ProductDto ToDto(Product product) => new(product.Id, product.Name, product.Sku,
-        product.CategoryId, product.Category?.Name ?? string.Empty, product.UnitPrice, product.CostPrice,
+        product.CategoryId, product.Category?.Name ?? string.Empty, product.UnitPrice.Amount, product.CostPrice.Amount,
         product.StockQuantity, product.ReorderLevel);
 }

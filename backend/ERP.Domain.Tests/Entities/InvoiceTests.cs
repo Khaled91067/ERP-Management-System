@@ -28,7 +28,7 @@ public class InvoiceTests
         invoice.CustomerId.Should().Be(2);
         invoice.DueDate.Should().Be(dueDate);
         invoice.Status.Should().Be(InvoiceStatus.Draft);
-        invoice.TotalAmount.Should().Be(0);
+        invoice.TotalAmount.Amount.Should().Be(0);
         invoice.InvoiceDate.Should().BeCloseTo(DateTime.UtcNow, precision: TimeSpan.FromSeconds(5));
     }
 
@@ -84,7 +84,7 @@ public class InvoiceTests
 
         // Assert
         invoice.InvoiceLines.Should().HaveCount(1);
-        invoice.TotalAmount.Should().Be(300m); // 3 * 100 * (1 + 0/100)
+        invoice.TotalAmount.Amount.Should().Be(300m); // 3 * 100 * (1 + 0/100)
     }
 
     [Fact]
@@ -98,7 +98,7 @@ public class InvoiceTests
 
         // Assert
         // (2 * 100) * (1 + 15/100) = 200 * 1.15 = 230
-        invoice.TotalAmount.Should().Be(230m);
+        invoice.TotalAmount.Amount.Should().Be(230m);
     }
 
     [Fact]
@@ -114,7 +114,7 @@ public class InvoiceTests
         // Assert
         // Line 1: 100 * (1 + 0) = 100
         // Line 2: (2*50) * (1 + 0.10) = 110
-        invoice.TotalAmount.Should().Be(210m);
+        invoice.TotalAmount.Amount.Should().Be(210m);
     }
 
     [Fact]

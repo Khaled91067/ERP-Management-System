@@ -7,8 +7,9 @@ using ERP.Domain.Sales.Customers;
 using ERP.Domain.Sales.Invoices;
 using ERP.Domain.Shared.Base;
 using ERP.Domain.Shared.Exceptions;
+using ERP.Domain.Shared.ValueObjects;
 
-public class Order : SoftDeletableEntity
+public class Order : AggregateRoot
 {
     private readonly List<OrderLine> _orderLines = [];
     private readonly List<Invoice> _invoices = [];
@@ -18,7 +19,7 @@ public class Order : SoftDeletableEntity
     public OrderStatus Status { get; private set; }
     public PaymentMethod PaymentMethod { get; private set; }
     public string ShippingAddress { get; private set; } = string.Empty;
-    public decimal TotalAmount { get; private set; }
+    public Money TotalAmount { get; private set; } = null!;
     public Customer? Customer { get; private set; }
 
     public IReadOnlyCollection<OrderLine> OrderLines => _orderLines.AsReadOnly();
@@ -43,7 +44,7 @@ public class Order : SoftDeletableEntity
 
         OrderDate = DateTime.UtcNow;
         Status = OrderStatus.Pending;
-        TotalAmount = 0;
+        TotalAmount = new Money(0);
     }
 
     public void UpdateShippingAddress(string shippingAddress)
@@ -98,8 +99,8 @@ public class Order : SoftDeletableEntity
 
     private void RecalculateTotal()
     {
-        TotalAmount = _orderLines.Sum(x =>
-            (x.Quantity * x.UnitPrice) * (1 - x.DiscountPercentage / 100));
+        TotalAmount = new Money(_orderLines.Sum(x =>
+            (x.Quantity * x.UnitPrice.Amount) * (1 - x.DiscountPercentage / 100)));
     }
 
     private void EnsurePending()

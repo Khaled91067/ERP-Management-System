@@ -1,4 +1,3 @@
-
 namespace ERP.Application.Features.Finance.Handlers;
 
 using System;
@@ -55,7 +54,7 @@ public sealed class GetInvoicesQueryHandler : IRequestHandler<GetInvoicesQuery, 
             invoice.InvoiceDate,
             invoice.DueDate,
             invoice.Status.ToString(),
-            invoice.TotalAmount,
+            invoice.TotalAmount.Amount,
             invoice.PaidAt,
             new List<InvoiceLineDto>()
         ));

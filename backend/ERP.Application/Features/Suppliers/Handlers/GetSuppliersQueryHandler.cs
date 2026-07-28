@@ -1,4 +1,3 @@
-
 namespace ERP.Application.Features.Suppliers.Handlers;
 
 using ERP.Application.Abstractions.Repositories;
@@ -28,7 +27,7 @@ public sealed class GetSuppliersQueryHandler : IRequestHandler<GetSuppliersQuery
             options.Filter = s =>
                 s.CompanyName.ToLower().Contains(term) ||
                 s.ContactName.ToLower().Contains(term) ||
-                s.Email.ToLower().Contains(term);
+                s.Email.Value.ToLower().Contains(term);
         }
 
         var pagedSuppliers = await _supplierRepository.GetPagedAsync(options, request.Page, request.PageSize);
@@ -37,7 +36,7 @@ public sealed class GetSuppliersQueryHandler : IRequestHandler<GetSuppliersQuery
             s.Id,
             s.CompanyName,
             s.ContactName,
-            s.Email,
+            s.Email.Value,
             s.Phone,
             s.PaymentTerms));
     }

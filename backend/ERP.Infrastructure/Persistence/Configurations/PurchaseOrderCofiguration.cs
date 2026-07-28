@@ -2,6 +2,7 @@
 namespace ERP.Infrastructure.Persistence.Configurations
 {
     using ERP.Domain.Purchasing.PurchaseOrders;
+    using ERP.Domain.Shared.ValueObjects;
 
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -12,8 +13,12 @@ namespace ERP.Infrastructure.Persistence.Configurations
         public void Configure(
             EntityTypeBuilder<PurchaseOrder> builder)
         {
+            builder.Property(po => po.ExpectedDelivery)
+                   .IsRequired();
+
             builder.Property(po => po.TotalAmount)
-                .HasPrecision(18, 2);
+                   .HasConversion(m => m.Amount, v => new Money(v))
+                   .HasPrecision(18, 2);
 
             builder.Property(po => po.Status)
                 .HasConversion<string>()

@@ -1,4 +1,3 @@
-
 namespace ERP.Application.Features.Sales.Handlers;
 
 using ERP.Application.Abstractions.Repositories;
@@ -26,7 +25,7 @@ public sealed class GetCustomersQueryHandler : IRequestHandler<GetCustomersQuery
         {
             var search = request.Search.Trim().ToLower();
             options.Filter = x => x.Name.ToLower().Contains(search) ||
-                                  x.Email.ToLower().Contains(search) ||
+                                  x.Email.Value.ToLower().Contains(search) ||
                                   x.Phone.ToLower().Contains(search) ||
                                   x.TaxId.ToLower().Contains(search) ||
                                   x.City.ToLower().Contains(search);
@@ -37,7 +36,7 @@ public sealed class GetCustomersQueryHandler : IRequestHandler<GetCustomersQuery
         return pagedCustomers.Map(customer => new CustomerDto(
             customer.Id,
             customer.Name,
-            customer.Email,
+            customer.Email.Value,
             customer.Phone,
             customer.Address,
             customer.City,

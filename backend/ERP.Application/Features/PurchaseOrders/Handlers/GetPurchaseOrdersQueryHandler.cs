@@ -1,4 +1,3 @@
-
 namespace ERP.Application.Features.PurchaseOrders.Handlers;
 
 using System;
@@ -52,6 +51,6 @@ public sealed class GetPurchaseOrdersQueryHandler : IRequestHandler<GetPurchaseO
             po.OrderDate,
             po.ExpectedDelivery,
             po.Status.ToString(),
-            po.TotalAmount));
+            po.TotalAmount.Amount));
     }
 }

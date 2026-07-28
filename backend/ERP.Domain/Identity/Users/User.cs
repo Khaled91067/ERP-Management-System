@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using ERP.Domain.Identity.Roles;
 using ERP.Domain.Shared.Base;
 using ERP.Domain.Shared.Exceptions;
+using ERP.Domain.Shared.ValueObjects;
 
 public class User : BaseEntity
 {
@@ -11,7 +12,7 @@ public class User : BaseEntity
 
     public string FirstName { get; private set; } = string.Empty;
     public string LastName { get; private set; } = string.Empty;
-    public string Email { get; private set; } = string.Empty;
+    public Email Email { get; private set; } = null!;
     public string PasswordHash { get; private set; } = string.Empty;
     public int RoleId { get; private set; }
 
@@ -33,18 +34,12 @@ public class User : BaseEntity
         if (string.IsNullOrWhiteSpace(lastName))
             throw new BusinessRuleValidationException("Last name is required.");
 
-        if (string.IsNullOrWhiteSpace(email))
-            throw new BusinessRuleValidationException("Email is required.");
-
-        if (string.IsNullOrWhiteSpace(passwordHash))
-            throw new BusinessRuleValidationException("Password hash is required.");
-
         if (roleId <= 0)
             throw new BusinessRuleValidationException("Role ID must be valid.");
 
         FirstName = firstName.Trim();
         LastName = lastName.Trim();
-        Email = email.Trim();
+        Email = new Email(email);
         PasswordHash = passwordHash;
         RoleId = roleId;
     }
@@ -57,12 +52,9 @@ public class User : BaseEntity
         if (string.IsNullOrWhiteSpace(lastName))
             throw new BusinessRuleValidationException("Last name is required.");
 
-        if (string.IsNullOrWhiteSpace(email))
-            throw new BusinessRuleValidationException("Email is required.");
-
         FirstName = firstName.Trim();
         LastName = lastName.Trim();
-        Email = email.Trim();
+        Email = new Email(email);
     }
 
     public void AssignRole(int roleId)

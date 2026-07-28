@@ -30,9 +30,9 @@ public sealed class GetInvoiceByIdQueryHandler : IRequestHandler<GetInvoiceByIdQ
             il.Id,
             il.Description,
             il.Quantity,
-            il.UnitPrice,
+            il.UnitPrice.Amount,
             il.TaxRate,
-            (il.Quantity * il.UnitPrice) * (1 + il.TaxRate / 100)
+            (il.Quantity * il.UnitPrice.Amount) * (1 + il.TaxRate / 100)
         )).ToList();
 
         return new InvoiceDto(
@@ -43,7 +43,7 @@ public sealed class GetInvoiceByIdQueryHandler : IRequestHandler<GetInvoiceByIdQ
             invoice.InvoiceDate,
             invoice.DueDate,
             invoice.Status.ToString(),
-            invoice.TotalAmount,
+            invoice.TotalAmount.Amount,
             invoice.PaidAt,
             linesDto);
     }

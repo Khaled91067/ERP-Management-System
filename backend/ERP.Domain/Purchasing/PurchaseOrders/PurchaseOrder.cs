@@ -6,6 +6,7 @@ using System.Linq;
 using ERP.Domain.Purchasing.Suppliers;
 using ERP.Domain.Shared.Base;
 using ERP.Domain.Shared.Exceptions;
+using ERP.Domain.Shared.ValueObjects;
 
 public class PurchaseOrder : AggregateRoot
 {
@@ -15,7 +16,7 @@ public class PurchaseOrder : AggregateRoot
     public DateTime OrderDate { get; private set; }
     public DateTime ExpectedDelivery { get; private set; }
     public PurchaseOrderStatus Status { get; private set; }
-    public decimal TotalAmount { get; private set; }
+    public Money TotalAmount { get; private set; } = null!;
     public Supplier? Supplier { get; private set; }
 
     public IReadOnlyCollection<PurchaseOrderLine> PurchaseOrderLines =>
@@ -41,7 +42,7 @@ public class PurchaseOrder : AggregateRoot
         OrderDate = orderDate;
         ExpectedDelivery = expectedDelivery;
         Status = PurchaseOrderStatus.Draft;
-        TotalAmount = 0;
+        TotalAmount = new Money(0);
     }
 
     public void AddLine(
@@ -119,8 +120,8 @@ public class PurchaseOrder : AggregateRoot
 
     private void RecalculateTotal()
     {
-        TotalAmount = _purchaseOrderLines.Sum(
-            x => x.Quantity * x.UnitCost);
+        TotalAmount = new Money(_purchaseOrderLines.Sum(
+            x => x.Quantity * x.UnitCost.Amount));
     }
 
     private void EnsureDraft()

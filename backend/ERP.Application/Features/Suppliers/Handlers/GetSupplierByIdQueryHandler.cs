@@ -27,7 +27,7 @@ public sealed class GetSupplierByIdQueryHandler : IRequestHandler<GetSupplierByI
             supplier.Id,
             supplier.CompanyName,
             supplier.ContactName,
-            supplier.Email,
+            supplier.Email.Value,
             supplier.Phone,
             supplier.PaymentTerms);
     }

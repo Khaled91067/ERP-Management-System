@@ -7,8 +7,9 @@ using ERP.Domain.Sales.Customers;
 using ERP.Domain.Sales.Orders;
 using ERP.Domain.Shared.Base;
 using ERP.Domain.Shared.Exceptions;
+using ERP.Domain.Shared.ValueObjects;
 
-public class Invoice : SoftDeletableEntity
+public class Invoice : AggregateRoot
 {
     private readonly List<InvoiceLine> _invoiceLines = [];
 
@@ -17,7 +18,7 @@ public class Invoice : SoftDeletableEntity
     public DateTime InvoiceDate { get; private set; }
     public DateTime DueDate { get; private set; }
     public InvoiceStatus Status { get; private set; }
-    public decimal TotalAmount { get; private set; }
+    public Money TotalAmount { get; private set; } = null!;
     public DateTime? PaidAt { get; private set; }
     public Order? Order { get; private set; }
     public Customer? Customer { get; private set; }
@@ -42,7 +43,7 @@ public class Invoice : SoftDeletableEntity
         InvoiceDate = DateTime.UtcNow;
         DueDate = dueDate;
         Status = InvoiceStatus.Draft;
-        TotalAmount = 0;
+        TotalAmount = new Money(0);
     }
 
     public void AddLine(string description, int quantity, decimal unitPrice, decimal taxRate = 0)
@@ -64,8 +65,8 @@ public class Invoice : SoftDeletableEntity
 
     private void RecalculateTotal()
     {
-        TotalAmount = _invoiceLines.Sum(x =>
-            (x.Quantity * x.UnitPrice) * (1 + x.TaxRate / 100));
+        TotalAmount = new Money(_invoiceLines.Sum(x =>
+            (x.Quantity * x.UnitPrice.Amount) * (1 + x.TaxRate / 100)));
     }
 
     public void Send()

@@ -2,6 +2,7 @@
 namespace ERP.Infrastructure.Persistence.Configurations
 {
     using ERP.Domain.Sales.Customers;
+    using ERP.Domain.Shared.ValueObjects;
 
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -15,7 +16,9 @@ namespace ERP.Infrastructure.Persistence.Configurations
                 .HasMaxLength(200);
 
             builder.Property(c => c.Email)
-                .HasMaxLength(256);
+                   .HasConversion(e => e.Value, v => new Email(v))
+                   .IsRequired()
+                   .HasMaxLength(256);
 
             builder.Property(c => c.Phone)
                 .HasMaxLength(30);

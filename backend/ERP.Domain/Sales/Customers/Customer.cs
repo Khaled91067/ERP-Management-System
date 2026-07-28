@@ -5,6 +5,7 @@ using ERP.Domain.Sales.Invoices;
 using ERP.Domain.Sales.Orders;
 using ERP.Domain.Shared.Base;
 using ERP.Domain.Shared.Exceptions;
+using ERP.Domain.Shared.ValueObjects;
 
 public class Customer : SoftDeletableEntity
 {
@@ -12,7 +13,7 @@ public class Customer : SoftDeletableEntity
     private readonly List<Invoice> _invoices = [];
 
     public string Name { get; private set; } = string.Empty;
-    public string Email { get; private set; } = string.Empty;
+    public Email Email { get; private set; } = null!;
     public string Phone { get; private set; } = string.Empty;
     public string Address { get; private set; } = string.Empty;
     public string City { get; private set; } = string.Empty;
@@ -60,11 +61,8 @@ public class Customer : SoftDeletableEntity
         if (string.IsNullOrWhiteSpace(name))
             throw new BusinessRuleValidationException("Customer name is required.");
 
-        if (string.IsNullOrWhiteSpace(email))
-            throw new BusinessRuleValidationException("Customer email is required.");
-
         Name = name.Trim();
-        Email = email.Trim();
+        Email = new Email(email);
         Phone = phone?.Trim() ?? string.Empty;
         Address = address?.Trim() ?? string.Empty;
         City = city?.Trim() ?? string.Empty;

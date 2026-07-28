@@ -27,7 +27,7 @@ public class PurchaseOrderTests
         po.SupplierId.Should().Be(1);
         po.ExpectedDelivery.Should().Be(expectedDelivery);
         po.Status.Should().Be(PurchaseOrderStatus.Draft);
-        po.TotalAmount.Should().Be(0);
+        po.TotalAmount.Amount.Should().Be(0);
         po.OrderDate.Should().BeCloseTo(DateTime.UtcNow, precision: TimeSpan.FromSeconds(5));
     }
 
@@ -71,7 +71,7 @@ public class PurchaseOrderTests
 
         // Assert
         po.PurchaseOrderLines.Should().HaveCount(1);
-        po.TotalAmount.Should().Be(250m); // 10 * 25
+        po.TotalAmount.Amount.Should().Be(250m); // 10 * 25
     }
 
     [Fact]
@@ -86,7 +86,7 @@ public class PurchaseOrderTests
 
         // Assert
         po.PurchaseOrderLines.Should().HaveCount(2);
-        po.TotalAmount.Should().Be(450m);
+        po.TotalAmount.Amount.Should().Be(450m);
     }
 
     [Fact]
@@ -135,7 +135,7 @@ public class PurchaseOrderTests
 
         // Assert
         po.PurchaseOrderLines.Should().HaveCount(1);
-        po.TotalAmount.Should().Be(200m);
+        po.TotalAmount.Amount.Should().Be(200m);
     }
 
     [Fact]
@@ -181,7 +181,7 @@ public class PurchaseOrderTests
         po.ChangeLineQuantity(productId: 1, quantity: 10);
 
         // Assert
-        po.TotalAmount.Should().Be(200m); // 10 * 20
+        po.TotalAmount.Amount.Should().Be(200m); // 10 * 20
         po.PurchaseOrderLines.Single().Quantity.Should().Be(10);
     }
 
@@ -215,8 +215,8 @@ public class PurchaseOrderTests
         po.ChangeLineUnitCost(productId: 1, unitCost: 30m);
 
         // Assert
-        po.TotalAmount.Should().Be(150m); // 5 * 30
-        po.PurchaseOrderLines.Single().UnitCost.Should().Be(30m);
+        po.TotalAmount.Amount.Should().Be(150m); // 5 * 30
+        po.PurchaseOrderLines.Single().UnitCost.Amount.Should().Be(30m);
     }
 
     // -----------------------------------------------------------------------

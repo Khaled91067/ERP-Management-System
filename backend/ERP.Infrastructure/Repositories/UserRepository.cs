@@ -1,4 +1,3 @@
-
 namespace ERP.Infrastructure.Repositories;
 
 using ERP.Application.Abstractions.Repositories;
@@ -18,21 +17,24 @@ public sealed class UserRepository: GenericRepository<User>, IUserRepository
 
     public async Task<User?> GetByEmailAsync(string email,CancellationToken cancellationToken = default)
     {
+        var emailVo = new ERP.Domain.Shared.ValueObjects.Email(email);
         return await _context.Set<User>()
                 .Include(user => user.Role)
-                .FirstOrDefaultAsync(user => user.Email == email,cancellationToken);
+                .FirstOrDefaultAsync(user => user.Email == emailVo, cancellationToken);
     }
 
     public async Task<bool> EmailExistsAsync(string email,CancellationToken cancellationToken = default)
     {
+        var emailVo = new ERP.Domain.Shared.ValueObjects.Email(email);
         return await _context.Set<User>()
-            .AnyAsync( user => user.Email == email,cancellationToken);
+            .AnyAsync( user => user.Email == emailVo, cancellationToken);
     }
 
     public async Task<bool> EmailExistsExceptAsync(string email, int userId, CancellationToken cancellationToken = default)
     {
+        var emailVo = new ERP.Domain.Shared.ValueObjects.Email(email);
         return await _context.Set<User>()
-            .AnyAsync(user => user.Email == email && user.Id != userId, cancellationToken);
+            .AnyAsync(user => user.Email == emailVo && user.Id != userId, cancellationToken);
     }
 
     public async Task<User?> GetByIdWithRoleAsync(int id, CancellationToken cancellationToken = default)

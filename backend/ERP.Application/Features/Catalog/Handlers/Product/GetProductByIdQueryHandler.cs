@@ -14,7 +14,7 @@ public sealed class GetProductByIdQueryHandler(IProductRepository productReposit
     {
         var product = await productRepository.GetByIdWithCategoryAsync(request.Id, cancellationToken);
         return product is null ? null : new ProductDto(product.Id, product.Name, product.Sku,
-            product.CategoryId, product.Category?.Name ?? string.Empty, product.UnitPrice, product.CostPrice,
+            product.CategoryId, product.Category?.Name ?? string.Empty, product.UnitPrice.Amount, product.CostPrice.Amount,
             product.StockQuantity, product.ReorderLevel);
     }
 }

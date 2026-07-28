@@ -1,4 +1,3 @@
-
 namespace ERP.Application.Features.Sales.Handlers;
 
 using System;
@@ -56,7 +55,7 @@ public sealed class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, Page
             order.Status.ToString(),
             order.PaymentMethod.ToString(),
             order.ShippingAddress,
-            order.TotalAmount,
+            order.TotalAmount.Amount,
             new List<OrderLineDto>()
         ));
     }

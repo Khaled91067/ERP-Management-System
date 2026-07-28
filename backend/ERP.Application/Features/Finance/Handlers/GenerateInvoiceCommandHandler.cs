@@ -1,4 +1,3 @@
-
 namespace ERP.Application.Features.Finance.Handlers;
 
 using System.Threading;
@@ -53,7 +52,7 @@ public sealed class GenerateInvoiceCommandHandler : IRequestHandler<GenerateInvo
                 : productName;
 
             // Calculate final price after discount
-            var finalUnitPrice = line.UnitPrice * (1 - line.DiscountPercentage / 100);
+            var finalUnitPrice = line.UnitPrice.Amount * (1 - line.DiscountPercentage / 100);
 
             // Add line to invoice (assuming standard 0% tax by default)
             invoice.AddLine(description, line.Quantity, finalUnitPrice, taxRate: 0);

@@ -6,6 +6,7 @@ using ERP.Domain.Purchasing.PurchaseOrders;
 using ERP.Domain.Sales.Orders;
 using ERP.Domain.Shared.Base;
 using ERP.Domain.Shared.Exceptions;
+using ERP.Domain.Shared.ValueObjects;
 
 public class Product : SoftDeletableEntity
 {
@@ -15,8 +16,8 @@ public class Product : SoftDeletableEntity
     public string Name { get; private set; } = string.Empty;
     public string Sku { get; private set; } = string.Empty;
     public int CategoryId { get; private set; }
-    public decimal UnitPrice { get; private set; }
-    public decimal CostPrice { get; private set; }
+    public Money UnitPrice { get; private set; } = null!;
+    public Money CostPrice { get; private set; } = null!;
     public int StockQuantity { get; private set; }
     public int ReorderLevel { get; private set; }
     public Category? Category { get; private set; }
@@ -87,14 +88,14 @@ public class Product : SoftDeletableEntity
         if (categoryId <= 0)
             throw new BusinessRuleValidationException("Category id must be valid.");
 
-        if (unitPrice < 0 || costPrice < 0 || reorderLevel < 0)
+        if (reorderLevel < 0)
             throw new BusinessRuleValidationException("Prices and reorder level cannot be negative.");
 
         Name = name.Trim();
         Sku = sku.Trim();
         CategoryId = categoryId;
-        UnitPrice = unitPrice;
-        CostPrice = costPrice;
+        UnitPrice = new Money(unitPrice);
+        CostPrice = new Money(costPrice);
         ReorderLevel = reorderLevel;
     }
 }

@@ -28,7 +28,7 @@ public sealed class GetCustomerByIdQueryHandler : IRequestHandler<GetCustomerByI
         return new CustomerDto(
             customer.Id,
             customer.Name,
-            customer.Email,
+            customer.Email.Value,
             customer.Phone,
             customer.Address,
             customer.City,

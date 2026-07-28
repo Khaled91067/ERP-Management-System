@@ -28,7 +28,7 @@ public sealed class TokenService : ITokenService
         {
             new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
 
-            new(JwtRegisteredClaimNames.Email, user.Email),
+            new(JwtRegisteredClaimNames.Email, user.Email.Value),
 
             new(ClaimTypes.Role, user.Role?.Name ?? string.Empty)
         };

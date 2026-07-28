@@ -29,12 +29,12 @@ public sealed class GetEmployeeByIdQueryHandler : IRequestHandler<GetEmployeeByI
             employee.Id,
             employee.FirstName,
             employee.LastName,
-            employee.Email,
+            employee.Email.Value,
             employee.Phone,
             employee.DepartmentId,
             employee.Department?.Name ?? string.Empty,
             employee.Position,
             employee.HireDate,
-            employee.Salary);
+            employee.Salary.Amount);
     }
 }

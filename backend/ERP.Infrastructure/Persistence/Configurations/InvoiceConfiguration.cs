@@ -3,6 +3,7 @@
 namespace ERP.Infrastructure.Persistence.Configurations
 {
     using ERP.Domain.Sales.Invoices;
+    using ERP.Domain.Shared.ValueObjects;
 
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -13,6 +14,7 @@ namespace ERP.Infrastructure.Persistence.Configurations
         public void Configure(EntityTypeBuilder<Invoice> builder)
         {
             builder.Property(i => i.TotalAmount)
+                   .HasConversion(m => m.Amount, v => new Money(v))
                    .HasPrecision(18, 2);
 
             builder.Property(i => i.Status)

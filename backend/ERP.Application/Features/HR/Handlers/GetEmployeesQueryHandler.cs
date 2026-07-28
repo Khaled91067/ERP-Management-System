@@ -1,4 +1,3 @@
-
 namespace ERP.Application.Features.HR.Handlers;
 
 using ERP.Application.Abstractions.Repositories;
@@ -35,7 +34,7 @@ public sealed class GetEmployeesQueryHandler : IRequestHandler<GetEmployeesQuery
             options.Filter = e => (existingFilter == null || existingFilter.Compile()(e)) &&
                                   (e.FirstName.ToLower().Contains(search) ||
                                    e.LastName.ToLower().Contains(search) ||
-                                   e.Email.ToLower().Contains(search) ||
+                                   e.Email.Value.ToLower().Contains(search) ||
                                    e.Position.ToLower().Contains(search));
         }
 
@@ -45,12 +44,12 @@ public sealed class GetEmployeesQueryHandler : IRequestHandler<GetEmployeesQuery
             employee.Id,
             employee.FirstName,
             employee.LastName,
-            employee.Email,
+            employee.Email.Value,
             employee.Phone,
             employee.DepartmentId,
             employee.Department?.Name ?? string.Empty,
             employee.Position,
             employee.HireDate,
-            employee.Salary));
+            employee.Salary.Amount));
     }
 }

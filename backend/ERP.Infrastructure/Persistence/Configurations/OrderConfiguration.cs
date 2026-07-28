@@ -4,6 +4,7 @@ namespace ERP.Infrastructure.Persistence.Configurations
     using System;
 
     using ERP.Domain.Sales.Orders;
+    using ERP.Domain.Shared.ValueObjects;
 
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -13,6 +14,7 @@ namespace ERP.Infrastructure.Persistence.Configurations
         public void Configure(EntityTypeBuilder<Order> builder)
         {
             builder.Property(o => o.TotalAmount)
+                .HasConversion(m => m.Amount, v => new Money(v))
                 .HasPrecision(18, 2);
 
             builder.Property(o => o.ShippingAddress)

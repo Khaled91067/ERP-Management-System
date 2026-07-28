@@ -32,9 +32,9 @@ public sealed class GetOrderByIdQueryHandler : IRequestHandler<GetOrderByIdQuery
             ol.ProductId,
             ol.Product?.Name ?? string.Empty,
             ol.Quantity,
-            ol.UnitPrice,
+            ol.UnitPrice.Amount,
             ol.DiscountPercentage,
-            (ol.Quantity * ol.UnitPrice) * (1 - ol.DiscountPercentage / 100)
+            (ol.Quantity * ol.UnitPrice.Amount) * (1 - ol.DiscountPercentage / 100)
         )).ToList();
 
         return new OrderDto(
@@ -45,7 +45,7 @@ public sealed class GetOrderByIdQueryHandler : IRequestHandler<GetOrderByIdQuery
             order.Status.ToString(),
             order.PaymentMethod.ToString(),
             order.ShippingAddress,
-            order.TotalAmount,
+            order.TotalAmount.Amount,
             linesDto);
     }
 }

@@ -3,6 +3,7 @@
 namespace ERP.Infrastructure.Persistence.Configurations
 {
     using ERP.Domain.Catalog.Products;
+    using ERP.Domain.Shared.ValueObjects;
 
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -24,9 +25,11 @@ namespace ERP.Infrastructure.Persistence.Configurations
                    .HasFilter("[IsDeleted] = 0");
 
             builder.Property(p => p.UnitPrice)
+                   .HasConversion(m => m.Amount, v => new Money(v))
                    .HasPrecision(18, 2);
 
             builder.Property(p => p.CostPrice)
+                   .HasConversion(m => m.Amount, v => new Money(v))
                    .HasPrecision(18, 2);
 
             builder.HasOne(p => p.Category)

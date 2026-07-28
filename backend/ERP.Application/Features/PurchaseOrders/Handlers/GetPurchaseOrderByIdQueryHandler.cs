@@ -30,6 +30,6 @@ public sealed class GetPurchaseOrderByIdQueryHandler: IRequestHandler<GetPurchas
             purchaseOrder.OrderDate,
             purchaseOrder.ExpectedDelivery,
             purchaseOrder.Status.ToString(),
-            purchaseOrder.TotalAmount);
+            purchaseOrder.TotalAmount.Amount);
     }
 }

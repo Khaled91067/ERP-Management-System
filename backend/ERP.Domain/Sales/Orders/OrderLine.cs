@@ -1,17 +1,17 @@
-
 namespace ERP.Domain.Sales.Orders;
 using ERP.Domain.Shared.Base;
 using ERP.Domain.Shared.Abstractions;
 
 using ERP.Domain.Catalog.Products;
 using ERP.Domain.Shared.Exceptions;
+using ERP.Domain.Shared.ValueObjects;
 
 public class OrderLine : BaseEntity
 {
     public int OrderId { get; private set; }
     public int ProductId { get; private set; }
     public int Quantity { get; private set; }
-    public decimal UnitPrice { get; private set; }
+    public Money UnitPrice { get; private set; } = null!;
     public decimal DiscountPercentage { get; private set; }
 
     public Order? Order { get; private set; }
@@ -33,23 +33,13 @@ public class OrderLine : BaseEntity
         if (quantity <= 0)
             throw new BusinessRuleValidationException("Quantity must be greater than zero.");
 
-        if (unitPrice < 0)
-            throw new BusinessRuleValidationException("Unit price cannot be negative.");
-
         if (discountPercentage < 0 || discountPercentage > 100)
             throw new BusinessRuleValidationException(
                 "Discount percentage must be between 0 and 100.");
 
         ProductId = productId;
         Quantity = quantity;
-        UnitPrice = unitPrice;
+        UnitPrice = new Money(unitPrice);
         DiscountPercentage = discountPercentage;
     }
-
-
 }
-
-
-
-
-

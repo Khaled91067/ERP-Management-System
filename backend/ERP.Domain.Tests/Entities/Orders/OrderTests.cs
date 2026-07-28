@@ -23,7 +23,7 @@ public class OrderTests
         order.PaymentMethod.Should().Be(PaymentMethod.Cash);
         order.ShippingAddress.Should().Be("123 Main St");
         order.Status.Should().Be(OrderStatus.Pending);
-        order.TotalAmount.Should().Be(0);
+        order.TotalAmount.Amount.Should().Be(0);
         order.OrderDate.Should().BeCloseTo(DateTime.UtcNow, precision: TimeSpan.FromSeconds(5));
     }
 
@@ -77,7 +77,7 @@ public class OrderTests
 
         // Assert
         order.OrderLines.Should().HaveCount(1);
-        order.TotalAmount.Should().Be(100m); // 2 * 50 * (1 - 0/100)
+        order.TotalAmount.Amount.Should().Be(100m); // 2 * 50 * (1 - 0/100)
     }
 
     [Fact]
@@ -91,7 +91,7 @@ public class OrderTests
 
         // Assert
         // (4 * 100) * (1 - 25/100) = 400 * 0.75 = 300
-        order.TotalAmount.Should().Be(300m);
+        order.TotalAmount.Amount.Should().Be(300m);
     }
 
     [Fact]
@@ -106,7 +106,7 @@ public class OrderTests
 
         // Assert
         order.OrderLines.Should().HaveCount(2);
-        order.TotalAmount.Should().Be(300m);
+        order.TotalAmount.Amount.Should().Be(300m);
     }
 
     [Fact]
@@ -155,7 +155,7 @@ public class OrderTests
 
         // Assert
         order.OrderLines.Should().HaveCount(1);
-        order.TotalAmount.Should().Be(30m);
+        order.TotalAmount.Amount.Should().Be(30m);
     }
 
     [Fact]

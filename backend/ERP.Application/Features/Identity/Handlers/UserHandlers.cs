@@ -24,14 +24,14 @@ public sealed class GetUsersQueryHandler(IUserRepository userRepository)
             var search = request.Search.Trim().ToLower();
             options.Filter = u => u.FirstName.ToLower().Contains(search) ||
                                   u.LastName.ToLower().Contains(search) ||
-                                  u.Email.ToLower().Contains(search);
+                                  u.Email.Value.ToLower().Contains(search);
         }
 
         var pagedUsers = await userRepository.GetPagedAsync(options, request.Page, request.PageSize);
         return pagedUsers.Map(ToDto);
     }
 
-    private static UserDto ToDto(User user) => new(user.Id, user.FirstName, user.LastName, user.Email,
+    private static UserDto ToDto(User user) => new(user.Id, user.FirstName, user.LastName, user.Email.Value,
         user.RoleId, user.Role?.Name ?? string.Empty);
 }
 
@@ -41,7 +41,7 @@ public sealed class GetUserByIdQueryHandler(IUserRepository userRepository)
     public async Task<UserDto?> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
     {
         var user = await userRepository.GetByIdWithRoleAsync(request.Id, cancellationToken);
-        return user is null ? null : new UserDto(user.Id, user.FirstName, user.LastName, user.Email,
+        return user is null ? null : new UserDto(user.Id, user.FirstName, user.LastName, user.Email.Value,
             user.RoleId, user.Role?.Name ?? string.Empty);
     }
 }
