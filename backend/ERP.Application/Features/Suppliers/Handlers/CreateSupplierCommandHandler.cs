@@ -1,5 +1,7 @@
-
 namespace ERP.Application.Features.Suppliers.Handlers;
+
+using System.Threading;
+using System.Threading.Tasks;
 
 using ERP.Application.Abstractions;
 using ERP.Application.Abstractions.Repositories;
@@ -23,14 +25,12 @@ public sealed class CreateSupplierCommandHandler : IRequestHandler<CreateSupplie
 
     public async Task<int> Handle(CreateSupplierCommand request, CancellationToken cancellationToken)
     {
-        var supplier = new Supplier
-        {
-            CompanyName = request.CompanyName.Trim(),
-            ContactName = request.ContactName.Trim(),
-            Email = request.Email.Trim(),
-            Phone = request.Phone.Trim(),
-            PaymentTerms = request.PaymentTerms.Trim()
-        };
+        var supplier = new Supplier(
+            request.CompanyName,
+            request.Email,
+            request.ContactName,
+            request.Phone,
+            request.PaymentTerms);
 
         _supplierRepository.Add(supplier);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
