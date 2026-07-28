@@ -202,13 +202,16 @@ export class UserFormComponent implements OnInit {
       next: (user) => {
         // Need to match role name back to role id from available roles, 
         // assuming the API returns the role name as string in user.role
-        let roleId = null;
-        if (user.role) {
-          const matchedRole = this.availableRoles().find(r => r.name === user.role);
+        let roleId = user.roleId || null;
+        const roleName = user.roleName || user.role;
+        if (!roleId && roleName) {
+          const matchedRole = this.availableRoles().find(r => r.name === roleName);
           if (matchedRole) {
             roleId = matchedRole.id;
-            this.initialRoleId = roleId;
           }
+        }
+        if (roleId) {
+          this.initialRoleId = roleId;
         }
         
         this.userForm.patchValue({

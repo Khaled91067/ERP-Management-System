@@ -9,7 +9,9 @@ export interface UserDto {
   lastName: string;
   email: string;
   isActive: boolean;
-  role: string;
+  role?: string;
+  roleId?: number;
+  roleName?: string;
 }
 
 export interface ChangeRoleDto {

@@ -95,7 +95,6 @@ export interface NavItem {
       height: 100%;
       background-color: var(--sidebar-bg);
       color: var(--text-primary);
-      border-right: 1px solid var(--sidebar-border);
       user-select: none;
     }
 

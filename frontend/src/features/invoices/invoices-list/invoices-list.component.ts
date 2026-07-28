@@ -134,7 +134,7 @@ import { ConfirmationDialogComponent } from '@shared/components/confirmation-dia
                   <mat-icon>payments</mat-icon>
                   <span>Mark as Paid</span>
                 </button>
-                <button mat-menu-item disabled matTooltip="PDF export is currently disabled">
+                <button mat-menu-item (click)="downloadPdf(invoice)">
                   <mat-icon>picture_as_pdf</mat-icon>
                   <span>Download PDF</span>
                 </button>
@@ -360,6 +360,23 @@ export class InvoicesListComponent implements OnInit {
           error: () => this.notification.error('Failed to delete invoice')
         });
       }
+    });
+  }
+
+  downloadPdf(invoice: Invoice): void {
+    this.invoicesService.downloadInvoicePdf(invoice.id).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `INV-${invoice.id.toString().padStart(5, '0')}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        a.remove();
+        this.notification.success('PDF downloaded successfully');
+      },
+      error: () => this.notification.error('Failed to download PDF')
     });
   }
 }

@@ -66,4 +66,8 @@ export class InvoicesService {
   deleteInvoice(id: number): Observable<void> {
     return this.apiService.delete<void>(this.endpoint, id);
   }
+
+  downloadInvoicePdf(id: number): Observable<Blob> {
+    return this.apiService.downloadFile(this.endpoint, `${id}/pdf`);
+  }
 }

@@ -79,4 +79,11 @@ export class ApiService {
   ): Observable<TResponse> {
     return this.http.delete<TResponse>(`${this.url(resource)}/${id}`);
   }
+
+  /** GET /resource/... (for downloading blobs) */
+  downloadFile(resource: string, path: string): Observable<Blob> {
+    return this.http.get(`${this.url(resource)}/${path}`, {
+      responseType: 'blob'
+    });
+  }
 }

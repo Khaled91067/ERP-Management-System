@@ -65,7 +65,7 @@ import { StatusBadgeComponent } from '@shared/components/status-badge/status-bad
 
           <ng-container matColumnDef="role">
             <th mat-header-cell *matHeaderCellDef>Role</th>
-            <td mat-cell *matCellDef="let user">{{ user.role || 'Unassigned' }}</td>
+            <td mat-cell *matCellDef="let user">{{ user.roleName || user.role || 'Unassigned' }}</td>
           </ng-container>
 
           <ng-container matColumnDef="status">
