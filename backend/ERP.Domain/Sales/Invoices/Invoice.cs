@@ -1,12 +1,8 @@
-
 namespace ERP.Domain.Sales.Invoices;
-using ERP.Domain.Shared.Base;
-using ERP.Domain.Shared.Abstractions;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using ERP.Domain.Sales.Customers;
 using ERP.Domain.Sales.Orders;
 using ERP.Domain.Shared.Base;
@@ -15,6 +11,7 @@ using ERP.Domain.Shared.Exceptions;
 public class Invoice : SoftDeletableEntity
 {
     private readonly List<InvoiceLine> _invoiceLines = [];
+
     public int OrderId { get; private set; }
     public int CustomerId { get; private set; }
     public DateTime InvoiceDate { get; private set; }
@@ -24,6 +21,7 @@ public class Invoice : SoftDeletableEntity
     public DateTime? PaidAt { get; private set; }
     public Order? Order { get; private set; }
     public Customer? Customer { get; private set; }
+
     public IReadOnlyCollection<InvoiceLine> InvoiceLines => _invoiceLines.AsReadOnly();
 
     private Invoice() { }
@@ -58,9 +56,15 @@ public class Invoice : SoftDeletableEntity
         RecalculateTotal();
     }
 
+    public void EnsureCanBeDeleted()
+    {
+        if (Status == InvoiceStatus.Paid)
+            throw new BusinessRuleValidationException("Paid invoices cannot be deleted.");
+    }
+
     private void RecalculateTotal()
     {
-        TotalAmount = _invoiceLines.Sum(x => 
+        TotalAmount = _invoiceLines.Sum(x =>
             (x.Quantity * x.UnitPrice) * (1 + x.TaxRate / 100));
     }
 
