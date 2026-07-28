@@ -1,6 +1,7 @@
-using MediatR;
 
 namespace ERP.Application.Features.Suppliers.Commands;
+
+using MediatR;
 
 public sealed record CreateSupplierCommand(
     string CompanyName,

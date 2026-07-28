@@ -1,16 +1,18 @@
-using ERP.Application.Abstractions;
-using ERP.Application.Abstractions.Repositories;
-using ERP.Application.Features.Sales.Commands.Models;
-using ERP.Domain.Entities;
-using ERP.Domain.Entities.Orders;
-using ERP.Domain.Enums;
-using ERP.Domain.Exceptions;
-using MediatR;
-using System;
+
+namespace ERP.Application.Features.Sales.Handlers;
+
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ERP.Application.Features.Sales.Handlers;
+using ERP.Application.Abstractions;
+using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Features.Sales.Commands.Models;
+using ERP.Domain.Catalog.Products;
+using ERP.Domain.Sales.Customers;
+using ERP.Domain.Sales.Orders;
+using ERP.Domain.Shared.Exceptions;
+
+using MediatR;
 
 public sealed class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, int>
 {

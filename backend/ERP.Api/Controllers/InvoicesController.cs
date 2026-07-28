@@ -1,12 +1,16 @@
-using ERP.Application.Features.Finance.Commands.Models;
-using ERP.Application.Features.Finance.Queries.Models;
-using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+
+namespace ERP.Api.Controllers;
+
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ERP.Api.Controllers;
+using ERP.Application.Features.Finance.Commands.Models;
+using ERP.Application.Features.Finance.Queries.Models;
+
+using MediatR;
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 [Authorize]
 [ApiController]

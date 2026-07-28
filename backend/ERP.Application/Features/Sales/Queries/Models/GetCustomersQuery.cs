@@ -1,8 +1,10 @@
-using ERP.Application.Common.Models;
-using ERP.Application.Features.Sales.Dtos;
-using MediatR;
 
 namespace ERP.Application.Features.Sales.Queries.Models;
+
+using ERP.Application.Common.Models;
+using ERP.Application.Features.Sales.Dtos;
+
+using MediatR;
 
 public sealed record GetCustomersQuery(
     string? Search = null,

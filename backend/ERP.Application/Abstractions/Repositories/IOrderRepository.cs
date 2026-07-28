@@ -1,9 +1,11 @@
-using ERP.Domain.Entities.Orders;
+
+namespace ERP.Application.Abstractions.Repositories;
+
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ERP.Application.Abstractions.Repositories;
+using ERP.Domain.Sales.Orders;
 
 public interface IOrderRepository : IGenericRepository<Order>
 {

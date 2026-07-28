@@ -1,10 +1,10 @@
-using ERP.Domain.Entities;
-using ERP.Domain.Enums;
-using ERP.Domain.Events;
-using ERP.Domain.Exceptions;
-using FluentAssertions;
 
 namespace ERP.Domain.Tests.Entities.Purchasing;
+
+using ERP.Domain.Purchasing.PurchaseOrders;
+using ERP.Domain.Shared.Exceptions;
+
+using FluentAssertions;
 
 public class PurchaseOrderTests
 {

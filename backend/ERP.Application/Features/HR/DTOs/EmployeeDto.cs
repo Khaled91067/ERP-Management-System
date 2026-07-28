@@ -1,6 +1,7 @@
-using System;
 
 namespace ERP.Application.Features.HR.Dtos;
+
+using System;
 
 public sealed record EmployeeDto(
     int Id,

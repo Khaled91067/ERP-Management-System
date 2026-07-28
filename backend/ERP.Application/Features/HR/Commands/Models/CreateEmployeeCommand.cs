@@ -1,7 +1,9 @@
-using MediatR;
-using System;
 
 namespace ERP.Application.Features.HR.Commands.Models;
+
+using System;
+
+using MediatR;
 
 public sealed record CreateEmployeeCommand(
     string FirstName,

@@ -1,13 +1,16 @@
+
+namespace ERP.Application.Features.Finance.Handlers;
+
+using System;
+using System.Collections.Generic;
+
 using ERP.Application.Abstractions.Repositories;
 using ERP.Application.Common.Models;
 using ERP.Application.Features.Finance.Dtos;
 using ERP.Application.Features.Finance.Queries.Models;
-using ERP.Domain.Entities;
-using MediatR;
-using System;
-using System.Collections.Generic;
+using ERP.Domain.Sales.Invoices;
 
-namespace ERP.Application.Features.Finance.Handlers;
+using MediatR;
 
 public sealed class GetInvoicesQueryHandler : IRequestHandler<GetInvoicesQuery, PagedResult<InvoiceDto>>
 {
@@ -28,7 +31,7 @@ public sealed class GetInvoicesQueryHandler : IRequestHandler<GetInvoicesQuery, 
             options.Filter = i => i.CustomerId == request.CustomerId.Value;
         }
 
-        if (!string.IsNullOrWhiteSpace(request.Status) && Enum.TryParse<ERP.Domain.Enums.InvoiceStatus>(request.Status, true, out var statusEnum))
+        if (!string.IsNullOrWhiteSpace(request.Status) && Enum.TryParse<InvoiceStatus>(request.Status, true, out var statusEnum))
         {
             var existingFilter = options.Filter;
             options.Filter = i => (existingFilter == null || existingFilter.Compile()(i)) && i.Status == statusEnum;

@@ -1,7 +1,9 @@
-using ERP.Application.Common.Models;
-using FluentAssertions;
 
 namespace ERP.Domain.Tests.Common;
+
+using ERP.Application.Common.Models;
+
+using FluentAssertions;
 
 public class PagedResultTests
 {

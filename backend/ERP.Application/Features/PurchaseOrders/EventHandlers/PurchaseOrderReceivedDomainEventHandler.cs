@@ -1,9 +1,10 @@
-﻿using ERP.Application.Abstractions.Messaging;
-using ERP.Application.Abstractions.Repositories;
-using ERP.Domain.Entities;
-using ERP.Domain.Events;
 
 namespace ERP.Application.Features.PurchaseOrders.EventHandlers;
+
+using ERP.Application.Abstractions.Messaging;
+using ERP.Application.Abstractions.Repositories;
+using ERP.Domain.Catalog.Products;
+using ERP.Domain.Purchasing.PurchaseOrders;
 
 public sealed class PurchaseOrderReceivedDomainEventHandler: IDomainEventHandler<PurchaseOrderReceivedDomainEvent>
 {

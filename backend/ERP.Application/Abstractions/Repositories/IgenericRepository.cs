@@ -1,9 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ERP.Application.Abstractions.Repositories
 {
+    using System.Collections.Generic;
+
     public interface IGenericRepository<T> where T : class
     {
         Task<T?> GetByIdAsync(int id);

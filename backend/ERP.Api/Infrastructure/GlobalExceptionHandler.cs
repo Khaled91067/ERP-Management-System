@@ -1,10 +1,13 @@
-using ERP.Application.Common.Exceptions;
-using ERP.Domain.Exceptions;
-using FluentValidation;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ERP.Api.Infrastructure;
+
+using ERP.Application.Common.Exceptions;
+using ERP.Domain.Shared.Exceptions;
+
+using FluentValidation;
+
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 
 public sealed class GlobalExceptionHandler(
     ILogger<GlobalExceptionHandler> logger,

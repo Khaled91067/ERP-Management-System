@@ -1,11 +1,14 @@
-using ERP.Application.Abstractions.Repositories;
-using ERP.Application.Features.HR.Dtos;
-using ERP.Application.Features.HR.Queries.Models;
-using MediatR;
+
+namespace ERP.Application.Features.HR.Handlers;
+
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ERP.Application.Features.HR.Handlers;
+using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Features.HR.Dtos;
+using ERP.Application.Features.HR.Queries.Models;
+
+using MediatR;
 
 public sealed class GetEmployeeByIdQueryHandler : IRequestHandler<GetEmployeeByIdQuery, EmployeeDto?>
 {

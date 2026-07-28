@@ -1,8 +1,9 @@
+
+namespace ERP.Application.Common.Models;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
-namespace ERP.Application.Common.Models;
 
 public class PagedResult<T>
 {

@@ -1,11 +1,13 @@
+
+namespace ERP.Application.Features.PurchaseOrders.Handlers;
+
 using ERP.Application.Abstractions;
 using ERP.Application.Abstractions.Repositories;
 using ERP.Application.Features.PurchaseOrders.Commands.Models;
-using ERP.Domain.Enums;
-using ERP.Domain.Exceptions;
-using MediatR;
+using ERP.Domain.Purchasing.PurchaseOrders;
+using ERP.Domain.Shared.Exceptions;
 
-namespace ERP.Application.Features.PurchaseOrders.Handlers;
+using MediatR;
 
 public sealed class UpdatePurchaseOrderStatusCommandHandler : IRequestHandler<UpdatePurchaseOrderStatusCommand, bool>
 {

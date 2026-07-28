@@ -1,12 +1,15 @@
-using ERP.Application.Abstractions;
-using ERP.Application.Abstractions.Repositories;
-using ERP.Application.Features.Sales.Commands.Models;
-using ERP.Domain.Entities;
-using MediatR;
+
+namespace ERP.Application.Features.Sales.Handlers;
+
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ERP.Application.Features.Sales.Handlers;
+using ERP.Application.Abstractions;
+using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Features.Sales.Commands.Models;
+using ERP.Domain.Sales.Customers;
+
+using MediatR;
 
 public sealed class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerCommand, int>
 {

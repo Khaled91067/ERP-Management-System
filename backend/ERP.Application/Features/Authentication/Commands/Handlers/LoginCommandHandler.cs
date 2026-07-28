@@ -1,12 +1,14 @@
-﻿using ERP.Application.Abstractions;
+
+namespace ERP.Application.Features.Authentication.Commands.Handlers;
+
+using ERP.Application.Abstractions;
 using ERP.Application.Abstractions.Authentication;
 using ERP.Application.Abstractions.Repositories;
 using ERP.Application.Features.Authentication.Commands.Models;
 using ERP.Application.Features.Authentication.DTOs;
-using ERP.Domain.Entities;
-using MediatR;
+using ERP.Domain.Identity.Users;
 
-namespace ERP.Application.Features.Authentication.Commands.Handlers;
+using MediatR;
 
 public sealed class LoginCommandHandler : IRequestHandler<LoginCommand, TokenResponse>
 {

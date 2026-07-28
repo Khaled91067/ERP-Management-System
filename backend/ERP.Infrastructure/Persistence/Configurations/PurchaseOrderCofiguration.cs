@@ -1,10 +1,11 @@
-using ERP.Domain.Entities;
-using ERP.Domain.Enums;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ERP.Infrastructure.Persistence.Configurations
 {
+    using ERP.Domain.Purchasing.PurchaseOrders;
+
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
     public class PurchaseOrderConfiguration
     : IEntityTypeConfiguration<PurchaseOrder>
     {

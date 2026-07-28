@@ -1,4 +1,4 @@
-﻿namespace ERP.Application.Features.PurchaseOrders.Dtos;
+namespace ERP.Application.Features.PurchaseOrders.Dtos;
 
 public sealed record PurchaseOrderDto(
     int Id,

@@ -1,12 +1,15 @@
-using ERP.Application.Abstractions.Repositories;
-using ERP.Application.Features.Finance.Dtos;
-using ERP.Application.Features.Finance.Queries.Models;
-using MediatR;
+
+namespace ERP.Application.Features.Finance.Handlers;
+
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ERP.Application.Features.Finance.Handlers;
+using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Features.Finance.Dtos;
+using ERP.Application.Features.Finance.Queries.Models;
+
+using MediatR;
 
 public sealed class GetInvoiceByIdQueryHandler : IRequestHandler<GetInvoiceByIdQuery, InvoiceDto?>
 {

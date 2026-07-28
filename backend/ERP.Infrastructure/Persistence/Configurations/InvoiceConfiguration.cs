@@ -1,11 +1,12 @@
-using ERP.Domain.Entities;
-using ERP.Domain.Enums;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 
 namespace ERP.Infrastructure.Persistence.Configurations
 {
+    using ERP.Domain.Sales.Invoices;
+
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
 
     public class InvoiceConfiguration: IEntityTypeConfiguration<Invoice>
     {

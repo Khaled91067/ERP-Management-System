@@ -1,6 +1,7 @@
-﻿using MediatR;
 
 namespace ERP.Application.Features.Authentication.Commands.Models;
+
+using MediatR;
 
 public sealed record RegisterUserCommand(
     string FirstName,

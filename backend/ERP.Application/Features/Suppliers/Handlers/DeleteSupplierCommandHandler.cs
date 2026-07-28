@@ -1,9 +1,11 @@
+
+namespace ERP.Application.Features.Suppliers.Handlers;
+
 using ERP.Application.Abstractions;
 using ERP.Application.Abstractions.Repositories;
 using ERP.Application.Features.Suppliers.Commands;
-using MediatR;
 
-namespace ERP.Application.Features.Suppliers.Handlers;
+using MediatR;
 
 public sealed class DeleteSupplierCommandHandler : IRequestHandler<DeleteSupplierCommand, bool>
 {

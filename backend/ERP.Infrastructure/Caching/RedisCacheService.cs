@@ -1,9 +1,13 @@
-using System.Text.Json;
-using ERP.Application.Abstractions.Caching;
-using Microsoft.Extensions.Logging;
-using StackExchange.Redis;
 
 namespace ERP.Infrastructure.Caching;
+
+using System.Text.Json;
+
+using ERP.Application.Abstractions.Caching;
+
+using Microsoft.Extensions.Logging;
+
+using StackExchange.Redis;
 
 public class RedisCacheService : ICacheService
 {

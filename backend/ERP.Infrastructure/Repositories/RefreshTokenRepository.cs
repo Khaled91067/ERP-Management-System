@@ -1,13 +1,12 @@
-﻿using ERP.Application.Abstractions.Repositories;
-using ERP.Domain.Entities;
-using ERP.Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ERP.Infrastructure.Repositories
 {
+    using ERP.Application.Abstractions.Repositories;
+    using ERP.Domain.Identity.Users;
+    using ERP.Infrastructure.Persistence;
+
+    using Microsoft.EntityFrameworkCore;
+
     public sealed class RefreshTokenRepository : IRefreshTokenRepository
     {
         private readonly AppDbContext _context;

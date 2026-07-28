@@ -1,11 +1,13 @@
+
+namespace ERP.Application.Features.Sales.Handlers;
+
 using ERP.Application.Abstractions;
 using ERP.Application.Abstractions.Repositories;
 using ERP.Application.Features.Sales.Commands.Models;
-using ERP.Domain.Enums;
-using ERP.Domain.Exceptions;
-using MediatR;
+using ERP.Domain.Sales.Orders;
+using ERP.Domain.Shared.Exceptions;
 
-namespace ERP.Application.Features.Sales.Handlers;
+using MediatR;
 
 public sealed class DeleteOrderCommandHandler : IRequestHandler<DeleteOrderCommand, bool>
 {

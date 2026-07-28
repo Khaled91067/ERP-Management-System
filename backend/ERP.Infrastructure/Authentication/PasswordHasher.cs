@@ -1,6 +1,7 @@
-﻿using ERP.Application.Abstractions.Authentication;
 
 namespace ERP.Infrastructure.Authentication;
+
+using ERP.Application.Abstractions.Authentication;
 
 public sealed class PasswordHasher : IPasswordHasher
 {

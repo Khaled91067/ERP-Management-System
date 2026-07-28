@@ -1,8 +1,10 @@
-using ERP.Application.Common.Models;
-using ERP.Application.Features.PurchaseOrders.Dtos;
-using MediatR;
 
 namespace ERP.Application.Features.PurchaseOrders.Queries.Models;
+
+using ERP.Application.Common.Models;
+using ERP.Application.Features.PurchaseOrders.Dtos;
+
+using MediatR;
 
 public sealed record GetPurchaseOrdersQuery(
     int? SupplierId = null,

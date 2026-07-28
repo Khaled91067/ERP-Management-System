@@ -1,9 +1,11 @@
-using ERP.Domain.Entities;
+
+namespace ERP.Application.Abstractions.Repositories;
+
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ERP.Application.Abstractions.Repositories;
+using ERP.Domain.HR.Employees;
 
 public interface IEmployeeRepository : IGenericRepository<Employee>
 {

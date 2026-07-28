@@ -1,8 +1,11 @@
-using ERP.Application.Abstractions.Common;
-using Microsoft.AspNetCore.Http;
-using System.Security.Claims;
 
 namespace ERP.Infrastructure.Services;
+
+using System.Security.Claims;
+
+using ERP.Application.Abstractions.Common;
+
+using Microsoft.AspNetCore.Http;
 
 public class CurrentUserService : ICurrentUserService
 {

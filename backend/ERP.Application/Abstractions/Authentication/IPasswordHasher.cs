@@ -1,4 +1,4 @@
-﻿namespace ERP.Application.Abstractions.Authentication;
+namespace ERP.Application.Abstractions.Authentication;
 
 public interface IPasswordHasher
 {

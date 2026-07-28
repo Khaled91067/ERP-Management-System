@@ -1,11 +1,13 @@
+
+namespace ERP.Application.Features.Sales.Handlers;
+
 using ERP.Application.Abstractions.Repositories;
 using ERP.Application.Common.Models;
 using ERP.Application.Features.Sales.Dtos;
 using ERP.Application.Features.Sales.Queries.Models;
-using ERP.Domain.Entities;
-using MediatR;
+using ERP.Domain.Sales.Customers;
 
-namespace ERP.Application.Features.Sales.Handlers;
+using MediatR;
 
 public sealed class GetCustomersQueryHandler : IRequestHandler<GetCustomersQuery, PagedResult<CustomerDto>>
 {

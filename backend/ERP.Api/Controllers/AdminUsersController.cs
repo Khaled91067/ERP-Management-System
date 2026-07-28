@@ -1,10 +1,13 @@
-using ERP.Application.Features.Identity.Commands;
-using ERP.Application.Features.Identity.Queries;
-using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ERP.Api.Controllers;
+
+using ERP.Application.Features.Identity.Commands;
+using ERP.Application.Features.Identity.Queries;
+
+using MediatR;
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 [Authorize(Roles = "Administrator")]
 [ApiController]

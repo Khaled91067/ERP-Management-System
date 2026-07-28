@@ -1,9 +1,10 @@
-using ERP.Domain.Entities.Orders;
-using ERP.Domain.Enums;
-using ERP.Domain.Exceptions;
-using FluentAssertions;
 
 namespace ERP.Domain.Tests.Entities.Orders;
+
+using ERP.Domain.Sales.Orders;
+using ERP.Domain.Shared.Exceptions;
+
+using FluentAssertions;
 
 public class OrderTests
 {

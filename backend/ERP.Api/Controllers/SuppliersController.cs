@@ -1,10 +1,13 @@
-using ERP.Application.Features.Suppliers.Commands;
-using ERP.Application.Features.Suppliers.Queries;
-using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ERP.Api.Controllers;
+
+using ERP.Application.Features.Suppliers.Commands;
+using ERP.Application.Features.Suppliers.Queries;
+
+using MediatR;
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 [Authorize]
 [ApiController]

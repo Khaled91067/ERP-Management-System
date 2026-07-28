@@ -1,6 +1,7 @@
-﻿using ERP.Domain.Entities;
 
 namespace ERP.Application.Abstractions.Authentication;
+
+using ERP.Domain.Identity.Users;
 
 public interface ITokenService
 {

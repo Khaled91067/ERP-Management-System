@@ -1,12 +1,15 @@
-using ERP.Application.Abstractions.Repositories;
-using ERP.Domain.Entities;
-using ERP.Infrastructure.Persistence;
-using ERP.Infrastructure.Repositories;
-using Microsoft.EntityFrameworkCore;
+
+namespace ERP.Infrastructure.Persistence.Repositories;
+
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ERP.Infrastructure.Persistence.Repositories;
+using ERP.Application.Abstractions.Repositories;
+using ERP.Domain.Sales.Customers;
+using ERP.Infrastructure.Persistence;
+using ERP.Infrastructure.Repositories;
+
+using Microsoft.EntityFrameworkCore;
 
 public sealed class CustomerRepository
     : GenericRepository<Customer>,

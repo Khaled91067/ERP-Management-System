@@ -1,10 +1,12 @@
-﻿using ERP.Application.Abstractions;
-using ERP.Application.Abstractions.Repositories;
-using ERP.Application.Features.PurchaseOrders.Commands.Models;
-using ERP.Domain.Entities;
-using MediatR;
 
 namespace ERP.Application.Features.PurchaseOrders.Handlers;
+
+using ERP.Application.Abstractions;
+using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Features.PurchaseOrders.Commands.Models;
+using ERP.Domain.Purchasing.PurchaseOrders;
+
+using MediatR;
 
 public sealed class CreatePurchaseOrderCommandHandler : IRequestHandler<CreatePurchaseOrderCommand, int>
 {

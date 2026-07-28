@@ -1,10 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Text;
 
 namespace ERP.Application.Abstractions.Repositories
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq.Expressions;
+
     public class QueryOptions<T> where T : class
     {
         public Expression<Func<T, bool>>? Filter { get; set; }

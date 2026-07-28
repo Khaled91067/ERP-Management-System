@@ -1,4 +1,4 @@
-﻿namespace ERP.Application.Common.Exceptions;
+namespace ERP.Application.Common.Exceptions;
 
 public sealed class UnauthorizedException : Exception
 {

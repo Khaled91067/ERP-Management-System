@@ -1,8 +1,11 @@
-using FluentValidation;
-using MediatR;
-using Microsoft.Extensions.Logging;
 
 namespace ERP.Application.Behaviors;
+
+using FluentValidation;
+
+using MediatR;
+
+using Microsoft.Extensions.Logging;
 
 public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>

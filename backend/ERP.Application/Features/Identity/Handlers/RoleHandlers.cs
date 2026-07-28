@@ -1,13 +1,15 @@
+
+namespace ERP.Application.Features.Identity.Handlers;
+
 using ERP.Application.Abstractions;
 using ERP.Application.Abstractions.Repositories;
 using ERP.Application.Common.Models;
 using ERP.Application.Features.Identity.Commands;
 using ERP.Application.Features.Identity.DTOs;
 using ERP.Application.Features.Identity.Queries;
-using ERP.Domain.Entities;
-using MediatR;
+using ERP.Domain.Identity.Roles;
 
-namespace ERP.Application.Features.Identity.Handlers;
+using MediatR;
 
 public sealed class GetRolesQueryHandler(IRoleRepository roleRepository) : IRequestHandler<GetRolesQuery, PagedResult<RoleDto>>
 {

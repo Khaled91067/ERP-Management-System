@@ -1,8 +1,10 @@
-﻿using ERP.Domain.Entities.Orders;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ERP.Infrastructure.Persistence.Configurations;
+
+using ERP.Domain.Sales.Orders;
+
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 public class OrderLineConfiguration: IEntityTypeConfiguration<OrderLine>
 {

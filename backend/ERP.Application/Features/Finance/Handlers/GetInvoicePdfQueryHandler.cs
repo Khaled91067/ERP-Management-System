@@ -1,10 +1,13 @@
-using ERP.Application.Abstractions.Repositories;
-using ERP.Application.Features.Finance.Queries.Models;
-using ERP.Domain.Exceptions;
-using MediatR;
-using System.Text;
 
 namespace ERP.Application.Features.Finance.Handlers;
+
+using System.Text;
+
+using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Features.Finance.Queries.Models;
+using ERP.Domain.Shared.Exceptions;
+
+using MediatR;
 
 public sealed class GetInvoicePdfQueryHandler : IRequestHandler<GetInvoicePdfQuery, byte[]>
 {

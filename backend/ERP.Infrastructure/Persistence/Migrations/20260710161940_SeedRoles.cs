@@ -1,4 +1,3 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -6,6 +5,8 @@
 
 namespace ERP.Infrastructure.Persistence.Migrations
 {
+    using Microsoft.EntityFrameworkCore.Migrations;
+
     /// <inheritdoc />
     public partial class SeedRoles : Migration
     {

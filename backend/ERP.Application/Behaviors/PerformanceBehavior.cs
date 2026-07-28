@@ -1,8 +1,11 @@
-using System.Diagnostics;
-using MediatR;
-using Microsoft.Extensions.Logging;
 
 namespace ERP.Application.Behaviors;
+
+using System.Diagnostics;
+
+using MediatR;
+
+using Microsoft.Extensions.Logging;
 
 public class PerformanceBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>

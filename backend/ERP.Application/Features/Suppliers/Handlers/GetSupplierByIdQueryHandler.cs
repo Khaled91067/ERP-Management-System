@@ -1,9 +1,11 @@
+
+namespace ERP.Application.Features.Suppliers.Handlers;
+
 using ERP.Application.Abstractions.Repositories;
 using ERP.Application.Features.Suppliers.DTOs;
 using ERP.Application.Features.Suppliers.Queries;
-using MediatR;
 
-namespace ERP.Application.Features.Suppliers.Handlers;
+using MediatR;
 
 public sealed class GetSupplierByIdQueryHandler : IRequestHandler<GetSupplierByIdQuery, SupplierDto?>
 {

@@ -1,8 +1,10 @@
-using ERP.Domain.Entities;
+
+namespace ERP.Application.Abstractions.Repositories;
+
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ERP.Application.Abstractions.Repositories;
+using ERP.Domain.Sales.Customers;
 
 public interface ICustomerRepository : IGenericRepository<Customer>
 {

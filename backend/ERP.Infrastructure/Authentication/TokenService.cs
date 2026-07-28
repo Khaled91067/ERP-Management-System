@@ -1,13 +1,16 @@
-﻿using ERP.Application.Abstractions.Authentication;
-using ERP.Domain.Entities;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
+
+namespace ERP.Infrastructure.Authentication;
+
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace ERP.Infrastructure.Authentication;
+using ERP.Application.Abstractions.Authentication;
+using ERP.Domain.Identity.Users;
+
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 
 public sealed class TokenService : ITokenService
 {

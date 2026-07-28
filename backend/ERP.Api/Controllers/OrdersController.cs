@@ -1,16 +1,20 @@
-using ERP.Application.Features.Sales.Commands.Models;
-using ERP.Application.Features.Sales.Queries.Models;
-using ERP.Domain.Enums;
-using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+
+namespace ERP.Api.Controllers;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ERP.Api.Controllers;
+using ERP.Application.Features.Sales.Commands.Models;
+using ERP.Application.Features.Sales.Queries.Models;
+using ERP.Domain.Sales.Orders;
+
+using MediatR;
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 [Authorize]
 [ApiController]

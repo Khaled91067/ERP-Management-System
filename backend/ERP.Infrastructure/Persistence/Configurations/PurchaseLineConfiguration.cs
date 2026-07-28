@@ -1,10 +1,12 @@
-﻿using ERP.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ERP.Infrastructure.Persistence.Configurations;
 
-    public class PurchaseLineConfiguration : IEntityTypeConfiguration<PurchaseLine>
+using ERP.Domain.Purchasing.PurchaseOrders;
+
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+public class PurchaseLineConfiguration : IEntityTypeConfiguration<PurchaseLine>
     {
         public void Configure(EntityTypeBuilder<PurchaseLine> builder)
         {

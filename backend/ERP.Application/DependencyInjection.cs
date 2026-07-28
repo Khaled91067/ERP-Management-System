@@ -1,10 +1,13 @@
-using ERP.Application.Abstractions.Messaging;
-using ERP.Application.Messaging;
-using ERP.Application.Behaviors;
-using FluentValidation;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace ERP.Application;
+
+using ERP.Application.Abstractions.Messaging;
+using ERP.Application.Behaviors;
+using ERP.Application.Messaging;
+
+using FluentValidation;
+
+using Microsoft.Extensions.DependencyInjection;
 
 public static class DependencyInjection
 {

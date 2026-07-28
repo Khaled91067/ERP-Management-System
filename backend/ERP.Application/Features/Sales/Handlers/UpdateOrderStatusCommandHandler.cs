@@ -1,14 +1,16 @@
-using ERP.Application.Abstractions;
-using ERP.Application.Abstractions.Repositories;
-using ERP.Application.Features.Sales.Commands.Models;
-using ERP.Domain.Enums;
-using ERP.Domain.Exceptions;
-using MediatR;
-using System;
+
+namespace ERP.Application.Features.Sales.Handlers;
+
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ERP.Application.Features.Sales.Handlers;
+using ERP.Application.Abstractions;
+using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Features.Sales.Commands.Models;
+using ERP.Domain.Sales.Orders;
+using ERP.Domain.Shared.Exceptions;
+
+using MediatR;
 
 public sealed class UpdateOrderStatusCommandHandler : IRequestHandler<UpdateOrderStatusCommand, bool>
 {

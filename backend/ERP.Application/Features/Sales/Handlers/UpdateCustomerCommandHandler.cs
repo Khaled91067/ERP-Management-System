@@ -1,11 +1,14 @@
-using ERP.Application.Abstractions;
-using ERP.Application.Abstractions.Repositories;
-using ERP.Application.Features.Sales.Commands.Models;
-using MediatR;
+
+namespace ERP.Application.Features.Sales.Handlers;
+
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ERP.Application.Features.Sales.Handlers;
+using ERP.Application.Abstractions;
+using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Features.Sales.Commands.Models;
+
+using MediatR;
 
 public sealed class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustomerCommand, bool>
 {

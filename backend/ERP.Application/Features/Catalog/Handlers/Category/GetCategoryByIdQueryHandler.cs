@@ -1,9 +1,11 @@
+
+namespace ERP.Application.Features.Catalog.Handlers;
+
 using ERP.Application.Abstractions.Repositories;
 using ERP.Application.Features.Catalog.DTOs;
 using ERP.Application.Features.Catalog.Queries;
-using MediatR;
 
-namespace ERP.Application.Features.Catalog.Handlers;
+using MediatR;
 
 public sealed class GetCategoryByIdQueryHandler(ICategoryRepository categoryRepository)
     : IRequestHandler<GetCategoryByIdQuery, CategoryDto?>

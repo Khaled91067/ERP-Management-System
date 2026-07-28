@@ -1,6 +1,7 @@
-using MediatR;
 
 namespace ERP.Application.Features.Sales.Commands.Models;
+
+using MediatR;
 
 public sealed record CreateCustomerCommand(
     string Name,

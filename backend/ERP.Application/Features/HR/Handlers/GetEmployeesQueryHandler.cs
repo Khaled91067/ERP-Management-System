@@ -1,12 +1,13 @@
+
+namespace ERP.Application.Features.HR.Handlers;
+
 using ERP.Application.Abstractions.Repositories;
 using ERP.Application.Common.Models;
 using ERP.Application.Features.HR.Dtos;
 using ERP.Application.Features.HR.Queries.Models;
-using ERP.Domain.Entities;
-using MediatR;
-using System.Collections.Generic;
+using ERP.Domain.HR.Employees;
 
-namespace ERP.Application.Features.HR.Handlers;
+using MediatR;
 
 public sealed class GetEmployeesQueryHandler : IRequestHandler<GetEmployeesQuery, PagedResult<EmployeeDto>>
 {

@@ -1,14 +1,15 @@
-using ERP.Application.Abstractions.Repositories;
-using ERP.Application.Features.Sales.Dtos;
-using ERP.Application.Features.Sales.Queries.Models;
-using MediatR;
-using System;
-using System.Collections.Generic;
+
+namespace ERP.Application.Features.Sales.Handlers;
+
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ERP.Application.Features.Sales.Handlers;
+using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Features.Sales.Dtos;
+using ERP.Application.Features.Sales.Queries.Models;
+
+using MediatR;
 
 public sealed class GetOrderByIdQueryHandler : IRequestHandler<GetOrderByIdQuery, OrderDto?>
 {

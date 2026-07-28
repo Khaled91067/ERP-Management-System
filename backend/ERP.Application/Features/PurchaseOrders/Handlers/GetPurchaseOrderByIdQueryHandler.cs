@@ -1,9 +1,11 @@
-﻿using ERP.Application.Abstractions.Repositories;
-using ERP.Application.Features.PurchaseOrders.Dtos;
-using ERP.Application.Features.PurchaseOrders.Queries.Models;
-using MediatR;
 
 namespace ERP.Application.Features.PurchaseOrders.Handlers;
+
+using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Features.PurchaseOrders.Dtos;
+using ERP.Application.Features.PurchaseOrders.Queries.Models;
+
+using MediatR;
 
 public sealed class GetPurchaseOrderByIdQueryHandler: IRequestHandler<GetPurchaseOrderByIdQuery, PurchaseOrderDto?>
 {

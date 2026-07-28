@@ -1,4 +1,4 @@
-﻿namespace ERP.Infrastructure.Authentication;
+namespace ERP.Infrastructure.Authentication;
 
 public sealed class JwtSettings
 {

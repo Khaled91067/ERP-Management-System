@@ -1,10 +1,13 @@
-using ERP.Application.Abstractions.Repositories;
-using ERP.Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace ERP.Infrastructure.Repositories
 {
+    using System.Linq;
+
+    using ERP.Application.Abstractions.Repositories;
+    using ERP.Infrastructure.Persistence;
+
+    using Microsoft.EntityFrameworkCore;
+
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         private readonly AppDbContext _context;

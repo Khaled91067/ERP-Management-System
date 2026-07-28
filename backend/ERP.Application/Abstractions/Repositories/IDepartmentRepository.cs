@@ -1,8 +1,10 @@
-using ERP.Domain.Entities;
+
+namespace ERP.Application.Abstractions.Repositories;
+
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ERP.Application.Abstractions.Repositories;
+using ERP.Domain.HR.Departments;
 
 public interface IDepartmentRepository : IGenericRepository<Department>
 {

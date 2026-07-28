@@ -1,11 +1,13 @@
+
+namespace ERP.Application.Features.Finance.Handlers;
+
 using ERP.Application.Abstractions;
 using ERP.Application.Abstractions.Repositories;
 using ERP.Application.Features.Finance.Commands.Models;
-using ERP.Domain.Entities;
-using ERP.Domain.Exceptions;
-using MediatR;
+using ERP.Domain.Sales.Invoices;
+using ERP.Domain.Shared.Exceptions;
 
-namespace ERP.Application.Features.Finance.Handlers;
+using MediatR;
 
 public sealed class CreateInvoiceCommandHandler : IRequestHandler<CreateInvoiceCommand, int>
 {

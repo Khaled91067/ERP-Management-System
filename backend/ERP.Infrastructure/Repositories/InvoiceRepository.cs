@@ -1,14 +1,17 @@
-using ERP.Application.Abstractions.Repositories;
-using ERP.Domain.Entities;
-using ERP.Infrastructure.Persistence;
-using ERP.Infrastructure.Repositories;
-using Microsoft.EntityFrameworkCore;
+
+namespace ERP.Infrastructure.Persistence.Repositories;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ERP.Infrastructure.Persistence.Repositories;
+using ERP.Application.Abstractions.Repositories;
+using ERP.Domain.Sales.Invoices;
+using ERP.Infrastructure.Persistence;
+using ERP.Infrastructure.Repositories;
+
+using Microsoft.EntityFrameworkCore;
 
 public sealed class InvoiceRepository
     : GenericRepository<Invoice>,

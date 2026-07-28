@@ -1,7 +1,8 @@
-using System;
-using System.Collections.Generic;
 
 namespace ERP.Application.Features.Finance.Dtos;
+
+using System;
+using System.Collections.Generic;
 
 public sealed record InvoiceDto(
     int Id,

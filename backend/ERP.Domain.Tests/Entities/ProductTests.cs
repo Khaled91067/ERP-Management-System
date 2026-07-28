@@ -1,8 +1,10 @@
-using ERP.Domain.Entities;
-using ERP.Domain.Exceptions;
-using FluentAssertions;
 
 namespace ERP.Domain.Tests.Entities;
+
+using ERP.Domain.Catalog.Products;
+using ERP.Domain.Shared.Exceptions;
+
+using FluentAssertions;
 
 public class ProductTests
 {

@@ -1,6 +1,7 @@
-﻿using ERP.Domain.Entities;
 
 namespace ERP.Application.Abstractions.Repositories;
+
+using ERP.Domain.Identity.Users;
 
 public interface IUserRepository : IGenericRepository<User>
 {

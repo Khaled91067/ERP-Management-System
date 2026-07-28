@@ -1,12 +1,13 @@
+
+namespace ERP.Application.Features.Suppliers.Handlers;
+
 using ERP.Application.Abstractions.Repositories;
 using ERP.Application.Common.Models;
 using ERP.Application.Features.Suppliers.DTOs;
 using ERP.Application.Features.Suppliers.Queries;
-using ERP.Domain.Entities;
-using MediatR;
-using System.Collections.Generic;
+using ERP.Domain.Purchasing.Suppliers;
 
-namespace ERP.Application.Features.Suppliers.Handlers;
+using MediatR;
 
 public sealed class GetSuppliersQueryHandler : IRequestHandler<GetSuppliersQuery, PagedResult<SupplierDto>>
 {

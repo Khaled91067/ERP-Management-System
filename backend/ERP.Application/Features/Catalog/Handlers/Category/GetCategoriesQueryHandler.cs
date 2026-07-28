@@ -1,11 +1,13 @@
+
+namespace ERP.Application.Features.Catalog.Handlers;
+
 using ERP.Application.Abstractions.Repositories;
 using ERP.Application.Common.Models;
 using ERP.Application.Features.Catalog.DTOs;
 using ERP.Application.Features.Catalog.Queries;
-using ERP.Domain.Entities;
-using MediatR;
+using ERP.Domain.Catalog.Categories;
 
-namespace ERP.Application.Features.Catalog.Handlers;
+using MediatR;
 
 public sealed class GetCategoriesQueryHandler(ICategoryRepository categoryRepository)
     : IRequestHandler<GetCategoriesQuery, PagedResult<CategoryDto>>

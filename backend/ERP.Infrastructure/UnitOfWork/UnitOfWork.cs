@@ -1,11 +1,11 @@
-﻿using ERP.Application.Abstractions;
-using ERP.Application.Abstractions.Messaging;
-using ERP.Domain.Common;
-using ERP.Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
 
 namespace ERP.Infrastructure.UnitOfWork
 {
+    using ERP.Application.Abstractions;
+    using ERP.Application.Abstractions.Messaging;
+    using ERP.Domain.Shared.Common;
+    using ERP.Infrastructure.Persistence;
+
     public sealed class UnitOfWork : IUnitOfWork
     {
         private readonly AppDbContext _context;

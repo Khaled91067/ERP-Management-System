@@ -1,10 +1,13 @@
-using ERP.Application.Features.Catalog.Commands;
-using ERP.Application.Features.Catalog.Queries;
-using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ERP.Api.Controllers;
+
+using ERP.Application.Features.Catalog.Commands;
+using ERP.Application.Features.Catalog.Queries;
+
+using MediatR;
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 [Authorize(Roles = "Administrator")]
 [ApiController]

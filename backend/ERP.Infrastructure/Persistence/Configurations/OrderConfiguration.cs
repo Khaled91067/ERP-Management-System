@@ -1,13 +1,13 @@
-using ERP.Domain.Entities.Orders;
-using ERP.Domain.Enums;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ERP.Infrastructure.Persistence.Configurations
 {
+    using System;
+
+    using ERP.Domain.Sales.Orders;
+
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
     public class OrderConfiguration: IEntityTypeConfiguration<Order>
     {
         public void Configure(EntityTypeBuilder<Order> builder)

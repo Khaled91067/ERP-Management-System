@@ -1,23 +1,27 @@
-using ERP.Application.Abstractions;
-using ERP.Application.Abstractions.Authentication;
-using ERP.Application.Abstractions.Repositories;
-using ERP.Infrastructure.Authentication;
-using ERP.Infrastructure.Persistence;
-using ERP.Infrastructure.Persistence.Repositories;
-using ERP.Infrastructure.Repositories;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using ERP.Application.Abstractions.Caching;
-using ERP.Infrastructure.Caching;
-using StackExchange.Redis;
 
 
 namespace ERP.Infrastructure
 {
+    using System.Text;
+
+    using ERP.Application.Abstractions;
+    using ERP.Application.Abstractions.Authentication;
+    using ERP.Application.Abstractions.Caching;
+    using ERP.Application.Abstractions.Repositories;
+    using ERP.Infrastructure.Authentication;
+    using ERP.Infrastructure.Caching;
+    using ERP.Infrastructure.Persistence;
+    using ERP.Infrastructure.Persistence.Repositories;
+    using ERP.Infrastructure.Repositories;
+
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.IdentityModel.Tokens;
+
+    using StackExchange.Redis;
+
     public static class DependencyInjection
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)

@@ -1,15 +1,17 @@
-using ERP.Application.Abstractions;
-using ERP.Application.Abstractions.Repositories;
-using ERP.Application.Features.Finance.Commands.Models;
-using ERP.Domain.Entities;
-using ERP.Domain.Enums;
-using ERP.Domain.Exceptions;
-using MediatR;
-using System;
+
+namespace ERP.Application.Features.Finance.Handlers;
+
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ERP.Application.Features.Finance.Handlers;
+using ERP.Application.Abstractions;
+using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Features.Finance.Commands.Models;
+using ERP.Domain.Sales.Invoices;
+using ERP.Domain.Sales.Orders;
+using ERP.Domain.Shared.Exceptions;
+
+using MediatR;
 
 public sealed class GenerateInvoiceCommandHandler : IRequestHandler<GenerateInvoiceCommand, int>
 {

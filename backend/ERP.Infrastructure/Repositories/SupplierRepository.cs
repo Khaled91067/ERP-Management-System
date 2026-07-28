@@ -1,8 +1,9 @@
-using ERP.Application.Abstractions.Repositories;
-using ERP.Domain.Entities;
-using ERP.Infrastructure.Persistence;
 
 namespace ERP.Infrastructure.Repositories;
+
+using ERP.Application.Abstractions.Repositories;
+using ERP.Domain.Purchasing.Suppliers;
+using ERP.Infrastructure.Persistence;
 
 public sealed class SupplierRepository : GenericRepository<Supplier>, ISupplierRepository
 {

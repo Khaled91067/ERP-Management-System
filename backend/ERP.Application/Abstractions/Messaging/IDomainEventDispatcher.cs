@@ -1,6 +1,7 @@
-﻿using ERP.Domain.Common;
 
 namespace ERP.Application.Abstractions.Messaging;
+
+using ERP.Domain.Shared.Common;
 
 public interface IDomainEventDispatcher
 {

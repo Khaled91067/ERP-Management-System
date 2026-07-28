@@ -1,8 +1,10 @@
-using ERP.Application.Common.Models;
-using ERP.Application.Features.Finance.Dtos;
-using MediatR;
 
 namespace ERP.Application.Features.Finance.Queries.Models;
+
+using ERP.Application.Common.Models;
+using ERP.Application.Features.Finance.Dtos;
+
+using MediatR;
 
 public sealed record GetInvoicesQuery(
     int? CustomerId = null,

@@ -1,9 +1,11 @@
+
+namespace ERP.Application.Features.Catalog.Handlers;
+
 using ERP.Application.Abstractions;
 using ERP.Application.Abstractions.Repositories;
 using ERP.Application.Features.Catalog.Commands;
-using MediatR;
 
-namespace ERP.Application.Features.Catalog.Handlers;
+using MediatR;
 
 public sealed class UpdateProductCommandHandler(
     IProductRepository productRepository,

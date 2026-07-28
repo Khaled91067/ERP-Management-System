@@ -1,14 +1,17 @@
-using ERP.Application.Abstractions;
-using ERP.Application.Abstractions.Repositories;
-using ERP.Application.Features.HR.Commands.Models;
-using ERP.Domain.Entities;
-using ERP.Domain.Exceptions;
-using MediatR;
+
+namespace ERP.Application.Features.HR.Handlers;
+
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ERP.Application.Features.HR.Handlers;
+using ERP.Application.Abstractions;
+using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Features.HR.Commands.Models;
+using ERP.Domain.HR.Departments;
+using ERP.Domain.Shared.Exceptions;
+
+using MediatR;
 
 public sealed class CreateDepartmentCommandHandler : IRequestHandler<CreateDepartmentCommand, int>
 {

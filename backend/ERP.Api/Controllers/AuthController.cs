@@ -1,9 +1,11 @@
-﻿using ERP.Application.Features.Authentication.Commands.Models;
-using MediatR;
-using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ERP.Api.Controllers;
+
+using ERP.Application.Features.Authentication.Commands.Models;
+
+using MediatR;
+
+using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("api/auth")]

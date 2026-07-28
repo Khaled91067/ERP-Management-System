@@ -1,7 +1,9 @@
-using ERP.Domain.Entities;
-using FluentAssertions;
 
 namespace ERP.Domain.Tests.Entities;
+
+using ERP.Domain.Identity.Users;
+
+using FluentAssertions;
 
 public class RefreshTokenTests
 {

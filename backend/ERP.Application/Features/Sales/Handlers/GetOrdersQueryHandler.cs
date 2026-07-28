@@ -1,13 +1,16 @@
+
+namespace ERP.Application.Features.Sales.Handlers;
+
+using System;
+using System.Collections.Generic;
+
 using ERP.Application.Abstractions.Repositories;
 using ERP.Application.Common.Models;
 using ERP.Application.Features.Sales.Dtos;
 using ERP.Application.Features.Sales.Queries.Models;
-using ERP.Domain.Entities.Orders;
-using MediatR;
-using System;
-using System.Collections.Generic;
+using ERP.Domain.Sales.Orders;
 
-namespace ERP.Application.Features.Sales.Handlers;
+using MediatR;
 
 public sealed class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, PagedResult<OrderDto>>
 {
@@ -28,7 +31,7 @@ public sealed class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, Page
             options.Filter = o => o.CustomerId == request.CustomerId.Value;
         }
 
-        if (!string.IsNullOrWhiteSpace(request.Status) && Enum.TryParse<ERP.Domain.Enums.OrderStatus>(request.Status, true, out var statusEnum))
+        if (!string.IsNullOrWhiteSpace(request.Status) && Enum.TryParse<OrderStatus>(request.Status, true, out var statusEnum))
         {
             var existingFilter = options.Filter;
             options.Filter = o => (existingFilter == null || existingFilter.Compile()(o)) && o.Status == statusEnum;

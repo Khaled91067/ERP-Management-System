@@ -1,14 +1,17 @@
-using ERP.Application.Abstractions.Repositories;
-using ERP.Domain.Entities.Orders;
-using ERP.Infrastructure.Persistence;
-using ERP.Infrastructure.Repositories;
-using Microsoft.EntityFrameworkCore;
+
+namespace ERP.Infrastructure.Persistence.Repositories;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ERP.Infrastructure.Persistence.Repositories;
+using ERP.Application.Abstractions.Repositories;
+using ERP.Domain.Sales.Orders;
+using ERP.Infrastructure.Persistence;
+using ERP.Infrastructure.Repositories;
+
+using Microsoft.EntityFrameworkCore;
 
 public sealed class OrderRepository
     : GenericRepository<Order>,

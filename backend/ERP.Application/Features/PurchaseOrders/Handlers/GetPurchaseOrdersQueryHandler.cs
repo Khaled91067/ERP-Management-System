@@ -1,14 +1,15 @@
+
+namespace ERP.Application.Features.PurchaseOrders.Handlers;
+
+using System;
+
 using ERP.Application.Abstractions.Repositories;
 using ERP.Application.Common.Models;
 using ERP.Application.Features.PurchaseOrders.Dtos;
 using ERP.Application.Features.PurchaseOrders.Queries.Models;
-using ERP.Domain.Entities;
-using ERP.Domain.Enums;
-using MediatR;
-using System;
-using System.Collections.Generic;
+using ERP.Domain.Purchasing.PurchaseOrders;
 
-namespace ERP.Application.Features.PurchaseOrders.Handlers;
+using MediatR;
 
 public sealed class GetPurchaseOrdersQueryHandler : IRequestHandler<GetPurchaseOrdersQuery, PagedResult<PurchaseOrderDto>>
 {

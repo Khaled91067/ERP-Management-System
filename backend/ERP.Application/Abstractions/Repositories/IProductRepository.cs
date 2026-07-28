@@ -1,6 +1,7 @@
-using ERP.Domain.Entities;
 
 namespace ERP.Application.Abstractions.Repositories;
+
+using ERP.Domain.Catalog.Products;
 
 public interface IProductRepository : IGenericRepository<Product>
 {

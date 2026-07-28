@@ -1,10 +1,13 @@
-using ERP.Application.Features.PurchaseOrders.Commands.Models;
-using ERP.Application.Features.PurchaseOrders.Queries.Models;
-using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ERP.Api.Controllers;
+
+using ERP.Application.Features.PurchaseOrders.Commands.Models;
+using ERP.Application.Features.PurchaseOrders.Queries.Models;
+
+using MediatR;
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 [Authorize]
 [ApiController]

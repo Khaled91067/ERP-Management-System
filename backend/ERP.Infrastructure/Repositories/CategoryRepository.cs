@@ -1,9 +1,11 @@
-using ERP.Application.Abstractions.Repositories;
-using ERP.Domain.Entities;
-using ERP.Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
 
 namespace ERP.Infrastructure.Repositories;
+
+using ERP.Application.Abstractions.Repositories;
+using ERP.Domain.Catalog.Categories;
+using ERP.Infrastructure.Persistence;
+
+using Microsoft.EntityFrameworkCore;
 
 public sealed class CategoryRepository : GenericRepository<Category>, ICategoryRepository
 {

@@ -1,12 +1,24 @@
-using ERP.Application.Abstractions.Common;
-using ERP.Domain.Common;
-using ERP.Domain.Entities;
-using ERP.Domain.Entities.Orders;
-using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 
 namespace ERP.Infrastructure.Persistence
 {
+    using System.Linq.Expressions;
+
+    using ERP.Application.Abstractions.Common;
+    using ERP.Domain.Catalog.Categories;
+    using ERP.Domain.Catalog.Products;
+    using ERP.Domain.HR.Departments;
+    using ERP.Domain.HR.Employees;
+    using ERP.Domain.Identity.Roles;
+    using ERP.Domain.Identity.Users;
+    using ERP.Domain.Purchasing.PurchaseOrders;
+    using ERP.Domain.Purchasing.Suppliers;
+    using ERP.Domain.Sales.Customers;
+    using ERP.Domain.Sales.Invoices;
+    using ERP.Domain.Sales.Orders;
+    using ERP.Domain.Shared.Common;
+
+    using Microsoft.EntityFrameworkCore;
+
     public class AppDbContext : DbContext
     {
         private readonly ICurrentUserService? _currentUserService;

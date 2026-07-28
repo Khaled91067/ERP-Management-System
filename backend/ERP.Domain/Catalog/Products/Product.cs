@@ -1,0 +1,53 @@
+
+namespace ERP.Domain.Catalog.Products;
+
+using ERP.Domain.Catalog.Categories;
+using ERP.Domain.Purchasing.PurchaseOrders;
+using ERP.Domain.Sales.Orders;
+using ERP.Domain.Shared.Common;
+using ERP.Domain.Shared.Exceptions;
+
+public class Product : ISoftDeletable, IAuditable
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string Sku { get; set; } = string.Empty;
+    public int CategoryId { get; set; }
+    public decimal UnitPrice { get; set; }
+    public decimal CostPrice { get; set; }
+    public int StockQuantity { get; private set; }
+    public int ReorderLevel { get; set; }
+    public bool IsDeleted { get; set; }
+    public DateTimeOffset? DeletedAt { get; set; }
+    public string? DeletedBy { get; set; }
+
+    public DateTimeOffset CreatedAt { get; set; }
+    public string? CreatedBy { get; set; }
+    public DateTimeOffset? LastModifiedAt { get; set; }
+    public string? LastModifiedBy { get; set; }
+    public Category? Category { get; set; }
+    public ICollection<OrderLine> OrderLines { get; set; } = new List<OrderLine>();
+    public ICollection<PurchaseLine> PurchaseLines { get; set; } = new List<PurchaseLine>();
+
+    public void IncreaseStock(int quantity)
+    {
+        if (quantity <= 0)
+            throw new BusinessRuleValidationException(
+                "Stock increase quantity must be greater than zero.");
+
+        StockQuantity += quantity;
+    }
+
+    public void DecreaseStock(int quantity)
+    {
+        if (quantity <= 0)
+            throw new BusinessRuleValidationException(
+                "Stock decrease quantity must be greater than zero.");
+
+        if (StockQuantity < quantity)
+            throw new BusinessRuleValidationException(
+                $"Insufficient stock for product {Name}. Available: {StockQuantity}, Requested: {quantity}");
+
+        StockQuantity -= quantity;
+    }
+}

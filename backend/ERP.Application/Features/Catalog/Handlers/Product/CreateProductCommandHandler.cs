@@ -1,10 +1,12 @@
+
+namespace ERP.Application.Features.Catalog.Handlers;
+
 using ERP.Application.Abstractions;
 using ERP.Application.Abstractions.Repositories;
 using ERP.Application.Features.Catalog.Commands;
-using ERP.Domain.Entities;
-using MediatR;
+using ERP.Domain.Catalog.Products;
 
-namespace ERP.Application.Features.Catalog.Handlers;
+using MediatR;
 
 public sealed class CreateProductCommandHandler(
     IProductRepository productRepository,

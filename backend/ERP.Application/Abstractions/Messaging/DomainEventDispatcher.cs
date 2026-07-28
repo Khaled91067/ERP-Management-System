@@ -1,8 +1,10 @@
-﻿using ERP.Application.Abstractions.Messaging;
-using ERP.Domain.Common;
-using MediatR;
 
 namespace ERP.Application.Messaging;
+
+using ERP.Application.Abstractions.Messaging;
+using ERP.Domain.Shared.Common;
+
+using MediatR;
 
 public sealed class DomainEventDispatcher(IPublisher publisher) : IDomainEventDispatcher
 {

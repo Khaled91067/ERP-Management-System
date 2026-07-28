@@ -1,17 +1,15 @@
-using ERP.Api.Infrastructure;
-using ERP.Application;
-using ERP.Infrastructure;
-using ERP.Infrastructure.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi;
-using System.Text;
 
-using Serilog;
 
 namespace ERP.Api
 {
+    using ERP.Api.Infrastructure;
+    using ERP.Application;
+    using ERP.Infrastructure;
+
+    using Microsoft.OpenApi;
+
+    using Serilog;
+
     public class Program
     {
         public static void Main(string[] args)

@@ -1,9 +1,11 @@
-using MediatR;
-using ERP.Domain.Enums;
-using System;
-using System.Collections.Generic;
 
 namespace ERP.Application.Features.Sales.Commands.Models;
+
+using System.Collections.Generic;
+
+using ERP.Domain.Sales.Orders;
+
+using MediatR;
 
 public sealed record CreateOrderCommand(
     int CustomerId,

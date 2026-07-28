@@ -1,10 +1,12 @@
+
+namespace ERP.Application.Features.Suppliers.Handlers;
+
 using ERP.Application.Abstractions;
 using ERP.Application.Abstractions.Repositories;
 using ERP.Application.Features.Suppliers.Commands;
-using ERP.Domain.Entities;
-using MediatR;
+using ERP.Domain.Purchasing.Suppliers;
 
-namespace ERP.Application.Features.Suppliers.Handlers;
+using MediatR;
 
 public sealed class CreateSupplierCommandHandler : IRequestHandler<CreateSupplierCommand, int>
 {

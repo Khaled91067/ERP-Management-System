@@ -1,13 +1,14 @@
-﻿using ERP.Application.Abstractions;
+
+namespace ERP.Application.Features.Authentication.Commands.Handlers;
+
+using System;
+
+using ERP.Application.Abstractions;
 using ERP.Application.Abstractions.Repositories;
 using ERP.Application.Common.Exceptions;
 using ERP.Application.Features.Authentication.Commands.Models;
-using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace ERP.Application.Features.Authentication.Commands.Handlers;
+using MediatR;
 
 public sealed class LogoutCommandHandler(IRefreshTokenRepository refreshTokenRepository,IUnitOfWork unitOfWork) :
     IRequestHandler<LogoutCommand>

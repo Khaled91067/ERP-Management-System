@@ -1,10 +1,13 @@
-﻿using ERP.Application.Abstractions.Repositories;
-using ERP.Domain.Entities;
-using ERP.Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
 
 namespace ERP.Infrastructure.Repositories
 {
+    using ERP.Application.Abstractions.Repositories;
+    using ERP.Domain.Identity.Roles;
+    using ERP.Domain.Identity.Users;
+    using ERP.Infrastructure.Persistence;
+
+    using Microsoft.EntityFrameworkCore;
+
     public sealed class RoleRepository: GenericRepository<Role>, IRoleRepository
     {
         private readonly AppDbContext _context;

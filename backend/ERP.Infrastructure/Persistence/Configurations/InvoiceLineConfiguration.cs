@@ -1,9 +1,11 @@
-﻿using ERP.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ERP.Infrastructure.Persistence.Configurations
 {
+    using ERP.Domain.Sales.Invoices;
+
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
     public class InvoiceLineConfiguration: IEntityTypeConfiguration<InvoiceLine>
     {
         public void Configure(EntityTypeBuilder<InvoiceLine> builder)

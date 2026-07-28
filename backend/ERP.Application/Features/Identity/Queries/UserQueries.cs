@@ -1,8 +1,10 @@
-using ERP.Application.Common.Models;
-using ERP.Application.Features.Identity.DTOs;
-using MediatR;
 
 namespace ERP.Application.Features.Identity.Queries;
+
+using ERP.Application.Common.Models;
+using ERP.Application.Features.Identity.DTOs;
+
+using MediatR;
 
 public sealed record GetUsersQuery(
     string? Search = null,
