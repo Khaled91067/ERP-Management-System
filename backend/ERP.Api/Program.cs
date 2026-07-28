@@ -5,6 +5,7 @@ namespace ERP.Api
     using ERP.Api.Infrastructure;
     using ERP.Application;
     using ERP.Infrastructure;
+    using QuestPDF.Infrastructure;
 
     using Microsoft.OpenApi;
 
@@ -14,6 +15,7 @@ namespace ERP.Api
     {
         public static async Task Main(string[] args)
         {
+            QuestPDF.Settings.License = LicenseType.Community;
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Host.UseSerilog((context, configuration) =>
