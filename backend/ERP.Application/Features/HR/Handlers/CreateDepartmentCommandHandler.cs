@@ -1,4 +1,3 @@
-
 namespace ERP.Application.Features.HR.Handlers;
 
 using System.Linq;
@@ -37,10 +36,7 @@ public sealed class CreateDepartmentCommandHandler : IRequestHandler<CreateDepar
         if (existing.Any())
             throw new ConflictException($"Department with name '{request.Name}' already exists.");
 
-        var department = new Department
-        {
-            Name = request.Name.Trim()
-        };
+        var department = new Department(request.Name);
 
         _departmentRepository.Add(department);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
