@@ -1,4 +1,3 @@
-
 namespace ERP.Application.Features.Authentication.Commands.Handlers;
 
 using ERP.Application.Abstractions;
@@ -28,23 +27,19 @@ public sealed class RegisterUserCommandHandler
 
     public async Task<int> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
-        var emailExists = await _userRepository.EmailExistsAsync(request.Email,cancellationToken);
+        var emailExists = await _userRepository.EmailExistsAsync(request.Email, cancellationToken);
 
         if (emailExists)
             throw new InvalidOperationException("Email is already registered.");
 
         var passwordHash = _passwordHasher.Hash(request.Password);
 
-
-
-        var user = new User
-        {
-            FirstName = request.FirstName,
-            LastName = request.LastName,
-            Email = request.Email,
-            PasswordHash = passwordHash,
-            RoleId = 1 // Assuming 1 is the default role ID for a new user
-        };
+        var user = new User(
+            request.FirstName,
+            request.LastName,
+            request.Email,
+            passwordHash,
+            1); // Default role ID
 
         _userRepository.Add(user);
 
