@@ -1,10 +1,8 @@
-
 namespace ERP.Domain.Purchasing.PurchaseOrders;
-using ERP.Domain.Shared.Base;
-using ERP.Domain.Shared.Abstractions;
 
 using System;
-
+using System.Collections.Generic;
+using System.Linq;
 using ERP.Domain.Purchasing.Suppliers;
 using ERP.Domain.Shared.Base;
 using ERP.Domain.Shared.Exceptions;
@@ -12,6 +10,7 @@ using ERP.Domain.Shared.Exceptions;
 public class PurchaseOrder : AggregateRoot
 {
     private readonly List<PurchaseOrderLine> _purchaseOrderLines = [];
+
     public int SupplierId { get; private set; }
     public DateTime OrderDate { get; private set; }
     public DateTime ExpectedDelivery { get; private set; }
@@ -103,6 +102,13 @@ public class PurchaseOrder : AggregateRoot
         RecalculateTotal();
     }
 
+    public void EnsureCanBeDeleted()
+    {
+        if (Status != PurchaseOrderStatus.Draft)
+            throw new BusinessRuleValidationException(
+                "Only draft purchase orders can be deleted.");
+    }
+
     private PurchaseOrderLine GetLine(int productId)
     {
         return _purchaseOrderLines.SingleOrDefault(
@@ -157,8 +163,8 @@ public class PurchaseOrder : AggregateRoot
                 "Only approved purchase orders can be received.");
 
         Status = PurchaseOrderStatus.Received;
-       
-        AddDomainEvent( new PurchaseOrderReceivedDomainEvent(Id));
+
+        AddDomainEvent(new PurchaseOrderReceivedDomainEvent(Id));
     }
 
     public void Cancel()
@@ -173,5 +179,4 @@ public class PurchaseOrder : AggregateRoot
 
         Status = PurchaseOrderStatus.Cancelled;
     }
-
 }
