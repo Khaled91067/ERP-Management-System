@@ -1,23 +1,74 @@
-
 namespace ERP.Domain.Sales.Customers;
-using ERP.Domain.Shared.Base;
-using ERP.Domain.Shared.Abstractions;
 
+using System.Collections.Generic;
 using ERP.Domain.Sales.Invoices;
 using ERP.Domain.Sales.Orders;
 using ERP.Domain.Shared.Base;
-
-
+using ERP.Domain.Shared.Exceptions;
 
 public class Customer : SoftDeletableEntity
 {
-    public string Name { get; set; } = string.Empty;
-    public string Email { get; set; } = string.Empty;
-    public string Phone { get; set; } = string.Empty;
-    public string Address { get; set; } = string.Empty;
-    public string City { get; set; } = string.Empty;
-    public string Country { get; set; } = string.Empty;
-    public string TaxId { get; set; } = string.Empty;
-    public ICollection<Order> Orders { get; set; } = new List<Order>();
-    public ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
+    private readonly List<Order> _orders = [];
+    private readonly List<Invoice> _invoices = [];
+
+    public string Name { get; private set; } = string.Empty;
+    public string Email { get; private set; } = string.Empty;
+    public string Phone { get; private set; } = string.Empty;
+    public string Address { get; private set; } = string.Empty;
+    public string City { get; private set; } = string.Empty;
+    public string Country { get; private set; } = string.Empty;
+    public string TaxId { get; private set; } = string.Empty;
+
+    public IReadOnlyCollection<Order> Orders => _orders.AsReadOnly();
+    public IReadOnlyCollection<Invoice> Invoices => _invoices.AsReadOnly();
+
+    private Customer() { }
+
+    public Customer(
+        string name,
+        string email,
+        string phone = "",
+        string address = "",
+        string city = "",
+        string country = "",
+        string taxId = "")
+    {
+        ValidateAndAssignDetails(name, email, phone, address, city, country, taxId);
+    }
+
+    public void UpdateDetails(
+        string name,
+        string email,
+        string phone,
+        string address,
+        string city,
+        string country,
+        string taxId)
+    {
+        ValidateAndAssignDetails(name, email, phone, address, city, country, taxId);
+    }
+
+    private void ValidateAndAssignDetails(
+        string name,
+        string email,
+        string phone,
+        string address,
+        string city,
+        string country,
+        string taxId)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            throw new BusinessRuleValidationException("Customer name is required.");
+
+        if (string.IsNullOrWhiteSpace(email))
+            throw new BusinessRuleValidationException("Customer email is required.");
+
+        Name = name.Trim();
+        Email = email.Trim();
+        Phone = phone?.Trim() ?? string.Empty;
+        Address = address?.Trim() ?? string.Empty;
+        City = city?.Trim() ?? string.Empty;
+        Country = country?.Trim() ?? string.Empty;
+        TaxId = taxId?.Trim() ?? string.Empty;
+    }
 }
