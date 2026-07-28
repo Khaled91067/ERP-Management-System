@@ -1,4 +1,3 @@
-
 namespace ERP.Application.Features.Catalog.Handlers;
 
 using ERP.Application.Abstractions;
@@ -20,7 +19,7 @@ public sealed class UpdateCategoryCommandHandler(ICategoryRepository categoryRep
         if (existing is not null && existing.Id != category.Id)
             throw new InvalidOperationException("A category with this name already exists.");
 
-        category.Name = name;
+        category.UpdateName(request.Name);
         categoryRepository.Update(category);
         await unitOfWork.SaveChangesAsync(cancellationToken);
         return true;

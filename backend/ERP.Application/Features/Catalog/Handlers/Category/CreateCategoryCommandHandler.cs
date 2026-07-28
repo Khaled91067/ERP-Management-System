@@ -1,4 +1,3 @@
-
 namespace ERP.Application.Features.Catalog.Handlers;
 
 using ERP.Application.Abstractions;
@@ -17,7 +16,7 @@ public sealed class CreateCategoryCommandHandler(ICategoryRepository categoryRep
         if (await categoryRepository.GetByNameAsync(name, cancellationToken) is not null)
             throw new InvalidOperationException("A category with this name already exists.");
 
-        var category = new Category { Name = name };
+        var category = new Category(request.Name);
         categoryRepository.Add(category);
         await unitOfWork.SaveChangesAsync(cancellationToken);
         return category.Id;
