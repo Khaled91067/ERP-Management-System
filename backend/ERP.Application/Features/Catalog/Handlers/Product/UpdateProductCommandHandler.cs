@@ -1,4 +1,3 @@
-
 namespace ERP.Application.Features.Catalog.Handlers;
 
 using ERP.Application.Abstractions;
@@ -25,12 +24,14 @@ public sealed class UpdateProductCommandHandler(
         if (existing is not null && existing.Id != product.Id)
             throw new InvalidOperationException("A product with this SKU already exists.");
 
-        product.Name = request.Name.Trim();
-        product.Sku = request.Sku.Trim();
-        product.CategoryId = request.CategoryId;
-        product.UnitPrice = request.UnitPrice;
-        product.CostPrice = request.CostPrice;
-        product.ReorderLevel = request.ReorderLevel;
+        product.UpdateDetails(
+            request.Name,
+            request.Sku,
+            request.CategoryId,
+            request.UnitPrice,
+            request.CostPrice,
+            request.ReorderLevel);
+
         productRepository.Update(product);
         await unitOfWork.SaveChangesAsync(cancellationToken);
         return true;
