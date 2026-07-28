@@ -1,34 +1,26 @@
 
 namespace ERP.Domain.Purchasing.PurchaseOrders;
+using ERP.Domain.Shared.Base;
+using ERP.Domain.Shared.Abstractions;
 
 using System;
 
 using ERP.Domain.Purchasing.Suppliers;
-using ERP.Domain.Shared.Common;
+using ERP.Domain.Shared.Base;
 using ERP.Domain.Shared.Exceptions;
 
-public class PurchaseOrder : AggregateRoot, ISoftDeletable, IAuditable
+public class PurchaseOrder : AggregateRoot
 {
-    private readonly List<PurchaseLine> _purchaseLines = [];
-
-    public int Id { get; private set; }
+    private readonly List<PurchaseOrderLine> _purchaseOrderLines = [];
     public int SupplierId { get; private set; }
     public DateTime OrderDate { get; private set; }
     public DateTime ExpectedDelivery { get; private set; }
     public PurchaseOrderStatus Status { get; private set; }
     public decimal TotalAmount { get; private set; }
-    public bool IsDeleted { get; set; }
-    public DateTimeOffset? DeletedAt { get; set; }
-    public string? DeletedBy { get; set; }
-
-    public DateTimeOffset CreatedAt { get; set; }
-    public string? CreatedBy { get; set; }
-    public DateTimeOffset? LastModifiedAt { get; set; }
-    public string? LastModifiedBy { get; set; }
     public Supplier? Supplier { get; private set; }
 
-    public IReadOnlyCollection<PurchaseLine> PurchaseLines =>
-        _purchaseLines.AsReadOnly();
+    public IReadOnlyCollection<PurchaseOrderLine> PurchaseOrderLines =>
+        _purchaseOrderLines.AsReadOnly();
 
     private PurchaseOrder() { }
 
@@ -60,16 +52,16 @@ public class PurchaseOrder : AggregateRoot, ISoftDeletable, IAuditable
     {
         EnsureDraft();
 
-        if (_purchaseLines.Any(x => x.ProductId == productId))
+        if (_purchaseOrderLines.Any(x => x.ProductId == productId))
             throw new ConflictException(
                 "Product already exists in this purchase order.");
 
-        var line = new PurchaseLine(
+        var line = new PurchaseOrderLine(
             productId,
             quantity,
             unitCost);
 
-        _purchaseLines.Add(line);
+        _purchaseOrderLines.Add(line);
 
         RecalculateTotal();
     }
@@ -80,7 +72,7 @@ public class PurchaseOrder : AggregateRoot, ISoftDeletable, IAuditable
 
         var line = GetLine(productId);
 
-        _purchaseLines.Remove(line);
+        _purchaseOrderLines.Remove(line);
 
         RecalculateTotal();
     }
@@ -111,9 +103,9 @@ public class PurchaseOrder : AggregateRoot, ISoftDeletable, IAuditable
         RecalculateTotal();
     }
 
-    private PurchaseLine GetLine(int productId)
+    private PurchaseOrderLine GetLine(int productId)
     {
-        return _purchaseLines.SingleOrDefault(
+        return _purchaseOrderLines.SingleOrDefault(
                    x => x.ProductId == productId)
                ?? throw new NotFoundException(
                    "Purchase line was not found.");
@@ -121,7 +113,7 @@ public class PurchaseOrder : AggregateRoot, ISoftDeletable, IAuditable
 
     private void RecalculateTotal()
     {
-        TotalAmount = _purchaseLines.Sum(
+        TotalAmount = _purchaseOrderLines.Sum(
             x => x.Quantity * x.UnitCost);
     }
 
@@ -138,7 +130,7 @@ public class PurchaseOrder : AggregateRoot, ISoftDeletable, IAuditable
             throw new BusinessRuleValidationException(
                 "Only draft purchase orders can be submitted.");
 
-        if (_purchaseLines.Count == 0)
+        if (_purchaseOrderLines.Count == 0)
             throw new BusinessRuleValidationException(
                 "Cannot submit an empty purchase order.");
 
@@ -151,7 +143,7 @@ public class PurchaseOrder : AggregateRoot, ISoftDeletable, IAuditable
             throw new BusinessRuleValidationException(
                 "Only draft purchase orders can be approved.");
 
-        if (_purchaseLines.Count == 0)
+        if (_purchaseOrderLines.Count == 0)
             throw new BusinessRuleValidationException(
                 "Cannot approve an empty purchase order.");
 

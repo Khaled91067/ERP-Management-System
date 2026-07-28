@@ -264,7 +264,7 @@ namespace ERP.Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PurchaseLines",
+                name: "PurchaseOrderLines",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -380,12 +380,12 @@ namespace ERP.Infrastructure.Persistence.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_PurchaseLines_ProductId",
-                table: "PurchaseLines",
+                table: "PurchaseOrderLines",
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PurchaseLines_PurchaseOrderId",
-                table: "PurchaseLines",
+                table: "PurchaseOrderLines",
                 column: "PurchaseOrderId");
 
             migrationBuilder.CreateIndex(
@@ -424,7 +424,7 @@ namespace ERP.Infrastructure.Persistence.Migrations
                 name: "OrderLines");
 
             migrationBuilder.DropTable(
-                name: "PurchaseLines");
+                name: "PurchaseOrderLines");
 
             migrationBuilder.DropTable(
                 name: "Users");

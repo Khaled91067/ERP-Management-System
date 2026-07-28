@@ -15,7 +15,8 @@ namespace ERP.Infrastructure.Persistence
     using ERP.Domain.Sales.Customers;
     using ERP.Domain.Sales.Invoices;
     using ERP.Domain.Sales.Orders;
-    using ERP.Domain.Shared.Common;
+    using ERP.Domain.Shared.Base;
+using ERP.Domain.Shared.Abstractions;
 
     using Microsoft.EntityFrameworkCore;
 
@@ -39,7 +40,7 @@ namespace ERP.Infrastructure.Persistence
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderLine> OrderLines { get; set; }
         public DbSet<Product> Products { get; set; }
-        public DbSet<PurchaseLine> PurchaseLines { get; set; }
+        public DbSet<PurchaseOrderLine> PurchaseOrderLines { get; set; }
         public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }

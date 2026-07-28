@@ -24,12 +24,12 @@ namespace ERP.Infrastructure.Persistence.Configurations
                 .HasForeignKey(po => po.SupplierId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            builder.HasMany(po => po.PurchaseLines)
+            builder.HasMany(po => po.PurchaseOrderLines)
                 .WithOne(pl => pl.PurchaseOrder)
                 .HasForeignKey(pl => pl.PurchaseOrderId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Navigation(po => po.PurchaseLines)
+            builder.Navigation(po => po.PurchaseOrderLines)
                 .UsePropertyAccessMode(
                     PropertyAccessMode.Field);
 

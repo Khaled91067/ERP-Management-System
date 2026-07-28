@@ -1,15 +1,16 @@
 
 namespace ERP.Domain.Catalog.Products;
+using ERP.Domain.Shared.Base;
+using ERP.Domain.Shared.Abstractions;
 
 using ERP.Domain.Catalog.Categories;
 using ERP.Domain.Purchasing.PurchaseOrders;
 using ERP.Domain.Sales.Orders;
-using ERP.Domain.Shared.Common;
+using ERP.Domain.Shared.Base;
 using ERP.Domain.Shared.Exceptions;
 
-public class Product : ISoftDeletable, IAuditable
+public class Product : SoftDeletableEntity
 {
-    public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string Sku { get; set; } = string.Empty;
     public int CategoryId { get; set; }
@@ -17,17 +18,9 @@ public class Product : ISoftDeletable, IAuditable
     public decimal CostPrice { get; set; }
     public int StockQuantity { get; private set; }
     public int ReorderLevel { get; set; }
-    public bool IsDeleted { get; set; }
-    public DateTimeOffset? DeletedAt { get; set; }
-    public string? DeletedBy { get; set; }
-
-    public DateTimeOffset CreatedAt { get; set; }
-    public string? CreatedBy { get; set; }
-    public DateTimeOffset? LastModifiedAt { get; set; }
-    public string? LastModifiedBy { get; set; }
     public Category? Category { get; set; }
     public ICollection<OrderLine> OrderLines { get; set; } = new List<OrderLine>();
-    public ICollection<PurchaseLine> PurchaseLines { get; set; } = new List<PurchaseLine>();
+    public ICollection<PurchaseOrderLine> PurchaseOrderLines { get; set; } = new List<PurchaseOrderLine>();
 
     public void IncreaseStock(int quantity)
     {

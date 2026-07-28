@@ -1,7 +1,10 @@
+using ERP.Domain.Shared.Base;
 
-namespace ERP.Domain.Shared.Common;
+namespace ERP.Domain.Shared.Base;
 
-public abstract class AggregateRoot
+using ERP.Domain.Shared.Abstractions;
+
+public abstract class AggregateRoot : SoftDeletableEntity
 {
     private readonly List<IDomainEvent> _domainEvents = [];
 

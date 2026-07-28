@@ -1,12 +1,13 @@
 
 namespace ERP.Domain.Sales.Orders;
+using ERP.Domain.Shared.Base;
+using ERP.Domain.Shared.Abstractions;
 
 using ERP.Domain.Catalog.Products;
 using ERP.Domain.Shared.Exceptions;
 
-public class OrderLine
+public class OrderLine : BaseEntity
 {
-    public int Id { get; private set; }
     public int OrderId { get; private set; }
     public int ProductId { get; private set; }
     public int Quantity { get; private set; }

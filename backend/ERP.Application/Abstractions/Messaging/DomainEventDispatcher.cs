@@ -2,7 +2,8 @@
 namespace ERP.Application.Messaging;
 
 using ERP.Application.Abstractions.Messaging;
-using ERP.Domain.Shared.Common;
+using ERP.Domain.Shared.Base;
+using ERP.Domain.Shared.Abstractions;
 
 using MediatR;
 

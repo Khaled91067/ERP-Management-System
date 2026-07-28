@@ -31,6 +31,6 @@ public sealed class ProductRepository : GenericRepository<Product>, IProductRepo
     public async Task<bool> HasTransactionsAsync(int productId, CancellationToken cancellationToken = default)
     {
         return await _context.OrderLines.AnyAsync(line => line.ProductId == productId, cancellationToken)
-            || await _context.PurchaseLines.AnyAsync(line => line.ProductId == productId, cancellationToken);
+            || await _context.PurchaseOrderLines.AnyAsync(line => line.ProductId == productId, cancellationToken);
     }
 }

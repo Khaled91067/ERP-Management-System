@@ -1,15 +1,16 @@
 
 namespace ERP.Domain.Sales.Customers;
+using ERP.Domain.Shared.Base;
+using ERP.Domain.Shared.Abstractions;
 
 using ERP.Domain.Sales.Invoices;
 using ERP.Domain.Sales.Orders;
-using ERP.Domain.Shared.Common;
+using ERP.Domain.Shared.Base;
 
 
 
-public class Customer : ISoftDeletable, IAuditable
+public class Customer : SoftDeletableEntity
 {
-    public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public string Phone { get; set; } = string.Empty;
@@ -17,14 +18,6 @@ public class Customer : ISoftDeletable, IAuditable
     public string City { get; set; } = string.Empty;
     public string Country { get; set; } = string.Empty;
     public string TaxId { get; set; } = string.Empty;
-    public bool IsDeleted { get; set; }
-    public DateTimeOffset? DeletedAt { get; set; }
-    public string? DeletedBy { get; set; }
-
-    public DateTimeOffset CreatedAt { get; set; }
-    public string? CreatedBy { get; set; }
-    public DateTimeOffset? LastModifiedAt { get; set; }
-    public string? LastModifiedBy { get; set; }
     public ICollection<Order> Orders { get; set; } = new List<Order>();
     public ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
 }

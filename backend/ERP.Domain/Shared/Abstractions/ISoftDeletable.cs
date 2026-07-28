@@ -1,4 +1,4 @@
-namespace ERP.Domain.Shared.Common;
+namespace ERP.Domain.Shared.Abstractions;
 
 public interface ISoftDeletable
 {

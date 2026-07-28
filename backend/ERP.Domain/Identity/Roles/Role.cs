@@ -1,10 +1,11 @@
 namespace ERP.Domain.Identity.Roles;
+using ERP.Domain.Shared.Base;
+using ERP.Domain.Shared.Abstractions;
 
 using ERP.Domain.Identity.Users;
 
-public class Role
+public class Role : BaseEntity
 {
-    public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
 
     // Storing as JSON string

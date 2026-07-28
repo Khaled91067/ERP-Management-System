@@ -1,11 +1,12 @@
 
 namespace ERP.Domain.Sales.Invoices;
+using ERP.Domain.Shared.Base;
+using ERP.Domain.Shared.Abstractions;
 
 using ERP.Domain.Shared.Exceptions;
 
-public class InvoiceLine
+public class InvoiceLine : BaseEntity
 {
-    public int Id { get; private set; }
     public int InvoiceId { get; private set; }
     public string Description { get; private set; } = string.Empty;
     public int Quantity { get; private set; }

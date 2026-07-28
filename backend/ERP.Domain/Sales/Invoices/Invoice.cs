@@ -1,5 +1,7 @@
 
 namespace ERP.Domain.Sales.Invoices;
+using ERP.Domain.Shared.Base;
+using ERP.Domain.Shared.Abstractions;
 
 using System;
 using System.Collections.Generic;
@@ -7,14 +9,12 @@ using System.Linq;
 
 using ERP.Domain.Sales.Customers;
 using ERP.Domain.Sales.Orders;
-using ERP.Domain.Shared.Common;
+using ERP.Domain.Shared.Base;
 using ERP.Domain.Shared.Exceptions;
 
-public class Invoice : ISoftDeletable, IAuditable
+public class Invoice : SoftDeletableEntity
 {
     private readonly List<InvoiceLine> _invoiceLines = [];
-
-    public int Id { get; private set; }
     public int OrderId { get; private set; }
     public int CustomerId { get; private set; }
     public DateTime InvoiceDate { get; private set; }
@@ -22,14 +22,6 @@ public class Invoice : ISoftDeletable, IAuditable
     public InvoiceStatus Status { get; private set; }
     public decimal TotalAmount { get; private set; }
     public DateTime? PaidAt { get; private set; }
-    public bool IsDeleted { get; set; }
-    public DateTimeOffset? DeletedAt { get; set; }
-    public string? DeletedBy { get; set; }
-
-    public DateTimeOffset CreatedAt { get; set; }
-    public string? CreatedBy { get; set; }
-    public DateTimeOffset? LastModifiedAt { get; set; }
-    public string? LastModifiedBy { get; set; }
     public Order? Order { get; private set; }
     public Customer? Customer { get; private set; }
     public IReadOnlyCollection<InvoiceLine> InvoiceLines => _invoiceLines.AsReadOnly();

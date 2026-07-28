@@ -1,32 +1,24 @@
 
 namespace ERP.Domain.Sales.Orders;
+using ERP.Domain.Shared.Base;
+using ERP.Domain.Shared.Abstractions;
 
 using System;
 
 using ERP.Domain.Sales.Customers;
 using ERP.Domain.Sales.Invoices;
-using ERP.Domain.Shared.Common;
+using ERP.Domain.Shared.Base;
 using ERP.Domain.Shared.Exceptions;
 
-public class Order : ISoftDeletable, IAuditable
+public class Order : SoftDeletableEntity
 {
     private readonly List<OrderLine> _orderLines = new();
-
-    public int Id { get; private set; }
     public int CustomerId { get; private set; }
     public DateTime OrderDate { get; private set; }
     public OrderStatus Status { get; private set; }
     public PaymentMethod PaymentMethod { get; private set; }
     public string ShippingAddress { get; private set; } = string.Empty;
     public decimal TotalAmount { get; private set; }
-    public bool IsDeleted { get; set; }
-    public DateTimeOffset? DeletedAt { get; set; }
-    public string? DeletedBy { get; set; }
-
-    public DateTimeOffset CreatedAt { get; set; }
-    public string? CreatedBy { get; set; }
-    public DateTimeOffset? LastModifiedAt { get; set; }
-    public string? LastModifiedBy { get; set; }
     public Customer? Customer { get; private set; }
 
     public IReadOnlyCollection<OrderLine> OrderLines => _orderLines.AsReadOnly();

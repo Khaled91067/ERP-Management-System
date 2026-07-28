@@ -1,7 +1,8 @@
 
 namespace ERP.Application.Abstractions.Messaging;
 
-using ERP.Domain.Shared.Common;
+using ERP.Domain.Shared.Base;
+using ERP.Domain.Shared.Abstractions;
 
 public interface IDomainEventDispatcher
 {

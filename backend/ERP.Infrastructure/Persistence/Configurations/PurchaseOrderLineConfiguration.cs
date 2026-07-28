@@ -6,15 +6,15 @@ using ERP.Domain.Purchasing.PurchaseOrders;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-public class PurchaseLineConfiguration : IEntityTypeConfiguration<PurchaseLine>
+public class PurchaseOrderLineConfiguration : IEntityTypeConfiguration<PurchaseOrderLine>
     {
-        public void Configure(EntityTypeBuilder<PurchaseLine> builder)
+        public void Configure(EntityTypeBuilder<PurchaseOrderLine> builder)
         {
             builder.Property(pl => pl.UnitCost)
                 .HasPrecision(18, 2);
 
             builder.HasOne(pl => pl.Product)
-                .WithMany(p => p.PurchaseLines)
+                .WithMany(p => p.PurchaseOrderLines)
                 .HasForeignKey(pl => pl.ProductId)
                 .OnDelete(DeleteBehavior.NoAction);
 

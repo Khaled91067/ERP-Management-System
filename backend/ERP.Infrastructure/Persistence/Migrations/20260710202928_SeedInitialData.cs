@@ -158,7 +158,7 @@ namespace ERP.Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "PurchaseLines",
+                table: "PurchaseOrderLines",
                 columns: new[] { "Id", "ProductId", "PurchaseOrderId", "Quantity", "UnitCost" },
                 values: new object[,]
                 {
@@ -262,32 +262,32 @@ namespace ERP.Infrastructure.Persistence.Migrations
                 keyValue: 6);
 
             migrationBuilder.DeleteData(
-                table: "PurchaseLines",
+                table: "PurchaseOrderLines",
                 keyColumn: "Id",
                 keyValue: 1);
 
             migrationBuilder.DeleteData(
-                table: "PurchaseLines",
+                table: "PurchaseOrderLines",
                 keyColumn: "Id",
                 keyValue: 2);
 
             migrationBuilder.DeleteData(
-                table: "PurchaseLines",
+                table: "PurchaseOrderLines",
                 keyColumn: "Id",
                 keyValue: 3);
 
             migrationBuilder.DeleteData(
-                table: "PurchaseLines",
+                table: "PurchaseOrderLines",
                 keyColumn: "Id",
                 keyValue: 4);
 
             migrationBuilder.DeleteData(
-                table: "PurchaseLines",
+                table: "PurchaseOrderLines",
                 keyColumn: "Id",
                 keyValue: 5);
 
             migrationBuilder.DeleteData(
-                table: "PurchaseLines",
+                table: "PurchaseOrderLines",
                 keyColumn: "Id",
                 keyValue: 6);
 

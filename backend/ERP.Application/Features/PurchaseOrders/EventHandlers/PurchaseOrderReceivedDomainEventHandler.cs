@@ -28,7 +28,7 @@ public sealed class PurchaseOrderReceivedDomainEventHandler: IDomainEventHandler
             throw new InvalidOperationException(
                 "Purchase order was not found.");
 
-        foreach (var line in purchaseOrder.PurchaseLines)
+        foreach (var line in purchaseOrder.PurchaseOrderLines)
         {
             var product =
                 await _productRepository.GetByIdAsync(line.ProductId);

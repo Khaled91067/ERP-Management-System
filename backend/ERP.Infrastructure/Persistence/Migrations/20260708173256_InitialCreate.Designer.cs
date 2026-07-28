@@ -15,7 +15,7 @@ using ERP.Domain.Purchasing.Suppliers;
 using ERP.Domain.Sales.Customers;
 using ERP.Domain.Sales.Invoices;
 using ERP.Domain.Sales.Orders;
-using ERP.Domain.Shared.Common;
+using ERP.Domain.Shared.Base;
 using ERP.Domain.Shared.Exceptions;
 using System;
 using ERP.Infrastructure.Persistence;
@@ -380,7 +380,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("ERP.Domain.Entities.PurchaseLine", b =>
+            modelBuilder.Entity("ERP.Domain.Entities.PurchaseOrderLine", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -407,7 +407,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
                     b.HasIndex("PurchaseOrderId");
 
-                    b.ToTable("PurchaseLines");
+                    b.ToTable("PurchaseOrderLines");
                 });
 
             modelBuilder.Entity("ERP.Domain.Entities.PurchaseOrder", b =>
@@ -629,16 +629,16 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("ERP.Domain.Entities.PurchaseLine", b =>
+            modelBuilder.Entity("ERP.Domain.Entities.PurchaseOrderLine", b =>
                 {
                     b.HasOne("ERP.Domain.Entities.Product", "Product")
-                        .WithMany("PurchaseLines")
+                        .WithMany("PurchaseOrderLines")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("ERP.Domain.Entities.PurchaseOrder", "PurchaseOrder")
-                        .WithMany("PurchaseLines")
+                        .WithMany("PurchaseOrderLines")
                         .HasForeignKey("PurchaseOrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -703,12 +703,12 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
                 {
                     b.Navigation("OrderLines");
 
-                    b.Navigation("PurchaseLines");
+                    b.Navigation("PurchaseOrderLines");
                 });
 
             modelBuilder.Entity("ERP.Domain.Entities.PurchaseOrder", b =>
                 {
-                    b.Navigation("PurchaseLines");
+                    b.Navigation("PurchaseOrderLines");
                 });
 
             modelBuilder.Entity("ERP.Domain.Entities.Role", b =>

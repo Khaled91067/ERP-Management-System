@@ -24,7 +24,7 @@ public sealed class PurchaseOrderRepository
         CancellationToken cancellationToken = default)
     {
         return await _context.PurchaseOrders
-            .Include(po => po.PurchaseLines)
+            .Include(po => po.PurchaseOrderLines)
             .FirstOrDefaultAsync(
                 po => po.Id == id,
                 cancellationToken);

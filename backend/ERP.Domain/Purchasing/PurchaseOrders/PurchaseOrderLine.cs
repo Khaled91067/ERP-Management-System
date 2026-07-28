@@ -1,12 +1,13 @@
 
 namespace ERP.Domain.Purchasing.PurchaseOrders;
+using ERP.Domain.Shared.Base;
+using ERP.Domain.Shared.Abstractions;
 
 using ERP.Domain.Catalog.Products;
 using ERP.Domain.Shared.Exceptions;
 
-public class PurchaseLine
+public class PurchaseOrderLine : BaseEntity
 {
-    public int Id { get; private set; }
     public int PurchaseOrderId { get; private set; }
     public int ProductId { get; private set; }
     public int Quantity { get; private set; }
@@ -15,9 +16,9 @@ public class PurchaseLine
     public PurchaseOrder? PurchaseOrder { get; private set; }
     public Product? Product { get; private set; }
 
-    private PurchaseLine() { }
+    private PurchaseOrderLine() { }
 
-    internal PurchaseLine(
+    internal PurchaseOrderLine(
         int productId,
         int quantity,
         decimal unitCost)
