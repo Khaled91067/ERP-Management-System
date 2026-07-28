@@ -1,4 +1,3 @@
-
 namespace ERP.Application.Features.Catalog.Handlers;
 
 using ERP.Application.Abstractions;
@@ -18,15 +17,14 @@ public sealed class CreateProductCommandHandler(
         await ValidateAsync(request.Sku, request.CategoryId, request.UnitPrice, request.CostPrice,
             request.InitialStockQuantity, request.ReorderLevel, cancellationToken);
 
-        var product = new Product
-        {
-            Name = request.Name.Trim(),
-            Sku = request.Sku.Trim(),
-            CategoryId = request.CategoryId,
-            UnitPrice = request.UnitPrice,
-            CostPrice = request.CostPrice,
-            ReorderLevel = request.ReorderLevel
-        };
+        var product = new Product(
+            request.Name,
+            request.Sku,
+            request.CategoryId,
+            request.UnitPrice,
+            request.CostPrice,
+            request.ReorderLevel);
+
         if (request.InitialStockQuantity > 0)
             product.IncreaseStock(request.InitialStockQuantity);
 

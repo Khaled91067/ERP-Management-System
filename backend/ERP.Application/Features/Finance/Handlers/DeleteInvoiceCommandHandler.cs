@@ -1,4 +1,3 @@
-
 namespace ERP.Application.Features.Finance.Handlers;
 
 using System.Threading;
@@ -8,7 +7,6 @@ using ERP.Application.Abstractions;
 using ERP.Application.Abstractions.Repositories;
 using ERP.Application.Features.Finance.Commands.Models;
 using ERP.Domain.Sales.Invoices;
-using ERP.Domain.Shared.Exceptions;
 
 using MediatR;
 
@@ -31,8 +29,7 @@ public sealed class DeleteInvoiceCommandHandler : IRequestHandler<DeleteInvoiceC
         if (invoice is null)
             return false;
 
-        if (invoice.Status == InvoiceStatus.Paid)
-            throw new BusinessRuleValidationException("Paid invoices cannot be deleted.");
+        invoice.EnsureCanBeDeleted();
 
         _invoiceRepository.Delete(invoice);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

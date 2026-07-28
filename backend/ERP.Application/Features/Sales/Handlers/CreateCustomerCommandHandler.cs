@@ -1,4 +1,3 @@
-
 namespace ERP.Application.Features.Sales.Handlers;
 
 using System.Threading;
@@ -26,16 +25,14 @@ public sealed class CreateCustomerCommandHandler : IRequestHandler<CreateCustome
 
     public async Task<int> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
     {
-        var customer = new Customer
-        {
-            Name = request.Name.Trim(),
-            Email = request.Email.Trim(),
-            Phone = request.Phone.Trim(),
-            Address = request.Address.Trim(),
-            City = request.City.Trim(),
-            Country = request.Country.Trim(),
-            TaxId = request.TaxId.Trim()
-        };
+        var customer = new Customer(
+            request.Name,
+            request.Email,
+            request.Phone,
+            request.Address,
+            request.City,
+            request.Country,
+            request.TaxId);
 
         _customerRepository.Add(customer);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

@@ -1,8 +1,6 @@
-
 namespace ERP.Domain.Catalog.Products;
-using ERP.Domain.Shared.Base;
-using ERP.Domain.Shared.Abstractions;
 
+using System.Collections.Generic;
 using ERP.Domain.Catalog.Categories;
 using ERP.Domain.Purchasing.PurchaseOrders;
 using ERP.Domain.Sales.Orders;
@@ -11,16 +9,44 @@ using ERP.Domain.Shared.Exceptions;
 
 public class Product : SoftDeletableEntity
 {
-    public string Name { get; set; } = string.Empty;
-    public string Sku { get; set; } = string.Empty;
-    public int CategoryId { get; set; }
-    public decimal UnitPrice { get; set; }
-    public decimal CostPrice { get; set; }
+    private readonly List<OrderLine> _orderLineList = [];
+    private readonly List<PurchaseOrderLine> _purchaseOrderLineList = [];
+
+    public string Name { get; private set; } = string.Empty;
+    public string Sku { get; private set; } = string.Empty;
+    public int CategoryId { get; private set; }
+    public decimal UnitPrice { get; private set; }
+    public decimal CostPrice { get; private set; }
     public int StockQuantity { get; private set; }
-    public int ReorderLevel { get; set; }
-    public Category? Category { get; set; }
-    public ICollection<OrderLine> OrderLines { get; set; } = new List<OrderLine>();
-    public ICollection<PurchaseOrderLine> PurchaseOrderLines { get; set; } = new List<PurchaseOrderLine>();
+    public int ReorderLevel { get; private set; }
+    public Category? Category { get; private set; }
+
+    public IReadOnlyCollection<OrderLine> OrderLines => _orderLineList.AsReadOnly();
+    public IReadOnlyCollection<PurchaseOrderLine> PurchaseOrderLines => _purchaseOrderLineList.AsReadOnly();
+
+    private Product() { }
+
+    public Product(
+        string name,
+        string sku,
+        int categoryId,
+        decimal unitPrice,
+        decimal costPrice,
+        int reorderLevel)
+    {
+        ValidateAndAssignDetails(name, sku, categoryId, unitPrice, costPrice, reorderLevel);
+    }
+
+    public void UpdateDetails(
+        string name,
+        string sku,
+        int categoryId,
+        decimal unitPrice,
+        decimal costPrice,
+        int reorderLevel)
+    {
+        ValidateAndAssignDetails(name, sku, categoryId, unitPrice, costPrice, reorderLevel);
+    }
 
     public void IncreaseStock(int quantity)
     {
@@ -42,5 +68,33 @@ public class Product : SoftDeletableEntity
                 $"Insufficient stock for product {Name}. Available: {StockQuantity}, Requested: {quantity}");
 
         StockQuantity -= quantity;
+    }
+
+    private void ValidateAndAssignDetails(
+        string name,
+        string sku,
+        int categoryId,
+        decimal unitPrice,
+        decimal costPrice,
+        int reorderLevel)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            throw new BusinessRuleValidationException("Product name is required.");
+
+        if (string.IsNullOrWhiteSpace(sku))
+            throw new BusinessRuleValidationException("Product SKU is required.");
+
+        if (categoryId <= 0)
+            throw new BusinessRuleValidationException("Category id must be valid.");
+
+        if (unitPrice < 0 || costPrice < 0 || reorderLevel < 0)
+            throw new BusinessRuleValidationException("Prices and reorder level cannot be negative.");
+
+        Name = name.Trim();
+        Sku = sku.Trim();
+        CategoryId = categoryId;
+        UnitPrice = unitPrice;
+        CostPrice = costPrice;
+        ReorderLevel = reorderLevel;
     }
 }

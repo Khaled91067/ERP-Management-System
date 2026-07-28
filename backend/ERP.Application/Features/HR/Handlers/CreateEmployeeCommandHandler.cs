@@ -1,4 +1,3 @@
-
 namespace ERP.Application.Features.HR.Handlers;
 
 using System.Threading;
@@ -34,17 +33,15 @@ public sealed class CreateEmployeeCommandHandler : IRequestHandler<CreateEmploye
         if (department is null)
             throw new NotFoundException("Department", request.DepartmentId);
 
-        var employee = new Employee
-        {
-            FirstName = request.FirstName.Trim(),
-            LastName = request.LastName.Trim(),
-            Email = request.Email.Trim(),
-            Phone = request.Phone.Trim(),
-            DepartmentId = request.DepartmentId,
-            Position = request.Position.Trim(),
-            HireDate = request.HireDate,
-            Salary = request.Salary
-        };
+        var employee = new Employee(
+            request.FirstName,
+            request.LastName,
+            request.Email,
+            request.Phone,
+            request.DepartmentId,
+            request.Position,
+            request.HireDate,
+            request.Salary);
 
         _employeeRepository.Add(employee);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

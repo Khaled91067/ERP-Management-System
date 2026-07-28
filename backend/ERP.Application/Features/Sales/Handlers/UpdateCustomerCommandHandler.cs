@@ -1,4 +1,3 @@
-
 namespace ERP.Application.Features.Sales.Handlers;
 
 using System.Threading;
@@ -29,13 +28,14 @@ public sealed class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustome
         if (customer is null)
             return false;
 
-        customer.Name = request.Name.Trim();
-        customer.Email = request.Email.Trim();
-        customer.Phone = request.Phone.Trim();
-        customer.Address = request.Address.Trim();
-        customer.City = request.City.Trim();
-        customer.Country = request.Country.Trim();
-        customer.TaxId = request.TaxId.Trim();
+        customer.UpdateDetails(
+            request.Name,
+            request.Email,
+            request.Phone,
+            request.Address,
+            request.City,
+            request.Country,
+            request.TaxId);
 
         _customerRepository.Update(customer);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

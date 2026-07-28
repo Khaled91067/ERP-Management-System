@@ -1,5 +1,7 @@
-
 namespace ERP.Application.Features.Suppliers.Handlers;
+
+using System.Threading;
+using System.Threading.Tasks;
 
 using ERP.Application.Abstractions;
 using ERP.Application.Abstractions.Repositories;
@@ -27,11 +29,12 @@ public sealed class UpdateSupplierCommandHandler : IRequestHandler<UpdateSupplie
         if (supplier is null)
             return false;
 
-        supplier.CompanyName = request.CompanyName.Trim();
-        supplier.ContactName = request.ContactName.Trim();
-        supplier.Email = request.Email.Trim();
-        supplier.Phone = request.Phone.Trim();
-        supplier.PaymentTerms = request.PaymentTerms.Trim();
+        supplier.UpdateDetails(
+            request.CompanyName,
+            request.Email,
+            request.ContactName,
+            request.Phone,
+            request.PaymentTerms);
 
         _supplierRepository.Update(supplier);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

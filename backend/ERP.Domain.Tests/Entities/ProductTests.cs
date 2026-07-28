@@ -1,4 +1,3 @@
-
 namespace ERP.Domain.Tests.Entities;
 
 using ERP.Domain.Catalog.Products;
@@ -8,6 +7,11 @@ using FluentAssertions;
 
 public class ProductTests
 {
+    private static Product CreateTestProduct()
+    {
+        return new Product("Widget", "WDG-001", 1, 10m, 5m, 0);
+    }
+
     // -----------------------------------------------------------------------
     // IncreaseStock
     // -----------------------------------------------------------------------
@@ -16,7 +20,7 @@ public class ProductTests
     public void IncreaseStock_WithPositiveQuantity_IncreasesStockQuantity()
     {
         // Arrange
-        var product = new Product { Name = "Widget" };
+        var product = CreateTestProduct();
         product.IncreaseStock(10); // seed to 10
 
         // Act
@@ -30,7 +34,7 @@ public class ProductTests
     public void IncreaseStock_WhenInitiallyZero_SetsStockToQuantity()
     {
         // Arrange
-        var product = new Product { Name = "Widget" }; // StockQuantity defaults to 0
+        var product = CreateTestProduct(); // StockQuantity defaults to 0
 
         // Act
         product.IncreaseStock(20);
@@ -45,7 +49,7 @@ public class ProductTests
     public void IncreaseStock_WithNonPositiveQuantity_ThrowsDomainException(int invalidQuantity)
     {
         // Arrange
-        var product = new Product { Name = "Widget" };
+        var product = CreateTestProduct();
 
         // Act
         var act = () => product.IncreaseStock(invalidQuantity);
@@ -63,7 +67,7 @@ public class ProductTests
     public void DecreaseStock_WithSufficientStock_DecreasesStockQuantity()
     {
         // Arrange
-        var product = new Product { Name = "Widget" };
+        var product = CreateTestProduct();
         product.IncreaseStock(20);
 
         // Act
@@ -77,7 +81,7 @@ public class ProductTests
     public void DecreaseStock_ExactAvailableQuantity_SetsStockToZero()
     {
         // Arrange
-        var product = new Product { Name = "Widget" };
+        var product = CreateTestProduct();
         product.IncreaseStock(10);
 
         // Act
@@ -93,7 +97,7 @@ public class ProductTests
     public void DecreaseStock_WithNonPositiveQuantity_ThrowsDomainException(int invalidQuantity)
     {
         // Arrange
-        var product = new Product { Name = "Widget" };
+        var product = CreateTestProduct();
         product.IncreaseStock(10);
 
         // Act
@@ -108,7 +112,7 @@ public class ProductTests
     public void DecreaseStock_WithInsufficientStock_ThrowsDomainException()
     {
         // Arrange
-        var product = new Product { Name = "Widget" };
+        var product = CreateTestProduct();
         product.IncreaseStock(5);
 
         // Act

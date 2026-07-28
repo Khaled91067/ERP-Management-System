@@ -1,4 +1,3 @@
-
 namespace ERP.Application.Features.Sales.Handlers;
 
 using System.Linq;
@@ -31,7 +30,6 @@ public sealed class DeleteCustomerCommandHandler : IRequestHandler<DeleteCustome
         if (customer is null)
             return false;
 
-        // Check if customer has orders or invoices
         if (customer.Orders.Any() || customer.Invoices.Any())
         {
             throw new BusinessRuleValidationException($"Cannot delete customer '{customer.Name}' because they have associated orders or invoices.");

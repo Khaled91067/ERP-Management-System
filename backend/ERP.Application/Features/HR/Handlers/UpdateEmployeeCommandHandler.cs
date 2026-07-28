@@ -1,4 +1,3 @@
-
 namespace ERP.Application.Features.HR.Handlers;
 
 using System.Threading;
@@ -37,14 +36,15 @@ public sealed class UpdateEmployeeCommandHandler : IRequestHandler<UpdateEmploye
         if (department is null)
             throw new NotFoundException("Department", request.DepartmentId);
 
-        employee.FirstName = request.FirstName.Trim();
-        employee.LastName = request.LastName.Trim();
-        employee.Email = request.Email.Trim();
-        employee.Phone = request.Phone.Trim();
-        employee.DepartmentId = request.DepartmentId;
-        employee.Position = request.Position.Trim();
-        employee.HireDate = request.HireDate;
-        employee.Salary = request.Salary;
+        employee.UpdateDetails(
+            request.FirstName,
+            request.LastName,
+            request.Email,
+            request.Phone,
+            request.DepartmentId,
+            request.Position,
+            request.HireDate,
+            request.Salary);
 
         _employeeRepository.Update(employee);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

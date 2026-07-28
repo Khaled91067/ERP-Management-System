@@ -1,4 +1,3 @@
-
 namespace ERP.Application.Features.Authentication.Commands.Handlers;
 
 using ERP.Application.Abstractions;
@@ -33,21 +32,14 @@ public sealed class RefreshTokenCommandHandler(
 
         var newRefreshToken = tokenService.GenerateRefreshToken();
 
-        refreshToken.RevokedAt = DateTime.UtcNow;
-        refreshToken.ReplacedByToken = newRefreshToken;
+        refreshToken.Revoke(newRefreshToken);
 
         await refreshTokenRepository.AddAsync(
-            new RefreshToken
-            {
-                Token = newRefreshToken,
-                UserId = user.Id,
-                CreatedAt = DateTime.UtcNow,
-                ExpiresAt = DateTime.UtcNow.AddDays(7)
-            },
+            new RefreshToken(newRefreshToken, user.Id, DateTime.UtcNow.AddDays(7)),
             cancellationToken);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return new TokenResponse(accessToken,newRefreshToken);
+        return new TokenResponse(accessToken, newRefreshToken);
     }
 }

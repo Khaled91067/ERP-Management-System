@@ -1,4 +1,3 @@
-
 namespace ERP.Application.Features.Identity.Handlers;
 
 using ERP.Application.Abstractions;
@@ -44,7 +43,7 @@ public sealed class CreateRoleCommandHandler(IRoleRepository roleRepository, IUn
         if (await roleRepository.GetByNameAsync(request.Name.Trim(), cancellationToken) is not null)
             throw new InvalidOperationException("A role with this name already exists.");
 
-        var role = new Role { Name = request.Name.Trim(), Permissions = request.Permissions };
+        var role = new Role(request.Name, request.Permissions);
         roleRepository.Add(role);
         await unitOfWork.SaveChangesAsync(cancellationToken);
         return role.Id;
@@ -62,8 +61,7 @@ public sealed class UpdateRoleCommandHandler(IRoleRepository roleRepository, IUn
         if (existing is not null && existing.Id != role.Id)
             throw new InvalidOperationException("A role with this name already exists.");
 
-        role.Name = request.Name.Trim();
-        role.Permissions = request.Permissions;
+        role.UpdateDetails(request.Name, request.Permissions);
         roleRepository.Update(role);
         await unitOfWork.SaveChangesAsync(cancellationToken);
         return true;

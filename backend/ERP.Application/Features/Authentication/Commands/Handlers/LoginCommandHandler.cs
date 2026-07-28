@@ -1,4 +1,3 @@
-
 namespace ERP.Application.Features.Authentication.Commands.Handlers;
 
 using ERP.Application.Abstractions;
@@ -18,7 +17,7 @@ public sealed class LoginCommandHandler : IRequestHandler<LoginCommand, TokenRes
     private readonly IUnitOfWork _unitOfWork;
     private readonly IRefreshTokenRepository _refreshTokenRepository;
 
-    public LoginCommandHandler(IUserRepository userRepository,IPasswordHasher passwordHasher,ITokenService jwtTokenGenerator,IUnitOfWork unitOfWork,IRefreshTokenRepository refreshTokenRepository)
+    public LoginCommandHandler(IUserRepository userRepository, IPasswordHasher passwordHasher, ITokenService jwtTokenGenerator, IUnitOfWork unitOfWork, IRefreshTokenRepository refreshTokenRepository)
     {
         _userRepository = userRepository;
         _passwordHasher = passwordHasher;
@@ -36,7 +35,7 @@ public sealed class LoginCommandHandler : IRequestHandler<LoginCommand, TokenRes
             throw new UnauthorizedAccessException("Invalid email or password.");
         }
 
-        var passwordIsValid = _passwordHasher.Verify(request.Password,user.PasswordHash);
+        var passwordIsValid = _passwordHasher.Verify(request.Password, user.PasswordHash);
 
         if (!passwordIsValid)
         {
@@ -47,15 +46,8 @@ public sealed class LoginCommandHandler : IRequestHandler<LoginCommand, TokenRes
         var refreshToken = _iTokenGenerator.GenerateRefreshToken();
 
         await _refreshTokenRepository.AddAsync(
-         new RefreshToken
-        {
-            UserId = user.Id,
-            Token = refreshToken,
-            CreatedAt = DateTime.UtcNow,
-            ExpiresAt = DateTime.UtcNow.AddDays(7)
-        },
-          cancellationToken);
-
+            new RefreshToken(refreshToken, user.Id, DateTime.UtcNow.AddDays(7)),
+            cancellationToken);
 
         await _unitOfWork.SaveChangesAsync();
         return new TokenResponse(accessToken, refreshToken);

@@ -1,4 +1,3 @@
-
 namespace ERP.Application.Features.Identity.Handlers;
 
 using ERP.Application.Abstractions;
@@ -60,14 +59,13 @@ public sealed class CreateUserCommandHandler(
         if (await roleRepository.GetByIdAsync(request.RoleId) is null)
             throw new InvalidOperationException("Role does not exist.");
 
-        var user = new User
-        {
-            FirstName = request.FirstName.Trim(),
-            LastName = request.LastName.Trim(),
-            Email = request.Email.Trim(),
-            PasswordHash = passwordHasher.Hash(request.Password),
-            RoleId = request.RoleId
-        };
+        var user = new User(
+            request.FirstName,
+            request.LastName,
+            request.Email,
+            passwordHasher.Hash(request.Password),
+            request.RoleId);
+
         userRepository.Add(user);
         await unitOfWork.SaveChangesAsync(cancellationToken);
         return user.Id;
@@ -84,9 +82,8 @@ public sealed class UpdateUserCommandHandler(IUserRepository userRepository, IUn
         if (await userRepository.EmailExistsExceptAsync(request.Email.Trim(), user.Id, cancellationToken))
             throw new InvalidOperationException("Email is already registered.");
 
-        user.FirstName = request.FirstName.Trim();
-        user.LastName = request.LastName.Trim();
-        user.Email = request.Email.Trim();
+        user.UpdateProfile(request.FirstName, request.LastName, request.Email);
+
         userRepository.Update(user);
         await unitOfWork.SaveChangesAsync(cancellationToken);
         return true;
@@ -105,7 +102,8 @@ public sealed class ChangeUserRoleCommandHandler(
         if (await roleRepository.GetByIdAsync(request.RoleId) is null)
             throw new InvalidOperationException("Role does not exist.");
 
-        user.RoleId = request.RoleId;
+        user.AssignRole(request.RoleId);
+
         userRepository.Update(user);
         await unitOfWork.SaveChangesAsync(cancellationToken);
         return true;
