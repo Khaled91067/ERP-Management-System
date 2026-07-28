@@ -1,11 +1,9 @@
-
 namespace ERP.Application.Features.Sales.Handlers;
 
 using ERP.Application.Abstractions;
 using ERP.Application.Abstractions.Repositories;
 using ERP.Application.Features.Sales.Commands.Models;
 using ERP.Domain.Sales.Orders;
-using ERP.Domain.Shared.Exceptions;
 
 using MediatR;
 
@@ -29,8 +27,7 @@ public sealed class DeleteOrderCommandHandler : IRequestHandler<DeleteOrderComma
         if (order is null)
             return false;
 
-        if (order.Status != OrderStatus.Pending)
-            throw new BusinessRuleValidationException("Only pending orders can be deleted.");
+        order.EnsureCanBeDeleted();
 
         order.Cancel();
         await _unitOfWork.SaveChangesAsync(cancellationToken);

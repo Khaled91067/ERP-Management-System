@@ -1,10 +1,8 @@
-
 namespace ERP.Domain.Sales.Orders;
-using ERP.Domain.Shared.Base;
-using ERP.Domain.Shared.Abstractions;
 
 using System;
-
+using System.Collections.Generic;
+using System.Linq;
 using ERP.Domain.Sales.Customers;
 using ERP.Domain.Sales.Invoices;
 using ERP.Domain.Shared.Base;
@@ -12,7 +10,9 @@ using ERP.Domain.Shared.Exceptions;
 
 public class Order : SoftDeletableEntity
 {
-    private readonly List<OrderLine> _orderLines = new();
+    private readonly List<OrderLine> _orderLines = [];
+    private readonly List<Invoice> _invoices = [];
+
     public int CustomerId { get; private set; }
     public DateTime OrderDate { get; private set; }
     public OrderStatus Status { get; private set; }
@@ -22,12 +22,9 @@ public class Order : SoftDeletableEntity
     public Customer? Customer { get; private set; }
 
     public IReadOnlyCollection<OrderLine> OrderLines => _orderLines.AsReadOnly();
-    public ICollection<Invoice> Invoices { get;private set; } = new List<Invoice>();
+    public IReadOnlyCollection<Invoice> Invoices => _invoices.AsReadOnly();
 
-
-    private Order()
-    {
-    }
+    private Order() { }
 
     public Order(
         int customerId,
@@ -47,6 +44,16 @@ public class Order : SoftDeletableEntity
         OrderDate = DateTime.UtcNow;
         Status = OrderStatus.Pending;
         TotalAmount = 0;
+    }
+
+    public void UpdateShippingAddress(string shippingAddress)
+    {
+        EnsurePending();
+
+        if (string.IsNullOrWhiteSpace(shippingAddress))
+            throw new BusinessRuleValidationException("Shipping address is required.");
+
+        ShippingAddress = shippingAddress.Trim();
     }
 
     public void AddLine(
@@ -83,9 +90,15 @@ public class Order : SoftDeletableEntity
         RecalculateTotal();
     }
 
+    public void EnsureCanBeDeleted()
+    {
+        if (Status != OrderStatus.Pending)
+            throw new BusinessRuleValidationException("Only pending orders can be deleted.");
+    }
+
     private void RecalculateTotal()
     {
-        TotalAmount = _orderLines.Sum(x => 
+        TotalAmount = _orderLines.Sum(x =>
             (x.Quantity * x.UnitPrice) * (1 - x.DiscountPercentage / 100));
     }
 
