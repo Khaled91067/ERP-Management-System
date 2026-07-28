@@ -1,15 +1,34 @@
 namespace ERP.Domain.Identity.Roles;
-using ERP.Domain.Shared.Base;
-using ERP.Domain.Shared.Abstractions;
 
+using System.Collections.Generic;
 using ERP.Domain.Identity.Users;
+using ERP.Domain.Shared.Base;
+using ERP.Domain.Shared.Exceptions;
 
 public class Role : BaseEntity
 {
-    public string Name { get; set; } = string.Empty;
+    private readonly List<User> _users = [];
+
+    public string Name { get; private set; } = string.Empty;
 
     // Storing as JSON string
-    public string Permissions { get; set; } = string.Empty;
+    public string Permissions { get; private set; } = string.Empty;
 
-    public ICollection<User> Users { get; set; } = new List<User>();
+    public IReadOnlyCollection<User> Users => _users.AsReadOnly();
+
+    private Role() { }
+
+    public Role(string name, string permissions = "")
+    {
+        UpdateDetails(name, permissions);
+    }
+
+    public void UpdateDetails(string name, string permissions = "")
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            throw new BusinessRuleValidationException("Role name is required.");
+
+        Name = name.Trim();
+        Permissions = permissions?.Trim() ?? string.Empty;
+    }
 }
