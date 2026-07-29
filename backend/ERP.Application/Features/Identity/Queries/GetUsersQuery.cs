@@ -11,5 +11,4 @@ public sealed record GetUsersQuery(
     int Page = 1,
     int PageSize = 20
 ) : IRequest<PagedResult<UserDto>>;
-public sealed record GetUserByIdQuery(int Id) : IRequest<UserDto?>;
 

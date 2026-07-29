@@ -1,0 +1,24 @@
+namespace ERP.Application.Features.Identity.Handlers;
+
+using global::ERP.Application.Abstractions;
+using global::ERP.Application.Abstractions.Authentication;
+using global::ERP.Application.Abstractions.Repositories;
+using global::ERP.Application.Common.Models;
+using global::ERP.Application.Features.Identity.Commands;
+using global::ERP.Application.Features.Identity.DTOs;
+using global::ERP.Application.Features.Identity.Queries;
+using global::ERP.Domain.Identity.Users;
+
+using MediatR;
+
+public sealed class GetUserByIdQueryHandler(IUserRepository userRepository)
+    : IRequestHandler<GetUserByIdQuery, UserDto?>
+{
+    public async Task<UserDto?> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
+    {
+        var user = await userRepository.GetByIdWithRoleAsync(request.Id, cancellationToken);
+        return user is null ? null : new UserDto(user.Id, user.FirstName, user.LastName, user.Email.Value,
+            user.RoleId, user.Role?.Name ?? string.Empty);
+    }
+}
+
