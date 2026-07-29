@@ -5,10 +5,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-using ERP.Application.Abstractions;
-using ERP.Application.Abstractions.Repositories;
-using ERP.Application.Features.HR.Commands.Models;
-using ERP.Domain.Shared.Exceptions;
+using global::ERP.Application.Abstractions;
+using global::ERP.Application.Abstractions.Repositories;
+using global::ERP.Application.Features.HR.Commands.Models;
+using global::ERP.Domain.Shared.Exceptions;
 
 using MediatR;
 
@@ -19,11 +19,15 @@ public sealed class DeleteDepartmentCommandHandler : IRequestHandler<DeleteDepar
 
     public DeleteDepartmentCommandHandler(
         IDepartmentRepository departmentRepository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        global::ERP.Application.Abstractions.Caching.ICacheService cacheService)
     {
         _departmentRepository = departmentRepository;
         _unitOfWork = unitOfWork;
+        _cacheService = cacheService;
     }
+
+    private readonly global::ERP.Application.Abstractions.Caching.ICacheService _cacheService;
 
     public async Task<bool> Handle(DeleteDepartmentCommand request, CancellationToken cancellationToken)
     {
@@ -40,6 +44,10 @@ public sealed class DeleteDepartmentCommandHandler : IRequestHandler<DeleteDepar
         _departmentRepository.Delete(department);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
+        await _cacheService.RemoveByPrefixAsync("HR:Departments", cancellationToken);
+
         return true;
     }
 }
+
+

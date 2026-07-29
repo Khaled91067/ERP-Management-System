@@ -1,8 +1,8 @@
 
 namespace ERP.Application.Features.Identity.Queries;
 
-using ERP.Application.Common.Models;
-using ERP.Application.Features.Identity.DTOs;
+using global::ERP.Application.Common.Models;
+using global::ERP.Application.Features.Identity.DTOs;
 
 using MediatR;
 
@@ -12,3 +12,4 @@ public sealed record GetRolesQuery(
     int PageSize = 20
 ) : IRequest<PagedResult<RoleDto>>;
 public sealed record GetRoleByIdQuery(int Id) : IRequest<RoleDto?>;
+

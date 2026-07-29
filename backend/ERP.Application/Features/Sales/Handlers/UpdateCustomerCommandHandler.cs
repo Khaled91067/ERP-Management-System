@@ -3,9 +3,9 @@ namespace ERP.Application.Features.Sales.Handlers;
 using System.Threading;
 using System.Threading.Tasks;
 
-using ERP.Application.Abstractions;
-using ERP.Application.Abstractions.Repositories;
-using ERP.Application.Features.Sales.Commands.Models;
+using global::ERP.Application.Abstractions;
+using global::ERP.Application.Abstractions.Repositories;
+using global::ERP.Application.Features.Sales.Commands.Models;
 
 using MediatR;
 
@@ -16,11 +16,15 @@ public sealed class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustome
 
     public UpdateCustomerCommandHandler(
         ICustomerRepository customerRepository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        global::ERP.Application.Abstractions.Caching.ICacheService cacheService)
     {
         _customerRepository = customerRepository;
         _unitOfWork = unitOfWork;
+        _cacheService = cacheService;
     }
+
+    private readonly global::ERP.Application.Abstractions.Caching.ICacheService _cacheService;
 
     public async Task<bool> Handle(UpdateCustomerCommand request, CancellationToken cancellationToken)
     {
@@ -40,6 +44,11 @@ public sealed class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustome
         _customerRepository.Update(customer);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
+        await _cacheService.RemoveAsync($"Sales:Customer:{customer.Id}", cancellationToken);
+        await _cacheService.RemoveByPrefixAsync("Sales:Customers", cancellationToken);
+
         return true;
     }
 }
+
+

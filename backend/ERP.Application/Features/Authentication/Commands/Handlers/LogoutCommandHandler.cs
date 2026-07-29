@@ -4,10 +4,10 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-using ERP.Application.Abstractions;
-using ERP.Application.Abstractions.Repositories;
-using ERP.Application.Common.Exceptions;
-using ERP.Application.Features.Authentication.Commands.Models;
+using global::ERP.Application.Abstractions;
+using global::ERP.Application.Abstractions.Repositories;
+using global::ERP.Application.Common.Exceptions;
+using global::ERP.Application.Features.Authentication.Commands.Models;
 
 using MediatR;
 
@@ -29,3 +29,4 @@ public sealed class LogoutCommandHandler(IRefreshTokenRepository refreshTokenRep
         await unitOfWork.SaveChangesAsync(cancellationToken);
     }
 }
+

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-using ERP.Domain.HR.Employees;
+using global::ERP.Domain.HR.Employees;
 
 public interface IEmployeeRepository : IGenericRepository<Employee>
 {
@@ -17,3 +17,4 @@ public interface IEmployeeRepository : IGenericRepository<Employee>
         int? departmentId = null,
         CancellationToken cancellationToken = default);
 }
+

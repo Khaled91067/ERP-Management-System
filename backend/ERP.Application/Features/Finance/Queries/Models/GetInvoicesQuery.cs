@@ -1,8 +1,8 @@
 
 namespace ERP.Application.Features.Finance.Queries.Models;
 
-using ERP.Application.Common.Models;
-using ERP.Application.Features.Finance.Dtos;
+using global::ERP.Application.Common.Models;
+using global::ERP.Application.Features.Finance.Dtos;
 
 using MediatR;
 
@@ -13,3 +13,4 @@ public sealed record GetInvoicesQuery(
     int Page = 1,
     int PageSize = 20
 ) : IRequest<PagedResult<InvoiceDto>>;
+

@@ -1,7 +1,7 @@
 
 namespace ERP.Application.Abstractions.Repositories;
 
-using ERP.Domain.Identity.Users;
+using global::ERP.Domain.Identity.Users;
 
 public interface IUserRepository : IGenericRepository<User>
 {
@@ -15,3 +15,4 @@ public interface IUserRepository : IGenericRepository<User>
 
     Task<IReadOnlyList<User>> GetAllWithRolesAsync(CancellationToken cancellationToken = default);
 }
+

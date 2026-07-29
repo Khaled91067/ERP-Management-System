@@ -1,14 +1,13 @@
-
 namespace ERP.Application.Features.Sales.Handlers;
 
 using System.Threading;
 using System.Threading.Tasks;
 
-using ERP.Application.Abstractions;
-using ERP.Application.Abstractions.Repositories;
-using ERP.Application.Features.Sales.Commands.Models;
-using ERP.Domain.Sales.Orders;
-using ERP.Domain.Shared.Exceptions;
+using global::ERP.Application.Abstractions;
+using global::ERP.Application.Abstractions.Repositories;
+using global::ERP.Application.Features.Sales.Commands.Models;
+using global::ERP.Domain.Sales.Orders;
+using global::ERP.Domain.Shared.Exceptions;
 
 using MediatR;
 
@@ -16,13 +15,16 @@ public sealed class UpdateOrderStatusCommandHandler : IRequestHandler<UpdateOrde
 {
     private readonly IOrderRepository _orderRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly global::ERP.Application.Abstractions.Caching.ICacheService _cacheService;
 
     public UpdateOrderStatusCommandHandler(
         IOrderRepository orderRepository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        global::ERP.Application.Abstractions.Caching.ICacheService cacheService)
     {
         _orderRepository = orderRepository;
         _unitOfWork = unitOfWork;
+        _cacheService = cacheService;
     }
 
     public async Task<bool> Handle(UpdateOrderStatusCommand request, CancellationToken cancellationToken)
@@ -49,6 +51,11 @@ public sealed class UpdateOrderStatusCommandHandler : IRequestHandler<UpdateOrde
         _orderRepository.Update(order);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
+        await _cacheService.RemoveAsync($"Sales:Order:{order.Id}", cancellationToken);
+        await _cacheService.RemoveByPrefixAsync("Sales:Orders", cancellationToken);
+
         return true;
     }
 }
+
+

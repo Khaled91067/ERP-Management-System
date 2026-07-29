@@ -3,10 +3,10 @@ namespace ERP.Application.Features.Sales.Handlers;
 using System.Threading;
 using System.Threading.Tasks;
 
-using ERP.Application.Abstractions;
-using ERP.Application.Abstractions.Repositories;
-using ERP.Application.Features.Sales.Commands.Models;
-using ERP.Domain.Sales.Customers;
+using global::ERP.Application.Abstractions;
+using global::ERP.Application.Abstractions.Repositories;
+using global::ERP.Application.Features.Sales.Commands.Models;
+using global::ERP.Domain.Sales.Customers;
 
 using MediatR;
 
@@ -17,11 +17,15 @@ public sealed class CreateCustomerCommandHandler : IRequestHandler<CreateCustome
 
     public CreateCustomerCommandHandler(
         ICustomerRepository customerRepository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        global::ERP.Application.Abstractions.Caching.ICacheService cacheService)
     {
         _customerRepository = customerRepository;
         _unitOfWork = unitOfWork;
+        _cacheService = cacheService;
     }
+
+    private readonly global::ERP.Application.Abstractions.Caching.ICacheService _cacheService;
 
     public async Task<int> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
     {
@@ -37,6 +41,10 @@ public sealed class CreateCustomerCommandHandler : IRequestHandler<CreateCustome
         _customerRepository.Add(customer);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
+        await _cacheService.RemoveByPrefixAsync("Sales:Customers", cancellationToken);
+
         return customer.Id;
     }
 }
+
+

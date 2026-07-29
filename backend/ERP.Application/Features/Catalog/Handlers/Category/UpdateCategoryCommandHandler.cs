@@ -1,12 +1,17 @@
 namespace ERP.Application.Features.Catalog.Handlers;
 
-using ERP.Application.Abstractions;
-using ERP.Application.Abstractions.Repositories;
-using ERP.Application.Features.Catalog.Commands;
+using global::ERP.Application.Abstractions;
+using global::ERP.Application.Abstractions.Repositories;
+using global::ERP.Application.Features.Catalog.Commands;
 
 using MediatR;
 
-public sealed class UpdateCategoryCommandHandler(ICategoryRepository categoryRepository, IUnitOfWork unitOfWork)
+using global::ERP.Application.Abstractions.Caching;
+
+public sealed class UpdateCategoryCommandHandler(
+    ICategoryRepository categoryRepository,
+    IUnitOfWork unitOfWork,
+    ICacheService cacheService)
     : IRequestHandler<UpdateCategoryCommand, bool>
 {
     public async Task<bool> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
@@ -22,6 +27,10 @@ public sealed class UpdateCategoryCommandHandler(ICategoryRepository categoryRep
         category.UpdateName(request.Name);
         categoryRepository.Update(category);
         await unitOfWork.SaveChangesAsync(cancellationToken);
+        
+        await cacheService.RemoveAsync($"Catalog:Category:{category.Id}", cancellationToken);
+        await cacheService.RemoveByPrefixAsync("Catalog:Categories", cancellationToken);
+        
         return true;
     }
 }

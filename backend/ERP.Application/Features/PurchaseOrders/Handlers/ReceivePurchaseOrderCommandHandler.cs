@@ -1,9 +1,9 @@
 
 namespace ERP.Application.Features.PurchaseOrders.Commands.Handlers;
 
-using ERP.Application.Abstractions;
-using ERP.Application.Abstractions.Repositories;
-using ERP.Application.Features.PurchaseOrders.Commands.Models;
+using global::ERP.Application.Abstractions;
+using global::ERP.Application.Abstractions.Repositories;
+using global::ERP.Application.Features.PurchaseOrders.Commands.Models;
 
 using MediatR;
 
@@ -12,11 +12,17 @@ public sealed class ReceivePurchaseOrderCommandHandler : IRequestHandler<Receive
     private readonly IPurchaseOrderRepository _purchaseOrderRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public ReceivePurchaseOrderCommandHandler(IPurchaseOrderRepository purchaseOrderRepository, IUnitOfWork unitOfWork)
+    public ReceivePurchaseOrderCommandHandler(
+        IPurchaseOrderRepository purchaseOrderRepository,
+        IUnitOfWork unitOfWork,
+        global::ERP.Application.Abstractions.Caching.ICacheService cacheService)
     {
         _purchaseOrderRepository = purchaseOrderRepository;
         _unitOfWork = unitOfWork;
+        _cacheService = cacheService;
     }
+
+    private readonly global::ERP.Application.Abstractions.Caching.ICacheService _cacheService;
 
     public async Task Handle(ReceivePurchaseOrderCommand request, CancellationToken cancellationToken)
     {
@@ -29,5 +35,9 @@ public sealed class ReceivePurchaseOrderCommandHandler : IRequestHandler<Receive
         purchaseOrder.Receive();
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        await _cacheService.RemoveAsync($"PO:PurchaseOrder:{purchaseOrder.Id}", cancellationToken);
+        await _cacheService.RemoveByPrefixAsync("PO:PurchaseOrders", cancellationToken);
     }
 }
+

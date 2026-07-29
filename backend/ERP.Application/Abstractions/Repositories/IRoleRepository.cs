@@ -2,7 +2,7 @@
 
 namespace ERP.Application.Abstractions.Repositories
 {
-    using ERP.Domain.Identity.Roles;
+    using global::ERP.Domain.Identity.Roles;
 
     public interface IRoleRepository : IGenericRepository<Role>
     {
@@ -11,3 +11,4 @@ namespace ERP.Application.Abstractions.Repositories
         Task<bool> HasUsersAsync(int roleId, CancellationToken cancellationToken = default);
     }
 }
+

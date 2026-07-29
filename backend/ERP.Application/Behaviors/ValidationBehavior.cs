@@ -5,7 +5,7 @@ using FluentValidation;
 
 using MediatR;
 
-using Microsoft.Extensions.Logging;
+using global::Microsoft.Extensions.Logging;
 
 public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
@@ -40,3 +40,4 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
         return await next();
     }
 }
+

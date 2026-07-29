@@ -1,10 +1,10 @@
 namespace ERP.Application.Features.Authentication.Commands.Handlers;
 
-using ERP.Application.Abstractions;
-using ERP.Application.Abstractions.Authentication;
-using ERP.Application.Abstractions.Repositories;
-using ERP.Application.Features.Authentication.Commands.Models;
-using ERP.Domain.Identity.Users;
+using global::ERP.Application.Abstractions;
+using global::ERP.Application.Abstractions.Authentication;
+using global::ERP.Application.Abstractions.Repositories;
+using global::ERP.Application.Features.Authentication.Commands.Models;
+using global::ERP.Domain.Identity.Users;
 
 using MediatR;
 

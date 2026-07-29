@@ -1,7 +1,7 @@
 
 namespace ERP.Application.Abstractions.Repositories
 {
-    using ERP.Domain.Identity.Users;
+    using global::ERP.Domain.Identity.Users;
 
     public interface IRefreshTokenRepository
     {
@@ -10,3 +10,4 @@ namespace ERP.Application.Abstractions.Repositories
         Task AddAsync(RefreshToken refreshToken,CancellationToken cancellationToken);
     }
 }
+

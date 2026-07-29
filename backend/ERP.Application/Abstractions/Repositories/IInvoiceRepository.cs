@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-using ERP.Domain.Sales.Invoices;
+using global::ERP.Domain.Sales.Invoices;
 
 public interface IInvoiceRepository : IGenericRepository<Invoice>
 {
@@ -17,3 +17,4 @@ public interface IInvoiceRepository : IGenericRepository<Invoice>
         int? customerId = null,
         CancellationToken cancellationToken = default);
 }
+

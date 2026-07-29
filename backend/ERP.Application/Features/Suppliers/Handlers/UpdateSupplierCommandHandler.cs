@@ -3,9 +3,9 @@ namespace ERP.Application.Features.Suppliers.Handlers;
 using System.Threading;
 using System.Threading.Tasks;
 
-using ERP.Application.Abstractions;
-using ERP.Application.Abstractions.Repositories;
-using ERP.Application.Features.Suppliers.Commands;
+using global::ERP.Application.Abstractions;
+using global::ERP.Application.Abstractions.Repositories;
+using global::ERP.Application.Features.Suppliers.Commands;
 
 using MediatR;
 
@@ -16,11 +16,15 @@ public sealed class UpdateSupplierCommandHandler : IRequestHandler<UpdateSupplie
 
     public UpdateSupplierCommandHandler(
         ISupplierRepository supplierRepository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        global::ERP.Application.Abstractions.Caching.ICacheService cacheService)
     {
         _supplierRepository = supplierRepository;
         _unitOfWork = unitOfWork;
+        _cacheService = cacheService;
     }
+
+    private readonly global::ERP.Application.Abstractions.Caching.ICacheService _cacheService;
 
     public async Task<bool> Handle(UpdateSupplierCommand request, CancellationToken cancellationToken)
     {
@@ -39,6 +43,11 @@ public sealed class UpdateSupplierCommandHandler : IRequestHandler<UpdateSupplie
         _supplierRepository.Update(supplier);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
+        await _cacheService.RemoveAsync($"Purchasing:Supplier:{supplier.Id}", cancellationToken);
+        await _cacheService.RemoveByPrefixAsync("Purchasing:Suppliers", cancellationToken);
+
         return true;
     }
 }
+
+

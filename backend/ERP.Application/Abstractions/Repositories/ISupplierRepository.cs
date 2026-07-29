@@ -1,8 +1,9 @@
 
 namespace ERP.Application.Abstractions.Repositories;
 
-using ERP.Domain.Purchasing.Suppliers;
+using global::ERP.Domain.Purchasing.Suppliers;
 
 public interface ISupplierRepository : IGenericRepository<Supplier>
 {
 }
+

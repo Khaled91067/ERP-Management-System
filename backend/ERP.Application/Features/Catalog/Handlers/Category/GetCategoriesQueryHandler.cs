@@ -1,31 +1,49 @@
 
 namespace ERP.Application.Features.Catalog.Handlers;
 
-using ERP.Application.Abstractions.Repositories;
-using ERP.Application.Common.Models;
-using ERP.Application.Features.Catalog.DTOs;
-using ERP.Application.Features.Catalog.Queries;
-using ERP.Domain.Catalog.Categories;
+using global::ERP.Application.Abstractions.Repositories;
+using global::ERP.Application.Common.Models;
+using global::ERP.Application.Features.Catalog.DTOs;
+using global::ERP.Application.Features.Catalog.Queries;
+using global::ERP.Domain.Catalog.Categories;
 
 using MediatR;
 
-public sealed class GetCategoriesQueryHandler(ICategoryRepository categoryRepository)
+using global::ERP.Application.Abstractions.Caching;
+using global::ERP.Application.Common.Caching;
+using global::Microsoft.Extensions.Options;
+
+public sealed class GetCategoriesQueryHandler(
+    ICategoryRepository categoryRepository,
+    ICacheService cacheService,
+    IOptions<CacheSettings> cacheSettings)
     : IRequestHandler<GetCategoriesQuery, PagedResult<CategoryDto>>
 {
     public async Task<PagedResult<CategoryDto>> Handle(GetCategoriesQuery request, CancellationToken cancellationToken)
     {
-        var options = new QueryOptions<Category>();
+        var cacheKey = $"Catalog:Categories:Search={request.Search?.Trim().ToLower() ?? "none"}:Page={request.Page}:Size={request.PageSize}";
+        var expiration = TimeSpan.FromMinutes(cacheSettings.Value.ReferenceDataExpirationMinutes);
 
-        if (!string.IsNullOrWhiteSpace(request.Search))
-        {
-            var search = request.Search.Trim().ToLower();
-            options.Filter = c => c.Name.ToLower().Contains(search);
-        }
+        return await cacheService.GetOrCreateAsync(
+            cacheKey,
+            async (ct) =>
+            {
+                var options = new QueryOptions<Category>();
 
-        var pagedCategories = await categoryRepository.GetPagedAsync(options, request.Page, request.PageSize);
+                if (!string.IsNullOrWhiteSpace(request.Search))
+                {
+                    var search = request.Search.Trim().ToLower();
+                    options.Filter = c => c.Name.ToLower().Contains(search);
+                }
 
-        return pagedCategories.Map(category => new CategoryDto(
-            category.Id,
-            category.Name));
+                var pagedCategories = await categoryRepository.GetPagedAsync(options, request.Page, request.PageSize);
+
+                return pagedCategories.Map(category => new CategoryDto(
+                    category.Id,
+                    category.Name));
+            },
+            expiration,
+            false,
+            cancellationToken);
     }
 }

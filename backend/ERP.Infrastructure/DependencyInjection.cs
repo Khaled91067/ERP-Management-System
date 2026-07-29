@@ -37,7 +37,7 @@ namespace ERP.Infrastructure
                 var multiplexer = ConnectionMultiplexer.Connect(redisConnectionString);
                 services.AddSingleton<IConnectionMultiplexer>(multiplexer);
             }
-            services.Configure<CacheSettings>(configuration.GetSection("Cache"));
+
             services.AddSingleton<ICacheService, RedisCacheService>();
 
             services.AddScoped(typeof(IGenericRepository<> ),typeof(GenericRepository<> ));

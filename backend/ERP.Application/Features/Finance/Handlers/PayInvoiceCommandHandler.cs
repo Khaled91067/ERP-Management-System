@@ -1,13 +1,12 @@
-
 namespace ERP.Application.Features.Finance.Handlers;
 
 using System.Threading;
 using System.Threading.Tasks;
 
-using ERP.Application.Abstractions;
-using ERP.Application.Abstractions.Repositories;
-using ERP.Application.Features.Finance.Commands.Models;
-using ERP.Domain.Sales.Invoices;
+using global::ERP.Application.Abstractions;
+using global::ERP.Application.Abstractions.Repositories;
+using global::ERP.Application.Features.Finance.Commands.Models;
+using global::ERP.Domain.Sales.Invoices;
 
 using MediatR;
 
@@ -15,13 +14,16 @@ public sealed class PayInvoiceCommandHandler : IRequestHandler<PayInvoiceCommand
 {
     private readonly IInvoiceRepository _invoiceRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly global::ERP.Application.Abstractions.Caching.ICacheService _cacheService;
 
     public PayInvoiceCommandHandler(
         IInvoiceRepository invoiceRepository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        global::ERP.Application.Abstractions.Caching.ICacheService cacheService)
     {
         _invoiceRepository = invoiceRepository;
         _unitOfWork = unitOfWork;
+        _cacheService = cacheService;
     }
 
     public async Task<bool> Handle(PayInvoiceCommand request, CancellationToken cancellationToken)
@@ -41,6 +43,11 @@ public sealed class PayInvoiceCommandHandler : IRequestHandler<PayInvoiceCommand
         _invoiceRepository.Update(invoice);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
+        await _cacheService.RemoveAsync($"Finance:Invoice:{invoice.Id}", cancellationToken);
+        await _cacheService.RemoveByPrefixAsync("Finance:Invoices", cancellationToken);
+
         return true;
     }
 }
+
+

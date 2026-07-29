@@ -1,7 +1,7 @@
 
 namespace ERP.Application.Abstractions.Authentication;
 
-using ERP.Domain.Identity.Users;
+using global::ERP.Domain.Identity.Users;
 
 public interface ITokenService
 {

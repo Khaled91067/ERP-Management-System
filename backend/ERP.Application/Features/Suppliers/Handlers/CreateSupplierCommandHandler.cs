@@ -3,10 +3,10 @@ namespace ERP.Application.Features.Suppliers.Handlers;
 using System.Threading;
 using System.Threading.Tasks;
 
-using ERP.Application.Abstractions;
-using ERP.Application.Abstractions.Repositories;
-using ERP.Application.Features.Suppliers.Commands;
-using ERP.Domain.Purchasing.Suppliers;
+using global::ERP.Application.Abstractions;
+using global::ERP.Application.Abstractions.Repositories;
+using global::ERP.Application.Features.Suppliers.Commands;
+using global::ERP.Domain.Purchasing.Suppliers;
 
 using MediatR;
 
@@ -17,11 +17,15 @@ public sealed class CreateSupplierCommandHandler : IRequestHandler<CreateSupplie
 
     public CreateSupplierCommandHandler(
         ISupplierRepository supplierRepository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        global::ERP.Application.Abstractions.Caching.ICacheService cacheService)
     {
         _supplierRepository = supplierRepository;
         _unitOfWork = unitOfWork;
+        _cacheService = cacheService;
     }
+
+    private readonly global::ERP.Application.Abstractions.Caching.ICacheService _cacheService;
 
     public async Task<int> Handle(CreateSupplierCommand request, CancellationToken cancellationToken)
     {
@@ -35,6 +39,10 @@ public sealed class CreateSupplierCommandHandler : IRequestHandler<CreateSupplie
         _supplierRepository.Add(supplier);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
+        await _cacheService.RemoveByPrefixAsync("Purchasing:Suppliers", cancellationToken);
+
         return supplier.Id;
     }
 }
+
+

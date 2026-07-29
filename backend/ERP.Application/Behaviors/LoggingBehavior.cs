@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 using MediatR;
 
-using Microsoft.Extensions.Logging;
+using global::Microsoft.Extensions.Logging;
 
 public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
@@ -41,3 +41,4 @@ public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
         }
     }
 }
+

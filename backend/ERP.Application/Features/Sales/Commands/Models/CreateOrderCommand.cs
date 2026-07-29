@@ -3,7 +3,7 @@ namespace ERP.Application.Features.Sales.Commands.Models;
 
 using System.Collections.Generic;
 
-using ERP.Domain.Sales.Orders;
+using global::ERP.Domain.Sales.Orders;
 
 using MediatR;
 
@@ -20,3 +20,4 @@ public sealed record CreateOrderLineCommand(
     decimal UnitPrice,
     decimal DiscountPercentage = 0
 );
+

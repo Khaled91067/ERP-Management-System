@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 using MediatR;
 
-using Microsoft.Extensions.Logging;
+using global::Microsoft.Extensions.Logging;
 
 public class PerformanceBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
@@ -33,3 +33,4 @@ public class PerformanceBehavior<TRequest, TResponse> : IPipelineBehavior<TReque
         return response;
     }
 }
+

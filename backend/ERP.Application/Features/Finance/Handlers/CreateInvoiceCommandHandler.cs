@@ -1,11 +1,12 @@
 
 namespace ERP.Application.Features.Finance.Handlers;
 
-using ERP.Application.Abstractions;
-using ERP.Application.Abstractions.Repositories;
-using ERP.Application.Features.Finance.Commands.Models;
-using ERP.Domain.Sales.Invoices;
-using ERP.Domain.Shared.Exceptions;
+
+using global::ERP.Application.Abstractions;
+using global::ERP.Application.Abstractions.Repositories;
+using global::ERP.Application.Features.Finance.Commands.Models;
+using global::ERP.Domain.Sales.Invoices;
+using global::ERP.Domain.Shared.Exceptions;
 
 using MediatR;
 
@@ -14,15 +15,18 @@ public sealed class CreateInvoiceCommandHandler : IRequestHandler<CreateInvoiceC
     private readonly IInvoiceRepository _invoiceRepository;
     private readonly ICustomerRepository _customerRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly global::ERP.Application.Abstractions.Caching.ICacheService _cacheService;
 
     public CreateInvoiceCommandHandler(
         IInvoiceRepository invoiceRepository,
         ICustomerRepository customerRepository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        global::ERP.Application.Abstractions.Caching.ICacheService cacheService)
     {
         _invoiceRepository = invoiceRepository;
         _customerRepository = customerRepository;
         _unitOfWork = unitOfWork;
+        _cacheService = cacheService;
     }
 
     public async Task<int> Handle(CreateInvoiceCommand request, CancellationToken cancellationToken)
@@ -52,6 +56,10 @@ public sealed class CreateInvoiceCommandHandler : IRequestHandler<CreateInvoiceC
         _invoiceRepository.Add(invoice);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
+        await _cacheService.RemoveByPrefixAsync("Finance:Invoices", cancellationToken);
+
         return invoice.Id;
     }
 }
+
+

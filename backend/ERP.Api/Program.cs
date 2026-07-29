@@ -46,6 +46,8 @@ namespace ERP.Api
             });
 
             // Add services to the container.
+            builder.Services.Configure<ERP.Application.Common.Caching.CacheSettings>(
+                builder.Configuration.GetSection("CacheSettings"));
             builder.Services.AddInfrastructure(builder.Configuration);
 
             builder.Services.AddApplication();

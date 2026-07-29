@@ -1,7 +1,7 @@
 
 namespace ERP.Application.Abstractions.Repositories;
 
-using ERP.Domain.Catalog.Products;
+using global::ERP.Domain.Catalog.Products;
 
 public interface IProductRepository : IGenericRepository<Product>
 {
@@ -10,3 +10,4 @@ public interface IProductRepository : IGenericRepository<Product>
     Task<IReadOnlyList<Product>> GetAllWithCategoriesAsync(CancellationToken cancellationToken = default);
     Task<bool> HasTransactionsAsync(int productId, CancellationToken cancellationToken = default);
 }
+

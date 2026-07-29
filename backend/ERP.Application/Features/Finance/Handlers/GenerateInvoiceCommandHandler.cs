@@ -3,12 +3,12 @@ namespace ERP.Application.Features.Finance.Handlers;
 using System.Threading;
 using System.Threading.Tasks;
 
-using ERP.Application.Abstractions;
-using ERP.Application.Abstractions.Repositories;
-using ERP.Application.Features.Finance.Commands.Models;
-using ERP.Domain.Sales.Invoices;
-using ERP.Domain.Sales.Orders;
-using ERP.Domain.Shared.Exceptions;
+using global::ERP.Application.Abstractions;
+using global::ERP.Application.Abstractions.Repositories;
+using global::ERP.Application.Features.Finance.Commands.Models;
+using global::ERP.Domain.Sales.Invoices;
+using global::ERP.Domain.Sales.Orders;
+using global::ERP.Domain.Shared.Exceptions;
 
 using MediatR;
 
@@ -64,3 +64,4 @@ public sealed class GenerateInvoiceCommandHandler : IRequestHandler<GenerateInvo
         return invoice.Id;
     }
 }
+

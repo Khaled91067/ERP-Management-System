@@ -1,9 +1,9 @@
 
 namespace ERP.Application.Features.Suppliers.Handlers;
 
-using ERP.Application.Abstractions;
-using ERP.Application.Abstractions.Repositories;
-using ERP.Application.Features.Suppliers.Commands;
+using global::ERP.Application.Abstractions;
+using global::ERP.Application.Abstractions.Repositories;
+using global::ERP.Application.Features.Suppliers.Commands;
 
 using MediatR;
 
@@ -14,11 +14,15 @@ public sealed class DeleteSupplierCommandHandler : IRequestHandler<DeleteSupplie
 
     public DeleteSupplierCommandHandler(
         ISupplierRepository supplierRepository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        global::ERP.Application.Abstractions.Caching.ICacheService cacheService)
     {
         _supplierRepository = supplierRepository;
         _unitOfWork = unitOfWork;
+        _cacheService = cacheService;
     }
+
+    private readonly global::ERP.Application.Abstractions.Caching.ICacheService _cacheService;
 
     public async Task<bool> Handle(DeleteSupplierCommand request, CancellationToken cancellationToken)
     {
@@ -30,6 +34,11 @@ public sealed class DeleteSupplierCommandHandler : IRequestHandler<DeleteSupplie
         _supplierRepository.Delete(supplier);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
+        await _cacheService.RemoveAsync($"Purchasing:Supplier:{supplier.Id}", cancellationToken);
+        await _cacheService.RemoveByPrefixAsync("Purchasing:Suppliers", cancellationToken);
+
         return true;
     }
 }
+
+

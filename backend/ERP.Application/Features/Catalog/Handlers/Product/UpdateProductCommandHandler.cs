@@ -1,15 +1,18 @@
 namespace ERP.Application.Features.Catalog.Handlers;
 
-using ERP.Application.Abstractions;
-using ERP.Application.Abstractions.Repositories;
-using ERP.Application.Features.Catalog.Commands;
+using global::ERP.Application.Abstractions;
+using global::ERP.Application.Abstractions.Repositories;
+using global::ERP.Application.Features.Catalog.Commands;
 
 using MediatR;
+
+using global::ERP.Application.Abstractions.Caching;
 
 public sealed class UpdateProductCommandHandler(
     IProductRepository productRepository,
     ICategoryRepository categoryRepository,
-    IUnitOfWork unitOfWork) : IRequestHandler<UpdateProductCommand, bool>
+    IUnitOfWork unitOfWork,
+    ICacheService cacheService) : IRequestHandler<UpdateProductCommand, bool>
 {
     public async Task<bool> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
@@ -34,6 +37,10 @@ public sealed class UpdateProductCommandHandler(
 
         productRepository.Update(product);
         await unitOfWork.SaveChangesAsync(cancellationToken);
+        
+        await cacheService.RemoveAsync($"Catalog:Product:{product.Id}", cancellationToken);
+        await cacheService.RemoveByPrefixAsync("Catalog:Products", cancellationToken);
+        
         return true;
     }
 }

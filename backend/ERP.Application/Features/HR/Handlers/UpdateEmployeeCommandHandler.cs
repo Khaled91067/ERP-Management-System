@@ -3,10 +3,10 @@ namespace ERP.Application.Features.HR.Handlers;
 using System.Threading;
 using System.Threading.Tasks;
 
-using ERP.Application.Abstractions;
-using ERP.Application.Abstractions.Repositories;
-using ERP.Application.Features.HR.Commands.Models;
-using ERP.Domain.Shared.Exceptions;
+using global::ERP.Application.Abstractions;
+using global::ERP.Application.Abstractions.Repositories;
+using global::ERP.Application.Features.HR.Commands.Models;
+using global::ERP.Domain.Shared.Exceptions;
 
 using MediatR;
 
@@ -19,12 +19,16 @@ public sealed class UpdateEmployeeCommandHandler : IRequestHandler<UpdateEmploye
     public UpdateEmployeeCommandHandler(
         IEmployeeRepository employeeRepository,
         IDepartmentRepository departmentRepository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        global::ERP.Application.Abstractions.Caching.ICacheService cacheService)
     {
         _employeeRepository = employeeRepository;
         _departmentRepository = departmentRepository;
         _unitOfWork = unitOfWork;
+        _cacheService = cacheService;
     }
+
+    private readonly global::ERP.Application.Abstractions.Caching.ICacheService _cacheService;
 
     public async Task<bool> Handle(UpdateEmployeeCommand request, CancellationToken cancellationToken)
     {
@@ -49,6 +53,11 @@ public sealed class UpdateEmployeeCommandHandler : IRequestHandler<UpdateEmploye
         _employeeRepository.Update(employee);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
+        await _cacheService.RemoveAsync($"HR:Employee:{employee.Id}", cancellationToken);
+        await _cacheService.RemoveByPrefixAsync("HR:Employees", cancellationToken);
+
         return true;
     }
 }
+
+

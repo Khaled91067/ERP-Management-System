@@ -1,9 +1,9 @@
 
 namespace ERP.Application.Features.PurchaseOrders.Handlers;
 
-using ERP.Application.Abstractions.Repositories;
-using ERP.Application.Features.PurchaseOrders.Dtos;
-using ERP.Application.Features.PurchaseOrders.Queries.Models;
+using global::ERP.Application.Abstractions.Repositories;
+using global::ERP.Application.Features.PurchaseOrders.Dtos;
+using global::ERP.Application.Features.PurchaseOrders.Queries.Models;
 
 using MediatR;
 

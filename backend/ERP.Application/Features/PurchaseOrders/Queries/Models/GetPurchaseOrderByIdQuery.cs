@@ -1,7 +1,7 @@
 
 namespace ERP.Application.Features.PurchaseOrders.Queries.Models;
 
-using ERP.Application.Features.PurchaseOrders.Dtos;
+using global::ERP.Application.Features.PurchaseOrders.Dtos;
 
 using MediatR;
 

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-using ERP.Domain.Sales.Orders;
+using global::ERP.Domain.Sales.Orders;
 
 public interface IOrderRepository : IGenericRepository<Order>
 {
@@ -17,3 +17,4 @@ public interface IOrderRepository : IGenericRepository<Order>
         int? customerId = null,
         CancellationToken cancellationToken = default);
 }
+

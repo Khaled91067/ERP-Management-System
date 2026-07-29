@@ -1,7 +1,7 @@
 
 namespace ERP.Application.Features.Authentication.Commands.Models;
 
-using ERP.Application.Features.Authentication.DTOs;
+using global::ERP.Application.Features.Authentication.DTOs;
 
 using MediatR;
 

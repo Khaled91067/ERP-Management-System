@@ -1,16 +1,19 @@
 namespace ERP.Application.Features.Catalog.Handlers;
 
-using ERP.Application.Abstractions;
-using ERP.Application.Abstractions.Repositories;
-using ERP.Application.Features.Catalog.Commands;
-using ERP.Domain.Catalog.Products;
+using global::ERP.Application.Abstractions;
+using global::ERP.Application.Abstractions.Repositories;
+using global::ERP.Application.Features.Catalog.Commands;
+using global::ERP.Domain.Catalog.Products;
 
 using MediatR;
+
+using global::ERP.Application.Abstractions.Caching;
 
 public sealed class CreateProductCommandHandler(
     IProductRepository productRepository,
     ICategoryRepository categoryRepository,
-    IUnitOfWork unitOfWork) : IRequestHandler<CreateProductCommand, int>
+    IUnitOfWork unitOfWork,
+    ICacheService cacheService) : IRequestHandler<CreateProductCommand, int>
 {
     public async Task<int> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
@@ -30,6 +33,9 @@ public sealed class CreateProductCommandHandler(
 
         productRepository.Add(product);
         await unitOfWork.SaveChangesAsync(cancellationToken);
+        
+        await cacheService.RemoveByPrefixAsync("Catalog:Products", cancellationToken);
+        
         return product.Id;
     }
 

@@ -4,7 +4,7 @@ namespace ERP.Application.Abstractions.Repositories;
 using System.Threading;
 using System.Threading.Tasks;
 
-using ERP.Domain.HR.Departments;
+using global::ERP.Domain.HR.Departments;
 
 public interface IDepartmentRepository : IGenericRepository<Department>
 {
@@ -12,3 +12,4 @@ public interface IDepartmentRepository : IGenericRepository<Department>
         int id,
         CancellationToken cancellationToken = default);
 }
+
