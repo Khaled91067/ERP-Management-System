@@ -27,7 +27,7 @@ public sealed class GetSuppliersQueryHandler : IRequestHandler<GetSuppliersQuery
     public async Task<PagedResult<SupplierDto>> Handle(GetSuppliersQuery request, CancellationToken cancellationToken)
     {
         var searchPart = !string.IsNullOrWhiteSpace(request.Search) ? request.Search.Trim().ToLower() : "none";
-        var cacheKey = $"Purchasing:Suppliers:Search={searchPart}:Page={request.Page}:Size={request.PageSize}";
+        var cacheKey = global::ERP.Application.Common.Caching.CacheKeys.Purchasing.SuppliersList(searchPart, request.Page, request.PageSize);
         var expiration = TimeSpan.FromMinutes(_cacheSettings.Value.PaginatedListExpirationMinutes);
 
         return await _cacheService.GetOrCreateAsync(

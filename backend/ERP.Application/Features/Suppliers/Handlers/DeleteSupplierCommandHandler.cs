@@ -34,8 +34,8 @@ public sealed class DeleteSupplierCommandHandler : IRequestHandler<DeleteSupplie
         _supplierRepository.Delete(supplier);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        await _cacheService.RemoveAsync($"Purchasing:Supplier:{supplier.Id}", cancellationToken);
-        await _cacheService.RemoveByPrefixAsync("Purchasing:Suppliers", cancellationToken);
+        await _cacheService.RemoveAsync(global::ERP.Application.Common.Caching.CacheKeys.Purchasing.SupplierById(supplier.Id), cancellationToken);
+        await _cacheService.RemoveByPrefixAsync(global::ERP.Application.Common.Caching.CacheKeys.Purchasing.SuppliersPrefix(), cancellationToken);
 
         return true;
     }

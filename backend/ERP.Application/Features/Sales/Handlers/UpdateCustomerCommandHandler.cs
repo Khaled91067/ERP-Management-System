@@ -44,8 +44,8 @@ public sealed class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustome
         _customerRepository.Update(customer);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        await _cacheService.RemoveAsync($"Sales:Customer:{customer.Id}", cancellationToken);
-        await _cacheService.RemoveByPrefixAsync("Sales:Customers", cancellationToken);
+        await _cacheService.RemoveAsync(global::ERP.Application.Common.Caching.CacheKeys.Sales.CustomerById(customer.Id), cancellationToken);
+        await _cacheService.RemoveByPrefixAsync(global::ERP.Application.Common.Caching.CacheKeys.Sales.CustomersPrefix(), cancellationToken);
 
         return true;
     }

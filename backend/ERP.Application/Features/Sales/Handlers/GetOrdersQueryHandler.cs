@@ -33,7 +33,7 @@ public sealed class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, Page
         var statPart = !string.IsNullOrWhiteSpace(request.Status) ? request.Status : "all";
         var searchPart = !string.IsNullOrWhiteSpace(request.Search) ? request.Search.Trim().ToLower() : "none";
         
-        var cacheKey = $"Sales:Orders:Cust={custPart}:Stat={statPart}:Search={searchPart}:Page={request.Page}:Size={request.PageSize}";
+        var cacheKey = global::ERP.Application.Common.Caching.CacheKeys.Sales.OrdersList(custPart, statPart, searchPart, request.Page, request.PageSize);
         var expiration = TimeSpan.FromMinutes(_cacheSettings.Value.PaginatedListExpirationMinutes);
 
         return await _cacheService.GetOrCreateAsync(

@@ -39,7 +39,7 @@ public sealed class CreateSupplierCommandHandler : IRequestHandler<CreateSupplie
         _supplierRepository.Add(supplier);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        await _cacheService.RemoveByPrefixAsync("Purchasing:Suppliers", cancellationToken);
+        await _cacheService.RemoveByPrefixAsync(global::ERP.Application.Common.Caching.CacheKeys.Purchasing.SuppliersPrefix(), cancellationToken);
 
         return supplier.Id;
     }

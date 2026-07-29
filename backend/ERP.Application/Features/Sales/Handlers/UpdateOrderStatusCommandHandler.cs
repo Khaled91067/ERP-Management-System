@@ -51,8 +51,8 @@ public sealed class UpdateOrderStatusCommandHandler : IRequestHandler<UpdateOrde
         _orderRepository.Update(order);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        await _cacheService.RemoveAsync($"Sales:Order:{order.Id}", cancellationToken);
-        await _cacheService.RemoveByPrefixAsync("Sales:Orders", cancellationToken);
+        await _cacheService.RemoveAsync(global::ERP.Application.Common.Caching.CacheKeys.Sales.OrderById(order.Id), cancellationToken);
+        await _cacheService.RemoveByPrefixAsync(global::ERP.Application.Common.Caching.CacheKeys.Sales.OrdersPrefix(), cancellationToken);
 
         return true;
     }

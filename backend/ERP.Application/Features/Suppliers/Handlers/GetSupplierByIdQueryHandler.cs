@@ -25,7 +25,7 @@ public sealed class GetSupplierByIdQueryHandler : IRequestHandler<GetSupplierByI
 
     public async Task<SupplierDto?> Handle(GetSupplierByIdQuery request, CancellationToken cancellationToken)
     {
-        var cacheKey = $"Purchasing:Supplier:{request.Id}";
+        var cacheKey = global::ERP.Application.Common.Caching.CacheKeys.Purchasing.SupplierById(request.Id);
         var expiration = TimeSpan.FromMinutes(_cacheSettings.Value.FrequentDataExpirationMinutes);
 
         return await _cacheService.GetOrCreateAsync(

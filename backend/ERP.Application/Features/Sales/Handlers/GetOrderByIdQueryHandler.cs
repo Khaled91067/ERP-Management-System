@@ -29,7 +29,7 @@ public sealed class GetOrderByIdQueryHandler : IRequestHandler<GetOrderByIdQuery
 
     public async Task<OrderDto?> Handle(GetOrderByIdQuery request, CancellationToken cancellationToken)
     {
-        var cacheKey = $"Sales:Order:{request.Id}";
+        var cacheKey = global::ERP.Application.Common.Caching.CacheKeys.Sales.OrderById(request.Id);
         var expiration = TimeSpan.FromMinutes(_cacheSettings.Value.FrequentDataExpirationMinutes);
 
         return await _cacheService.GetOrCreateAsync(
