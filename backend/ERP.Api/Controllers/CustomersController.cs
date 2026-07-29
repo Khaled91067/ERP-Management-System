@@ -4,8 +4,8 @@ namespace ERP.Api.Controllers;
 using System.Threading;
 using System.Threading.Tasks;
 
-using ERP.Application.Features.Sales.Commands.Models;
-using ERP.Application.Features.Sales.Queries.Models;
+using ERP.Application.Features.Sales.Commands;
+using ERP.Application.Features.Sales.Queries;
 
 using MediatR;
 

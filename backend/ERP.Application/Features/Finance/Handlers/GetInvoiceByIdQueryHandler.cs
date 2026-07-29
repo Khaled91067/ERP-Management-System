@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 using global::ERP.Application.Abstractions.Repositories;
 using global::ERP.Application.Features.Finance.Dtos;
-using global::ERP.Application.Features.Finance.Queries.Models;
+using global::ERP.Application.Features.Finance.Queries;
 
 using MediatR;
 

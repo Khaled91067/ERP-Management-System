@@ -2,7 +2,7 @@ namespace ERP.Application.Features.Sales.Handlers;
 
 using global::ERP.Application.Abstractions;
 using global::ERP.Application.Abstractions.Repositories;
-using global::ERP.Application.Features.Sales.Commands.Models;
+using global::ERP.Application.Features.Sales.Commands;
 using global::ERP.Domain.Sales.Orders;
 
 using MediatR;

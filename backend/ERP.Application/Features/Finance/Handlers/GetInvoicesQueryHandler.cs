@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using global::ERP.Application.Abstractions.Repositories;
 using global::ERP.Application.Common.Models;
 using global::ERP.Application.Features.Finance.Dtos;
-using global::ERP.Application.Features.Finance.Queries.Models;
+using global::ERP.Application.Features.Finance.Queries;
 using global::ERP.Domain.Sales.Invoices;
 
 using MediatR;

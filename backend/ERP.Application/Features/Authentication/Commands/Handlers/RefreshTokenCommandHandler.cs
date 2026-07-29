@@ -4,7 +4,7 @@ using global::ERP.Application.Abstractions;
 using global::ERP.Application.Abstractions.Authentication;
 using global::ERP.Application.Abstractions.Repositories;
 using global::ERP.Application.Common.Exceptions;
-using global::ERP.Application.Features.Authentication.Commands.Models;
+using global::ERP.Application.Features.Authentication.Commands;
 using global::ERP.Application.Features.Authentication.DTOs;
 using global::ERP.Domain.Identity.Users;
 

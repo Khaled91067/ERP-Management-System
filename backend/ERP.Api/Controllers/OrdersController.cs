@@ -7,8 +7,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-using ERP.Application.Features.Sales.Commands.Models;
-using ERP.Application.Features.Sales.Queries.Models;
+using ERP.Application.Features.Sales.Commands;
+using ERP.Application.Features.Sales.Queries;
 using ERP.Domain.Sales.Orders;
 
 using MediatR;

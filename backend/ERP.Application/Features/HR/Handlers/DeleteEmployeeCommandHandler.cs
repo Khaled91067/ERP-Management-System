@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using global::ERP.Application.Abstractions;
 using global::ERP.Application.Abstractions.Repositories;
-using global::ERP.Application.Features.HR.Commands.Models;
+using global::ERP.Application.Features.HR.Commands;
 
 using MediatR;
 

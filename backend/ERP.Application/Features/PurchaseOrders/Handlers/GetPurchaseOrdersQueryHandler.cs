@@ -5,7 +5,7 @@ using System;
 using global::ERP.Application.Abstractions.Repositories;
 using global::ERP.Application.Common.Models;
 using global::ERP.Application.Features.PurchaseOrders.Dtos;
-using global::ERP.Application.Features.PurchaseOrders.Queries.Models;
+using global::ERP.Application.Features.PurchaseOrders.Queries;
 using global::ERP.Domain.Purchasing.PurchaseOrders;
 
 using MediatR;

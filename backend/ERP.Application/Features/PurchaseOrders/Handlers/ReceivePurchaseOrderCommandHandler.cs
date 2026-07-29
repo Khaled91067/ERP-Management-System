@@ -3,7 +3,7 @@ namespace ERP.Application.Features.PurchaseOrders.Commands.Handlers;
 
 using global::ERP.Application.Abstractions;
 using global::ERP.Application.Abstractions.Repositories;
-using global::ERP.Application.Features.PurchaseOrders.Commands.Models;
+using global::ERP.Application.Features.PurchaseOrders.Commands;
 
 using MediatR;
 

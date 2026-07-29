@@ -1,7 +1,7 @@
 
 namespace ERP.Api.Controllers;
 
-using ERP.Application.Features.Authentication.Commands.Models;
+using ERP.Application.Features.Authentication.Commands;
 
 using MediatR;
 

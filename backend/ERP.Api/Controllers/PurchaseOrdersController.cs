@@ -1,8 +1,8 @@
 
 namespace ERP.Api.Controllers;
 
-using ERP.Application.Features.PurchaseOrders.Commands.Models;
-using ERP.Application.Features.PurchaseOrders.Queries.Models;
+using ERP.Application.Features.PurchaseOrders.Commands;
+using ERP.Application.Features.PurchaseOrders.Queries;
 
 using MediatR;
 

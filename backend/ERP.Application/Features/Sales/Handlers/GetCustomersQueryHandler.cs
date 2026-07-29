@@ -3,7 +3,7 @@ namespace ERP.Application.Features.Sales.Handlers;
 using global::ERP.Application.Abstractions.Repositories;
 using global::ERP.Application.Common.Models;
 using global::ERP.Application.Features.Sales.Dtos;
-using global::ERP.Application.Features.Sales.Queries.Models;
+using global::ERP.Application.Features.Sales.Queries;
 using global::ERP.Domain.Sales.Customers;
 
 using MediatR;

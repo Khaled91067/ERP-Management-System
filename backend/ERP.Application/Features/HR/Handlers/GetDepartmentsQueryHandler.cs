@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using global::ERP.Application.Abstractions.Repositories;
 using global::ERP.Application.Common.Models;
 using global::ERP.Application.Features.HR.Dtos;
-using global::ERP.Application.Features.HR.Queries.Models;
+using global::ERP.Application.Features.HR.Queries;
 using global::ERP.Domain.HR.Departments;
 
 using MediatR;

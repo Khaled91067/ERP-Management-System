@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 using global::ERP.Application.Abstractions;
 using global::ERP.Application.Abstractions.Repositories;
-using global::ERP.Application.Features.Sales.Commands.Models;
+using global::ERP.Application.Features.Sales.Commands;
 using global::ERP.Domain.Sales.Customers;
 
 using MediatR;

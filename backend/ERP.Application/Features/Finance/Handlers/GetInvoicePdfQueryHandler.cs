@@ -2,7 +2,7 @@ namespace ERP.Application.Features.Finance.Handlers;
 
 using System.Linq;
 using global::ERP.Application.Abstractions.Repositories;
-using global::ERP.Application.Features.Finance.Queries.Models;
+using global::ERP.Application.Features.Finance.Queries;
 using global::ERP.Domain.Shared.Exceptions;
 using MediatR;
 using QuestPDF.Fluent;

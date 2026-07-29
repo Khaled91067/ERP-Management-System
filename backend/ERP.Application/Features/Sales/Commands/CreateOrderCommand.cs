@@ -1,0 +1,23 @@
+
+namespace ERP.Application.Features.Sales.Commands;
+
+using System.Collections.Generic;
+
+using global::ERP.Domain.Sales.Orders;
+
+using MediatR;
+
+public sealed record CreateOrderCommand(
+    int CustomerId,
+    PaymentMethod PaymentMethod,
+    string ShippingAddress,
+    List<CreateOrderLineCommand> Lines
+) : IRequest<int>;
+
+public sealed record CreateOrderLineCommand(
+    int ProductId,
+    int Quantity,
+    decimal UnitPrice,
+    decimal DiscountPercentage = 0
+);
+

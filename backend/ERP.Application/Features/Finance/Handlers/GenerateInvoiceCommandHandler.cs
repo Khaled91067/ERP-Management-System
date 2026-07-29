@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 using global::ERP.Application.Abstractions;
 using global::ERP.Application.Abstractions.Repositories;
-using global::ERP.Application.Features.Finance.Commands.Models;
+using global::ERP.Application.Features.Finance.Commands;
 using global::ERP.Domain.Sales.Invoices;
 using global::ERP.Domain.Sales.Orders;
 using global::ERP.Domain.Shared.Exceptions;
