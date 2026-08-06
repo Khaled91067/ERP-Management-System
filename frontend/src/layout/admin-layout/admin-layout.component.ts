@@ -11,7 +11,7 @@ import { FooterComponent } from '../footer/footer.component';
   standalone: true,
   imports: [RouterOutlet, MatSidenavModule, HeaderComponent, SidebarComponent, FooterComponent],
   template: `
-    <mat-sidenav-container class="layout-wrapper" [class.dark-theme-wrapper]="true" [hasBackdrop]="true">
+    <mat-sidenav-container class="layout-wrapper" [hasBackdrop]="true">
       <mat-sidenav 
         #sidenav 
         mode="over" 

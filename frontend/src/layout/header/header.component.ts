@@ -3,7 +3,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AuthService } from '@core/auth/auth.service';
-import { ThemeService } from '@core/services/theme.service';
 
 @Component({
   selector: 'app-header',
@@ -34,20 +33,6 @@ import { ThemeService } from '@core/services/theme.service';
           class="header-icon-btn"
           matTooltip="Notifications">
           <mat-icon>notifications_none</mat-icon>
-        </button>
-
-        <button 
-          type="button"
-          mat-icon-button 
-          class="header-icon-btn"
-          (click)="themeService.toggleTheme()" 
-          [aria-label]="'Switch to ' + (themeService.theme() === 'dark' ? 'light' : 'dark') + ' mode'" 
-          [matTooltip]="'Theme: ' + themeService.theme()">
-          @if (themeService.theme() === 'dark') {
-            <mat-icon>light_mode</mat-icon>
-          } @else {
-            <mat-icon>dark_mode</mat-icon>
-          }
         </button>
 
         @if (authService.currentUser(); as user) {
@@ -247,7 +232,6 @@ import { ThemeService } from '@core/services/theme.service';
 })
 export class HeaderComponent {
   readonly authService = inject(AuthService);
-  readonly themeService = inject(ThemeService);
 
   readonly collapsed = input<boolean>(false);
   readonly toggleSidebar = output<void>();
