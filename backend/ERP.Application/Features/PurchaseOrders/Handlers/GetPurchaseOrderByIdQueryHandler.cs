@@ -19,7 +19,7 @@ public sealed class GetPurchaseOrderByIdQueryHandler: IRequestHandler<GetPurchas
     public async Task<PurchaseOrderDto?> Handle(GetPurchaseOrderByIdQuery request, CancellationToken cancellationToken)
     {
         var purchaseOrder =
-            await _repository.GetByIdAsync(request.Id);
+            await _repository.GetByIdAsync(request.Id, cancellationToken);
 
         if (purchaseOrder is null)
             return null;

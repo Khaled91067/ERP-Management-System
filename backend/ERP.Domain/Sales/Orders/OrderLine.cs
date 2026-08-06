@@ -1,8 +1,7 @@
 namespace ERP.Domain.Sales.Orders;
-using ERP.Domain.Shared.Base;
-using ERP.Domain.Shared.Abstractions;
 
 using ERP.Domain.Catalog.Products;
+using ERP.Domain.Shared.Base;
 using ERP.Domain.Shared.Exceptions;
 using ERP.Domain.Shared.ValueObjects;
 

@@ -1,9 +1,11 @@
 namespace ERP.Infrastructure.Persistence.Seeding;
 
-using ERP.Domain.Catalog.Products;
-using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
+
+using ERP.Domain.Catalog.Products;
+
+using Microsoft.EntityFrameworkCore;
 
 public class ProductSeeder : ISeeder
 {

@@ -30,7 +30,7 @@ public sealed class GetPurchaseOrdersQueryHandler : IRequestHandler<GetPurchaseO
     {
         var supPart = request.SupplierId.HasValue ? request.SupplierId.Value.ToString() : "all";
         var statPart = !string.IsNullOrWhiteSpace(request.Status) ? request.Status : "all";
-        var searchPart = !string.IsNullOrWhiteSpace(request.Search) ? request.Search.Trim().ToLower() : "none";
+        var searchPart = !string.IsNullOrWhiteSpace(request.Search) ? request.Search.Trim() : "none";
         
         var cacheKey = $"PO:PurchaseOrders:Sup={supPart}:Stat={statPart}:Search={searchPart}:Page={request.Page}:Size={request.PageSize}";
         var expiration = TimeSpan.FromMinutes(_cacheSettings.Value.PaginatedListExpirationMinutes);
@@ -58,11 +58,11 @@ public sealed class GetPurchaseOrdersQueryHandler : IRequestHandler<GetPurchaseO
 
                 if (!string.IsNullOrWhiteSpace(request.Search))
                 {
-                    var search = request.Search.Trim().ToLower();
-                    options.Filters.Add(po => po.Supplier != null && (po.Supplier.CompanyName.ToLower().Contains(search) || po.Supplier.ContactName.ToLower().Contains(search)));
+                    var search = request.Search.Trim();
+                    options.Filters.Add(po => po.Supplier != null && (po.Supplier.CompanyName.Contains(search) || po.Supplier.ContactName.Contains(search)));
                 }
 
-                var pagedOrders = await _repository.GetPagedAsync(options, request.Page, request.PageSize);
+                var pagedOrders = await _repository.GetPagedAsync(options, request.Page, request.PageSize, ct);
 
                 return pagedOrders.Map(po => new PurchaseOrderDto(
                     po.Id,

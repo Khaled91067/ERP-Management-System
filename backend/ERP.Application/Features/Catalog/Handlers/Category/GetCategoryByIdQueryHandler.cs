@@ -1,15 +1,14 @@
 
 namespace ERP.Application.Features.Catalog.Handlers;
 
+using global::ERP.Application.Abstractions.Caching;
 using global::ERP.Application.Abstractions.Repositories;
+using global::ERP.Application.Common.Caching;
 using global::ERP.Application.Features.Catalog.DTOs;
 using global::ERP.Application.Features.Catalog.Queries;
+using global::Microsoft.Extensions.Options;
 
 using MediatR;
-
-using global::ERP.Application.Abstractions.Caching;
-using global::ERP.Application.Common.Caching;
-using global::Microsoft.Extensions.Options;
 
 public sealed class GetCategoryByIdQueryHandler(
     ICategoryRepository categoryRepository,
@@ -26,7 +25,7 @@ public sealed class GetCategoryByIdQueryHandler(
             cacheKey,
             async (ct) =>
             {
-                var category = await categoryRepository.GetByIdAsync(request.Id);
+                var category = await categoryRepository.GetByIdAsync(request.Id, ct);
                 return category is null ? null : new CategoryDto(category.Id, category.Name);
             },
             expiration,

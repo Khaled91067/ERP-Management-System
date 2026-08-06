@@ -1,6 +1,7 @@
 namespace ERP.Domain.Catalog.Products;
 
 using System.Collections.Generic;
+
 using ERP.Domain.Catalog.Categories;
 using ERP.Domain.Purchasing.PurchaseOrders;
 using ERP.Domain.Sales.Orders;

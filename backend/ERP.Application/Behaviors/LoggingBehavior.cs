@@ -3,9 +3,9 @@ namespace ERP.Application.Behaviors;
 
 using System.Diagnostics;
 
-using MediatR;
-
 using global::Microsoft.Extensions.Logging;
+
+using MediatR;
 
 public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>

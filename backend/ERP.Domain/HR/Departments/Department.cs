@@ -1,9 +1,9 @@
 namespace ERP.Domain.HR.Departments;
 
 using System.Collections.Generic;
+
 using ERP.Domain.HR.Employees;
 using ERP.Domain.Shared.Base;
-using ERP.Domain.Shared.Abstractions;
 using ERP.Domain.Shared.Exceptions;
 
 public class Department : SoftDeletableEntity

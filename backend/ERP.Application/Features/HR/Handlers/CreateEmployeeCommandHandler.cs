@@ -33,7 +33,7 @@ public sealed class CreateEmployeeCommandHandler : IRequestHandler<CreateEmploye
 
     public async Task<int> Handle(CreateEmployeeCommand request, CancellationToken cancellationToken)
     {
-        var department = await _departmentRepository.GetByIdAsync(request.DepartmentId);
+        var department = await _departmentRepository.GetByIdAsync(request.DepartmentId, cancellationToken);
         if (department is null)
             throw new NotFoundException("Department", request.DepartmentId);
 

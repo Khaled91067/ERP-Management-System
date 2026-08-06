@@ -12,7 +12,7 @@ public sealed class DeleteCategoryCommandHandler(ICategoryRepository categoryRep
 {
     public async Task<bool> Handle(DeleteCategoryCommand request, CancellationToken cancellationToken)
     {
-        var category = await categoryRepository.GetByIdAsync(request.Id);
+        var category = await categoryRepository.GetByIdAsync(request.Id, cancellationToken);
         if (category is null) return false;
         if (await categoryRepository.HasProductsAsync(category.Id, cancellationToken))
             throw new InvalidOperationException("A category with products cannot be deleted.");

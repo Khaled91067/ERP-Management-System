@@ -1,6 +1,7 @@
 namespace ERP.Domain.Identity.Roles;
 
 using System.Collections.Generic;
+
 using ERP.Domain.Identity.Users;
 using ERP.Domain.Shared.Base;
 using ERP.Domain.Shared.Exceptions;

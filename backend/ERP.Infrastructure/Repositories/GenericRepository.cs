@@ -29,7 +29,7 @@ namespace ERP.Infrastructure.Repositories
             _dbSet.Remove(entity);
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync(QueryOptions<T>? options = null)
+        public async Task<IEnumerable<T>> GetAllAsync(QueryOptions<T>? options = null, CancellationToken cancellationToken = default)
         {
             IQueryable<T> query = _dbSet;
 
@@ -61,10 +61,10 @@ namespace ERP.Infrastructure.Repositories
                 }
             }
 
-            return await query.ToListAsync();
+            return await query.ToListAsync(cancellationToken);
         }
 
-        public async Task<ERP.Application.Common.Models.PagedResult<T>> GetPagedAsync(QueryOptions<T>? options = null, int page = 1, int pageSize = 20)
+        public async Task<ERP.Application.Common.Models.PagedResult<T>> GetPagedAsync(QueryOptions<T>? options = null, int page = 1, int pageSize = 20, CancellationToken cancellationToken = default)
         {
             IQueryable<T> query = _dbSet;
 
@@ -96,18 +96,18 @@ namespace ERP.Infrastructure.Repositories
                 }
             }
 
-            var totalCount = await query.CountAsync();
+            var totalCount = await query.CountAsync(cancellationToken);
             var items = await query
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             return new ERP.Application.Common.Models.PagedResult<T>(items, totalCount, page, pageSize);
         }
 
-        public async Task<T?> GetByIdAsync(int id)
+        public async Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
-            return await _dbSet.FindAsync(id);
+            return await _dbSet.FindAsync(new object[] { id }, cancellationToken);
         }
 
         public void Update(T entity)

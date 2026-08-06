@@ -2,12 +2,11 @@
 namespace ERP.Application.Features.Catalog.Handlers;
 
 using global::ERP.Application.Abstractions;
+using global::ERP.Application.Abstractions.Caching;
 using global::ERP.Application.Abstractions.Repositories;
 using global::ERP.Application.Features.Catalog.Commands;
 
 using MediatR;
-
-using global::ERP.Application.Abstractions.Caching;
 
 public sealed class AdjustStockCommandHandler : IRequestHandler<AdjustStockCommand, bool>
 {
@@ -27,7 +26,7 @@ public sealed class AdjustStockCommandHandler : IRequestHandler<AdjustStockComma
 
     public async Task<bool> Handle(AdjustStockCommand request, CancellationToken cancellationToken)
     {
-        var product = await _productRepository.GetByIdAsync(request.ProductId);
+        var product = await _productRepository.GetByIdAsync(request.ProductId, cancellationToken);
 
         if (product is null)
             return false;

@@ -4,7 +4,6 @@ namespace ERP.Infrastructure.UnitOfWork
     using ERP.Application.Abstractions;
     using ERP.Application.Abstractions.Messaging;
     using ERP.Domain.Shared.Base;
-using ERP.Domain.Shared.Abstractions;
     using ERP.Infrastructure.Persistence;
 
     public sealed class UnitOfWork : IUnitOfWork

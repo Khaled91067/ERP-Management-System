@@ -2,6 +2,7 @@ namespace ERP.Domain.Shared.ValueObjects;
 
 using System;
 using System.Collections.Generic;
+
 using ERP.Domain.Shared.Base;
 using ERP.Domain.Shared.Exceptions;
 

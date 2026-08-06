@@ -1,10 +1,7 @@
 namespace ERP.Application.Features.Identity.Handlers;
 
-using global::ERP.Application.Abstractions;
-using global::ERP.Application.Abstractions.Authentication;
 using global::ERP.Application.Abstractions.Repositories;
 using global::ERP.Application.Common.Models;
-using global::ERP.Application.Features.Identity.Commands;
 using global::ERP.Application.Features.Identity.DTOs;
 using global::ERP.Application.Features.Identity.Queries;
 using global::ERP.Domain.Identity.Users;
@@ -25,13 +22,13 @@ public sealed class GetUsersQueryHandler(IUserRepository userRepository)
 
         if (!string.IsNullOrWhiteSpace(request.Search))
         {
-            var search = request.Search.Trim().ToLower();
-            options.Filters.Add(u => u.FirstName.ToLower().Contains(search) ||
-                                     u.LastName.ToLower().Contains(search) ||
-                                     u.Email.Value.ToLower().Contains(search));
+            var search = request.Search.Trim();
+            options.Filters.Add(u => u.FirstName.Contains(search) ||
+                                     u.LastName.Contains(search) ||
+                                     u.Email.Value.Contains(search));
         }
 
-        var pagedUsers = await userRepository.GetPagedAsync(options, request.Page, request.PageSize);
+        var pagedUsers = await userRepository.GetPagedAsync(options, request.Page, request.PageSize, cancellationToken);
         return pagedUsers.Map(ToDto);
     }
 

@@ -62,7 +62,7 @@ namespace ERP.Infrastructure.Persistence.Migrations
                         .IsUnique()
                         .HasFilter("[IsDeleted] = 0");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("ERP.Domain.Catalog.Products.Product", b =>
@@ -129,7 +129,7 @@ namespace ERP.Infrastructure.Persistence.Migrations
                         .IsUnique()
                         .HasFilter("[IsDeleted] = 0");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("ERP.Domain.HR.Departments.Department", b =>
@@ -172,7 +172,7 @@ namespace ERP.Infrastructure.Persistence.Migrations
                         .IsUnique()
                         .HasFilter("[IsDeleted] = 0");
 
-                    b.ToTable("Departments");
+                    b.ToTable("Departments", (string)null);
                 });
 
             modelBuilder.Entity("ERP.Domain.HR.Employees.Employee", b =>
@@ -247,7 +247,7 @@ namespace ERP.Infrastructure.Persistence.Migrations
                         .IsUnique()
                         .HasFilter("[IsDeleted] = 0");
 
-                    b.ToTable("Employees");
+                    b.ToTable("Employees", (string)null);
                 });
 
             modelBuilder.Entity("ERP.Domain.Identity.Roles.Role", b =>
@@ -272,7 +272,7 @@ namespace ERP.Infrastructure.Persistence.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("ERP.Domain.Identity.Users.RefreshToken", b =>
@@ -309,7 +309,7 @@ namespace ERP.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("RefreshTokens");
+                    b.ToTable("RefreshTokens", (string)null);
                 });
 
             modelBuilder.Entity("ERP.Domain.Identity.Users.User", b =>
@@ -350,7 +350,7 @@ namespace ERP.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("ERP.Domain.Purchasing.PurchaseOrders.PurchaseOrder", b =>
@@ -404,7 +404,7 @@ namespace ERP.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("SupplierId");
 
-                    b.ToTable("PurchaseOrders");
+                    b.ToTable("PurchaseOrders", (string)null);
                 });
 
             modelBuilder.Entity("ERP.Domain.Purchasing.PurchaseOrders.PurchaseOrderLine", b =>
@@ -434,7 +434,7 @@ namespace ERP.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("PurchaseOrderId");
 
-                    b.ToTable("PurchaseOrderLines");
+                    b.ToTable("PurchaseOrderLines", (string)null);
                 });
 
             modelBuilder.Entity("ERP.Domain.Purchasing.Suppliers.Supplier", b =>
@@ -493,7 +493,7 @@ namespace ERP.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Suppliers");
+                    b.ToTable("Suppliers", (string)null);
                 });
 
             modelBuilder.Entity("ERP.Domain.Sales.Customers.Customer", b =>
@@ -562,7 +562,7 @@ namespace ERP.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customers");
+                    b.ToTable("Customers", (string)null);
                 });
 
             modelBuilder.Entity("ERP.Domain.Sales.Invoices.Invoice", b =>
@@ -624,7 +624,7 @@ namespace ERP.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("Invoices");
+                    b.ToTable("Invoices", (string)null);
                 });
 
             modelBuilder.Entity("ERP.Domain.Sales.Invoices.InvoiceLine", b =>
@@ -658,7 +658,7 @@ namespace ERP.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("InvoiceId");
 
-                    b.ToTable("InvoiceLines", t =>
+                    b.ToTable("InvoiceLines", null, t =>
                         {
                             t.HasCheckConstraint("CK_InvoiceLines_TaxRate", "[TaxRate] >= 0 AND [TaxRate] <= 100");
                         });
@@ -720,7 +720,7 @@ namespace ERP.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("ERP.Domain.Sales.Orders.OrderLine", b =>
@@ -754,7 +754,7 @@ namespace ERP.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderLines", t =>
+                    b.ToTable("OrderLines", null, t =>
                         {
                             t.HasCheckConstraint("CK_OrderLines_DiscountPercentage", "[DiscountPercentage] >= 0 AND [DiscountPercentage] <= 100");
                         });

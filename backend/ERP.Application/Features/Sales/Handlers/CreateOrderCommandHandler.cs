@@ -39,7 +39,7 @@ public sealed class CreateOrderCommandHandler : IRequestHandler<CreateOrderComma
 
     public async Task<int> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
     {
-        var customer = await _customerRepository.GetByIdAsync(request.CustomerId);
+        var customer = await _customerRepository.GetByIdAsync(request.CustomerId, cancellationToken);
         if (customer is null)
             throw new NotFoundException("Customer", request.CustomerId);
 
@@ -50,7 +50,7 @@ public sealed class CreateOrderCommandHandler : IRequestHandler<CreateOrderComma
 
         foreach (var line in request.Lines)
         {
-            var product = await _productRepository.GetByIdAsync(line.ProductId);
+            var product = await _productRepository.GetByIdAsync(line.ProductId, cancellationToken);
             if (product is null)
                 throw new NotFoundException("Product", line.ProductId);
 

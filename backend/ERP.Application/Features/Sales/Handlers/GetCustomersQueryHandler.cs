@@ -26,7 +26,7 @@ public sealed class GetCustomersQueryHandler : IRequestHandler<GetCustomersQuery
 
     public async Task<PagedResult<CustomerDto>> Handle(GetCustomersQuery request, CancellationToken cancellationToken)
     {
-        var searchPart = !string.IsNullOrWhiteSpace(request.Search) ? request.Search.Trim().ToLower() : "none";
+        var searchPart = !string.IsNullOrWhiteSpace(request.Search) ? request.Search.Trim() : "none";
         var cacheKey = $"Sales:Customers:Search={searchPart}:Page={request.Page}:Size={request.PageSize}";
         var expiration = TimeSpan.FromMinutes(_cacheSettings.Value.PaginatedListExpirationMinutes);
 
@@ -42,15 +42,15 @@ public sealed class GetCustomersQueryHandler : IRequestHandler<GetCustomersQuery
 
                 if (!string.IsNullOrWhiteSpace(request.Search))
                 {
-                    var search = request.Search.Trim().ToLower();
-                    options.Filters.Add(x => x.Name.ToLower().Contains(search) ||
-                                             x.Email.Value.ToLower().Contains(search) ||
-                                             x.Phone.ToLower().Contains(search) ||
-                                             x.TaxId.ToLower().Contains(search) ||
-                                             x.City.ToLower().Contains(search));
+                    var search = request.Search.Trim();
+                    options.Filters.Add(x => x.Name.Contains(search) ||
+                                             x.Email.Value.Contains(search) ||
+                                             x.Phone.Contains(search) ||
+                                             x.TaxId.Contains(search) ||
+                                             x.City.Contains(search));
                 }
 
-                var pagedCustomers = await _customerRepository.GetPagedAsync(options, request.Page, request.PageSize);
+                var pagedCustomers = await _customerRepository.GetPagedAsync(options, request.Page, request.PageSize, ct);
 
                 return pagedCustomers.Map(customer => new CustomerDto(
                     customer.Id,

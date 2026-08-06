@@ -2,11 +2,7 @@ namespace ERP.Application.Features.Identity.Handlers;
 
 using global::ERP.Application.Abstractions;
 using global::ERP.Application.Abstractions.Repositories;
-using global::ERP.Application.Common.Models;
 using global::ERP.Application.Features.Identity.Commands;
-using global::ERP.Application.Features.Identity.DTOs;
-using global::ERP.Application.Features.Identity.Queries;
-using global::ERP.Domain.Identity.Roles;
 
 using MediatR;
 
@@ -14,7 +10,7 @@ public sealed class UpdateRoleCommandHandler(IRoleRepository roleRepository, IUn
 {
     public async Task<bool> Handle(UpdateRoleCommand request, CancellationToken cancellationToken)
     {
-        var role = await roleRepository.GetByIdAsync(request.Id);
+        var role = await roleRepository.GetByIdAsync(request.Id, cancellationToken);
         if (role is null) return false;
 
         var existing = await roleRepository.GetByNameAsync(request.Name.Trim(), cancellationToken);

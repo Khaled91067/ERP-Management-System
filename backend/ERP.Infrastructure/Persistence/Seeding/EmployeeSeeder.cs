@@ -1,10 +1,12 @@
 namespace ERP.Infrastructure.Persistence.Seeding;
 
-using ERP.Domain.HR.Employees;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+
+using ERP.Domain.HR.Employees;
+
+using Microsoft.EntityFrameworkCore;
 
 public class EmployeeSeeder : ISeeder
 {

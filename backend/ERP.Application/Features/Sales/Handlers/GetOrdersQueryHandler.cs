@@ -31,7 +31,7 @@ public sealed class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, Page
     {
         var custPart = request.CustomerId.HasValue ? request.CustomerId.Value.ToString() : "all";
         var statPart = !string.IsNullOrWhiteSpace(request.Status) ? request.Status : "all";
-        var searchPart = !string.IsNullOrWhiteSpace(request.Search) ? request.Search.Trim().ToLower() : "none";
+        var searchPart = !string.IsNullOrWhiteSpace(request.Search) ? request.Search.Trim() : "none";
         
         var cacheKey = global::ERP.Application.Common.Caching.CacheKeys.Sales.OrdersList(custPart, statPart, searchPart, request.Page, request.PageSize);
         var expiration = TimeSpan.FromMinutes(_cacheSettings.Value.PaginatedListExpirationMinutes);
@@ -59,12 +59,12 @@ public sealed class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, Page
 
                 if (!string.IsNullOrWhiteSpace(request.Search))
                 {
-                    var search = request.Search.Trim().ToLower();
-                    options.Filters.Add(o => (o.Customer != null && o.Customer.Name.ToLower().Contains(search)) ||
-                                             o.ShippingAddress.ToLower().Contains(search));
+                    var search = request.Search.Trim();
+                    options.Filters.Add(o => (o.Customer != null && o.Customer.Name.Contains(search)) ||
+                                             o.ShippingAddress.Contains(search));
                 }
 
-                var pagedOrders = await _orderRepository.GetPagedAsync(options, request.Page, request.PageSize);
+                var pagedOrders = await _orderRepository.GetPagedAsync(options, request.Page, request.PageSize, ct);
 
                 return pagedOrders.Map(order => new OrderDto(
                     order.Id,

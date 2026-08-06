@@ -5,9 +5,10 @@ namespace ERP.Api
     using ERP.Api.Infrastructure;
     using ERP.Application;
     using ERP.Infrastructure;
-    using QuestPDF.Infrastructure;
 
     using Microsoft.OpenApi;
+
+    using QuestPDF.Infrastructure;
 
     using Serilog;
 

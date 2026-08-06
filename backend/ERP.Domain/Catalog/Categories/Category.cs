@@ -1,9 +1,9 @@
 namespace ERP.Domain.Catalog.Categories;
 
 using System.Collections.Generic;
+
 using ERP.Domain.Catalog.Products;
 using ERP.Domain.Shared.Base;
-using ERP.Domain.Shared.Abstractions;
 using ERP.Domain.Shared.Exceptions;
 
 public class Category : SoftDeletableEntity

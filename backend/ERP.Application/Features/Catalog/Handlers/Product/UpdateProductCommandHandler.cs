@@ -1,12 +1,11 @@
 namespace ERP.Application.Features.Catalog.Handlers;
 
 using global::ERP.Application.Abstractions;
+using global::ERP.Application.Abstractions.Caching;
 using global::ERP.Application.Abstractions.Repositories;
 using global::ERP.Application.Features.Catalog.Commands;
 
 using MediatR;
-
-using global::ERP.Application.Abstractions.Caching;
 
 public sealed class UpdateProductCommandHandler(
     IProductRepository productRepository,
@@ -16,11 +15,11 @@ public sealed class UpdateProductCommandHandler(
 {
     public async Task<bool> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
-        var product = await productRepository.GetByIdAsync(request.Id);
+        var product = await productRepository.GetByIdAsync(request.Id, cancellationToken);
         if (product is null) return false;
         if (request.UnitPrice < 0 || request.CostPrice < 0 || request.ReorderLevel < 0)
             throw new InvalidOperationException("Prices and reorder level cannot be negative.");
-        if (await categoryRepository.GetByIdAsync(request.CategoryId) is null)
+        if (await categoryRepository.GetByIdAsync(request.CategoryId, cancellationToken) is null)
             throw new InvalidOperationException("Category does not exist.");
 
         var existing = await productRepository.GetBySkuAsync(request.Sku.Trim(), cancellationToken);

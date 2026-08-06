@@ -1,9 +1,11 @@
 namespace ERP.Infrastructure.Persistence.Seeding;
 
-using ERP.Domain.Purchasing.Suppliers;
-using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
+
+using ERP.Domain.Purchasing.Suppliers;
+
+using Microsoft.EntityFrameworkCore;
 
 public class SupplierSeeder : ISeeder
 {

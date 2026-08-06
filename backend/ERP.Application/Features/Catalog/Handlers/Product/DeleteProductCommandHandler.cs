@@ -2,12 +2,11 @@
 namespace ERP.Application.Features.Catalog.Handlers;
 
 using global::ERP.Application.Abstractions;
+using global::ERP.Application.Abstractions.Caching;
 using global::ERP.Application.Abstractions.Repositories;
 using global::ERP.Application.Features.Catalog.Commands;
 
 using MediatR;
-
-using global::ERP.Application.Abstractions.Caching;
 
 public sealed class DeleteProductCommandHandler(
     IProductRepository productRepository,
@@ -17,7 +16,7 @@ public sealed class DeleteProductCommandHandler(
 {
     public async Task<bool> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
     {
-        var product = await productRepository.GetByIdAsync(request.Id);
+        var product = await productRepository.GetByIdAsync(request.Id, cancellationToken);
         if (product is null) return false;
         if (await productRepository.HasTransactionsAsync(product.Id, cancellationToken))
             throw new InvalidOperationException("A product with transactions cannot be deleted.");

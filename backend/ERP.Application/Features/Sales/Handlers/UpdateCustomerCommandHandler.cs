@@ -28,7 +28,7 @@ public sealed class UpdateCustomerCommandHandler : IRequestHandler<UpdateCustome
 
     public async Task<bool> Handle(UpdateCustomerCommand request, CancellationToken cancellationToken)
     {
-        var customer = await _customerRepository.GetByIdAsync(request.Id);
+        var customer = await _customerRepository.GetByIdAsync(request.Id, cancellationToken);
         if (customer is null)
             return false;
 

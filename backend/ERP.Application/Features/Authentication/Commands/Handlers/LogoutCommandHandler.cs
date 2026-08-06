@@ -1,6 +1,5 @@
 namespace ERP.Application.Features.Authentication.Commands.Handlers;
 
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 

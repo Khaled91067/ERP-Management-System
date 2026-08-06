@@ -32,11 +32,11 @@ public sealed class UpdateEmployeeCommandHandler : IRequestHandler<UpdateEmploye
 
     public async Task<bool> Handle(UpdateEmployeeCommand request, CancellationToken cancellationToken)
     {
-        var employee = await _employeeRepository.GetByIdAsync(request.Id);
+        var employee = await _employeeRepository.GetByIdAsync(request.Id, cancellationToken);
         if (employee is null)
             return false;
 
-        var department = await _departmentRepository.GetByIdAsync(request.DepartmentId);
+        var department = await _departmentRepository.GetByIdAsync(request.DepartmentId, cancellationToken);
         if (department is null)
             throw new NotFoundException("Department", request.DepartmentId);
 

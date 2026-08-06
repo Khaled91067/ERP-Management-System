@@ -5,15 +5,14 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using global::ERP.Application.Abstractions.Caching;
 using global::ERP.Application.Abstractions.Repositories;
+using global::ERP.Application.Common.Caching;
 using global::ERP.Application.Features.Finance.Dtos;
 using global::ERP.Application.Features.Finance.Queries;
+using global::Microsoft.Extensions.Options;
 
 using MediatR;
-
-using global::ERP.Application.Abstractions.Caching;
-using global::ERP.Application.Common.Caching;
-using global::Microsoft.Extensions.Options;
 
 public sealed class GetInvoiceByIdQueryHandler : IRequestHandler<GetInvoiceByIdQuery, InvoiceDto?>
 {

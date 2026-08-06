@@ -3,7 +3,6 @@ namespace ERP.Application.Features.Sales.Handlers;
 using global::ERP.Application.Abstractions;
 using global::ERP.Application.Abstractions.Repositories;
 using global::ERP.Application.Features.Sales.Commands;
-using global::ERP.Domain.Sales.Orders;
 
 using MediatR;
 
@@ -26,7 +25,7 @@ public sealed class DeleteOrderCommandHandler : IRequestHandler<DeleteOrderComma
 
     public async Task<bool> Handle(DeleteOrderCommand request, CancellationToken cancellationToken)
     {
-        var order = await _orderRepository.GetByIdAsync(request.Id);
+        var order = await _orderRepository.GetByIdAsync(request.Id, cancellationToken);
 
         if (order is null)
             return false;

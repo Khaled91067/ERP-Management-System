@@ -1,8 +1,8 @@
 namespace ERP.Domain.Shared.ValueObjects;
 
-using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+
 using ERP.Domain.Shared.Base;
 using ERP.Domain.Shared.Exceptions;
 
