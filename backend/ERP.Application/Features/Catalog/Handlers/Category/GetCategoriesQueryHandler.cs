@@ -1,17 +1,16 @@
 
 namespace ERP.Application.Features.Catalog.Handlers;
 
+using global::ERP.Application.Abstractions.Caching;
 using global::ERP.Application.Abstractions.Repositories;
+using global::ERP.Application.Common.Caching;
 using global::ERP.Application.Common.Models;
 using global::ERP.Application.Features.Catalog.DTOs;
 using global::ERP.Application.Features.Catalog.Queries;
 using global::ERP.Domain.Catalog.Categories;
+using global::Microsoft.Extensions.Options;
 
 using MediatR;
-
-using global::ERP.Application.Abstractions.Caching;
-using global::ERP.Application.Common.Caching;
-using global::Microsoft.Extensions.Options;
 
 public sealed class GetCategoriesQueryHandler(
     ICategoryRepository categoryRepository,
@@ -21,7 +20,7 @@ public sealed class GetCategoriesQueryHandler(
 {
     public async Task<PagedResult<CategoryDto>> Handle(GetCategoriesQuery request, CancellationToken cancellationToken)
     {
-        var cacheKey = $"Catalog:Categories:Search={request.Search?.Trim().ToLower() ?? "none"}:Page={request.Page}:Size={request.PageSize}";
+        var cacheKey = $"Catalog:Categories:Search={request.Search?.Trim() ?? "none"}:Page={request.Page}:Size={request.PageSize}";
         var expiration = TimeSpan.FromMinutes(cacheSettings.Value.ReferenceDataExpirationMinutes);
 
         return await cacheService.GetOrCreateAsync(
@@ -31,16 +30,16 @@ public sealed class GetCategoriesQueryHandler(
                 var options = new QueryOptions<Category> 
                 { 
                     AsNoTracking = true,
-                    OrderBy = q => System.Linq.Queryable.OrderBy(q, c => c.Name)
+                    OrderBy = q => Queryable.OrderBy(q, c => c.Name)
                 };
 
                 if (!string.IsNullOrWhiteSpace(request.Search))
                 {
-                    var search = request.Search.Trim().ToLower();
-                    options.Filters.Add(c => c.Name.ToLower().Contains(search));
+                    var search = request.Search.Trim();
+                    options.Filters.Add(c => c.Name.Contains(search));
                 }
 
-                var pagedCategories = await categoryRepository.GetPagedAsync(options, request.Page, request.PageSize);
+                var pagedCategories = await categoryRepository.GetPagedAsync(options, request.Page, request.PageSize, ct);
 
                 return pagedCategories.Map(category => new CategoryDto(
                     category.Id,

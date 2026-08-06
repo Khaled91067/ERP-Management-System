@@ -3,17 +3,16 @@ namespace ERP.Application.Features.Finance.Handlers;
 using System;
 using System.Collections.Generic;
 
+using global::ERP.Application.Abstractions.Caching;
 using global::ERP.Application.Abstractions.Repositories;
+using global::ERP.Application.Common.Caching;
 using global::ERP.Application.Common.Models;
 using global::ERP.Application.Features.Finance.Dtos;
 using global::ERP.Application.Features.Finance.Queries;
 using global::ERP.Domain.Sales.Invoices;
+using global::Microsoft.Extensions.Options;
 
 using MediatR;
-
-using global::ERP.Application.Abstractions.Caching;
-using global::ERP.Application.Common.Caching;
-using global::Microsoft.Extensions.Options;
 
 public sealed class GetInvoicesQueryHandler : IRequestHandler<GetInvoicesQuery, PagedResult<InvoiceDto>>
 {
@@ -35,7 +34,7 @@ public sealed class GetInvoicesQueryHandler : IRequestHandler<GetInvoicesQuery, 
     {
         var custPart = request.CustomerId.HasValue ? request.CustomerId.Value.ToString() : "all";
         var statPart = !string.IsNullOrWhiteSpace(request.Status) ? request.Status : "all";
-        var searchPart = !string.IsNullOrWhiteSpace(request.Search) ? request.Search.Trim().ToLower() : "none";
+        var searchPart = !string.IsNullOrWhiteSpace(request.Search) ? request.Search.Trim() : "none";
         
         var cacheKey = $"Finance:Invoices:Cust={custPart}:Stat={statPart}:Search={searchPart}:Page={request.Page}:Size={request.PageSize}";
         var expiration = TimeSpan.FromMinutes(_cacheSettings.Value.PaginatedListExpirationMinutes);
@@ -47,7 +46,7 @@ public sealed class GetInvoicesQueryHandler : IRequestHandler<GetInvoicesQuery, 
                 var options = new QueryOptions<Invoice> 
                 { 
                     AsNoTracking = true,
-                    OrderBy = q => System.Linq.Queryable.OrderByDescending(q, i => i.InvoiceDate)
+                    OrderBy = q => Queryable.OrderByDescending(q, i => i.InvoiceDate)
                 };
                 options.Includes.Add(i => i.Customer);
 
@@ -63,11 +62,11 @@ public sealed class GetInvoicesQueryHandler : IRequestHandler<GetInvoicesQuery, 
 
                 if (!string.IsNullOrWhiteSpace(request.Search))
                 {
-                    var search = request.Search.Trim().ToLower();
-                    options.Filters.Add(i => i.Customer != null && i.Customer.Name.ToLower().Contains(search));
+                    var search = request.Search.Trim();
+                    options.Filters.Add(i => i.Customer != null && i.Customer.Name.Contains(search));
                 }
 
-                var pagedInvoices = await _invoiceRepository.GetPagedAsync(options, request.Page, request.PageSize);
+                var pagedInvoices = await _invoiceRepository.GetPagedAsync(options, request.Page, request.PageSize, ct);
 
                 return pagedInvoices.Map(invoice => new InvoiceDto(
                     invoice.Id,

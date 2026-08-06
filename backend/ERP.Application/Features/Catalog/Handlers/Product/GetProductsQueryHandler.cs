@@ -1,16 +1,15 @@
 namespace ERP.Application.Features.Catalog.Handlers;
 
+using global::ERP.Application.Abstractions.Caching;
 using global::ERP.Application.Abstractions.Repositories;
+using global::ERP.Application.Common.Caching;
 using global::ERP.Application.Common.Models;
 using global::ERP.Application.Features.Catalog.DTOs;
 using global::ERP.Application.Features.Catalog.Queries;
 using global::ERP.Domain.Catalog.Products;
+using global::Microsoft.Extensions.Options;
 
 using MediatR;
-
-using global::ERP.Application.Abstractions.Caching;
-using global::ERP.Application.Common.Caching;
-using global::Microsoft.Extensions.Options;
 
 public sealed class GetProductsQueryHandler(
     IProductRepository productRepository,
@@ -20,7 +19,7 @@ public sealed class GetProductsQueryHandler(
 {
     public async Task<PagedResult<ProductDto>> Handle(GetProductsQuery request, CancellationToken cancellationToken)
     {
-        var searchPart = request.Search?.Trim().ToLower() ?? "none";
+        var searchPart = request.Search?.Trim() ?? "none";
         var categoryPart = request.CategoryId.HasValue ? request.CategoryId.Value.ToString() : "all";
         var cacheKey = $"Catalog:Products:Search={searchPart}:Category={categoryPart}:Page={request.Page}:Size={request.PageSize}";
         var expiration = TimeSpan.FromMinutes(cacheSettings.Value.PaginatedListExpirationMinutes);
@@ -32,7 +31,7 @@ public sealed class GetProductsQueryHandler(
                 var options = new QueryOptions<Product> 
                 { 
                     AsNoTracking = true,
-                    OrderBy = q => System.Linq.Queryable.OrderBy(q, p => p.Name)
+                    OrderBy = q => Queryable.OrderBy(q, p => p.Name)
                 };
                 options.Includes.Add(p => p.Category);
 
@@ -43,11 +42,11 @@ public sealed class GetProductsQueryHandler(
 
                 if (!string.IsNullOrWhiteSpace(request.Search))
                 {
-                    var search = request.Search.Trim().ToLower();
-                    options.Filters.Add(p => p.Name.ToLower().Contains(search) || p.Sku.ToLower().Contains(search));
+                    var search = request.Search.Trim();
+                    options.Filters.Add(p => p.Name.Contains(search) || p.Sku.Contains(search));
                 }
 
-                var pagedProducts = await productRepository.GetPagedAsync(options, request.Page, request.PageSize);
+                var pagedProducts = await productRepository.GetPagedAsync(options, request.Page, request.PageSize, ct);
                 return pagedProducts.Map(ToDto);
             },
             expiration,
