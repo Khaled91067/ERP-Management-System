@@ -28,12 +28,16 @@ public sealed class GetCategoriesQueryHandler(
             cacheKey,
             async (ct) =>
             {
-                var options = new QueryOptions<Category>();
+                var options = new QueryOptions<Category> 
+                { 
+                    AsNoTracking = true,
+                    OrderBy = q => System.Linq.Queryable.OrderBy(q, c => c.Name)
+                };
 
                 if (!string.IsNullOrWhiteSpace(request.Search))
                 {
                     var search = request.Search.Trim().ToLower();
-                    options.Filter = c => c.Name.ToLower().Contains(search);
+                    options.Filters.Add(c => c.Name.ToLower().Contains(search));
                 }
 
                 var pagedCategories = await categoryRepository.GetPagedAsync(options, request.Page, request.PageSize);

@@ -35,23 +35,25 @@ public sealed class GetEmployeesQueryHandler : IRequestHandler<GetEmployeesQuery
             cacheKey,
             async (ct) =>
             {
-                var options = new QueryOptions<Employee>();
+                var options = new QueryOptions<Employee> 
+                { 
+                    AsNoTracking = true,
+                    OrderBy = q => System.Linq.Queryable.ThenBy(System.Linq.Queryable.OrderBy(q, e => e.FirstName), e => e.LastName)
+                };
                 options.Includes.Add(e => e.Department);
 
                 if (request.DepartmentId.HasValue)
                 {
-                    options.Filter = e => e.DepartmentId == request.DepartmentId.Value;
+                    options.Filters.Add(e => e.DepartmentId == request.DepartmentId.Value);
                 }
 
                 if (!string.IsNullOrWhiteSpace(request.Search))
                 {
                     var search = request.Search.Trim().ToLower();
-                    var existingFilter = options.Filter;
-                    options.Filter = e => (existingFilter == null || existingFilter.Compile()(e)) &&
-                                          (e.FirstName.ToLower().Contains(search) ||
-                                           e.LastName.ToLower().Contains(search) ||
-                                           e.Email.Value.ToLower().Contains(search) ||
-                                           e.Position.ToLower().Contains(search));
+                    options.Filters.Add(e => e.FirstName.ToLower().Contains(search) ||
+                                             e.LastName.ToLower().Contains(search) ||
+                                             e.Email.Value.ToLower().Contains(search) ||
+                                             e.Position.ToLower().Contains(search));
                 }
 
                 var pagedEmployees = await _employeeRepository.GetPagedAsync(options, request.Page, request.PageSize);

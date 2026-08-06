@@ -14,12 +14,16 @@ public sealed class GetRolesQueryHandler(IRoleRepository roleRepository) : IRequ
 {
     public async Task<PagedResult<RoleDto>> Handle(GetRolesQuery request, CancellationToken cancellationToken)
     {
-        var options = new QueryOptions<Role>();
+        var options = new QueryOptions<Role> 
+        { 
+            AsNoTracking = true,
+            OrderBy = q => System.Linq.Queryable.OrderBy(q, r => r.Name)
+        };
 
         if (!string.IsNullOrWhiteSpace(request.Search))
         {
             var search = request.Search.Trim().ToLower();
-            options.Filter = r => r.Name.ToLower().Contains(search);
+            options.Filters.Add(r => r.Name.ToLower().Contains(search));
         }
 
         var pagedRoles = await roleRepository.GetPagedAsync(options, request.Page, request.PageSize);

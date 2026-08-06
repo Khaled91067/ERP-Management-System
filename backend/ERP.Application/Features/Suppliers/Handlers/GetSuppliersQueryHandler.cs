@@ -34,15 +34,19 @@ public sealed class GetSuppliersQueryHandler : IRequestHandler<GetSuppliersQuery
             cacheKey,
             async (ct) =>
             {
-                var options = new QueryOptions<Supplier>();
+                var options = new QueryOptions<Supplier> 
+                { 
+                    AsNoTracking = true,
+                    OrderBy = q => System.Linq.Queryable.OrderBy(q, s => s.CompanyName)
+                };
 
                 if (!string.IsNullOrWhiteSpace(request.Search))
                 {
                     var term = request.Search.Trim().ToLower();
-                    options.Filter = s =>
+                    options.Filters.Add(s =>
                         s.CompanyName.ToLower().Contains(term) ||
                         s.ContactName.ToLower().Contains(term) ||
-                        s.Email.Value.ToLower().Contains(term);
+                        s.Email.Value.ToLower().Contains(term));
                 }
 
                 var pagedSuppliers = await _supplierRepository.GetPagedAsync(options, request.Page, request.PageSize);

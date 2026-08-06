@@ -38,6 +38,8 @@ public sealed class GetDepartmentsQueryHandler : IRequestHandler<GetDepartmentsQ
             {
                 var options = new QueryOptions<Department>
                 {
+                    AsNoTracking = true,
+                    OrderBy = q => System.Linq.Queryable.OrderBy(q, d => d.Name),
                     Includes = new List<System.Linq.Expressions.Expression<System.Func<Department, object>>>
                     {
                         d => d.Employees
@@ -47,7 +49,7 @@ public sealed class GetDepartmentsQueryHandler : IRequestHandler<GetDepartmentsQ
                 if (!string.IsNullOrWhiteSpace(request.Search))
                 {
                     var search = request.Search.Trim().ToLower();
-                    options.Filter = d => d.Name.ToLower().Contains(search);
+                    options.Filters.Add(d => d.Name.ToLower().Contains(search));
                 }
 
                 var pagedDepartments = await _departmentRepository.GetPagedAsync(options, request.Page, request.PageSize);

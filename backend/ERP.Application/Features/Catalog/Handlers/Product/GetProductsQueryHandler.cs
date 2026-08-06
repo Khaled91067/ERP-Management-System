@@ -29,20 +29,22 @@ public sealed class GetProductsQueryHandler(
             cacheKey,
             async (ct) =>
             {
-                var options = new QueryOptions<Product>();
+                var options = new QueryOptions<Product> 
+                { 
+                    AsNoTracking = true,
+                    OrderBy = q => System.Linq.Queryable.OrderBy(q, p => p.Name)
+                };
                 options.Includes.Add(p => p.Category);
 
                 if (request.CategoryId.HasValue)
                 {
-                    options.Filter = p => p.CategoryId == request.CategoryId.Value;
+                    options.Filters.Add(p => p.CategoryId == request.CategoryId.Value);
                 }
 
                 if (!string.IsNullOrWhiteSpace(request.Search))
                 {
                     var search = request.Search.Trim().ToLower();
-                    var existingFilter = options.Filter;
-                    options.Filter = p => (existingFilter == null || existingFilter.Compile()(p)) &&
-                                          (p.Name.ToLower().Contains(search) || p.Sku.ToLower().Contains(search));
+                    options.Filters.Add(p => p.Name.ToLower().Contains(search) || p.Sku.ToLower().Contains(search));
                 }
 
                 var pagedProducts = await productRepository.GetPagedAsync(options, request.Page, request.PageSize);

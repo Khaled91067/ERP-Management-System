@@ -33,6 +33,11 @@ namespace ERP.Infrastructure.Repositories
         {
             IQueryable<T> query = _dbSet;
 
+            if (options?.AsNoTracking == true)
+            {
+                query = query.AsNoTracking();
+            }
+
             if(options != null)
             {
                 if (options.IncludeDeleted)
@@ -40,10 +45,9 @@ namespace ERP.Infrastructure.Repositories
                     query = query.IgnoreQueryFilters();
                 }
 
-                if(options.Filter != null)
+                foreach (var filter in options.Filters)
                 {
-                    query = query.Where(options.Filter);
-
+                    query = query.Where(filter);
                 }
                
                 foreach (var include in options.Includes)
@@ -51,6 +55,10 @@ namespace ERP.Infrastructure.Repositories
                     query = query.Include(include);
                 }
 
+                if (options.OrderBy != null)
+                {
+                    query = options.OrderBy(query);
+                }
             }
 
             return await query.ToListAsync();
@@ -60,6 +68,11 @@ namespace ERP.Infrastructure.Repositories
         {
             IQueryable<T> query = _dbSet;
 
+            if (options?.AsNoTracking == true)
+            {
+                query = query.AsNoTracking();
+            }
+
             if (options != null)
             {
                 if (options.IncludeDeleted)
@@ -67,14 +80,19 @@ namespace ERP.Infrastructure.Repositories
                     query = query.IgnoreQueryFilters();
                 }
 
-                if (options.Filter != null)
+                foreach (var filter in options.Filters)
                 {
-                    query = query.Where(options.Filter);
+                    query = query.Where(filter);
                 }
 
                 foreach (var include in options.Includes)
                 {
                     query = query.Include(include);
+                }
+
+                if (options.OrderBy != null)
+                {
+                    query = options.OrderBy(query);
                 }
             }
 

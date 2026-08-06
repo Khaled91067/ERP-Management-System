@@ -34,16 +34,20 @@ public sealed class GetCustomersQueryHandler : IRequestHandler<GetCustomersQuery
             cacheKey,
             async (ct) =>
             {
-                var options = new QueryOptions<Customer>();
+                var options = new QueryOptions<Customer> 
+                { 
+                    AsNoTracking = true,
+                    OrderBy = q => System.Linq.Queryable.OrderBy(q, c => c.Name)
+                };
 
                 if (!string.IsNullOrWhiteSpace(request.Search))
                 {
                     var search = request.Search.Trim().ToLower();
-                    options.Filter = x => x.Name.ToLower().Contains(search) ||
-                                          x.Email.Value.ToLower().Contains(search) ||
-                                          x.Phone.ToLower().Contains(search) ||
-                                          x.TaxId.ToLower().Contains(search) ||
-                                          x.City.ToLower().Contains(search);
+                    options.Filters.Add(x => x.Name.ToLower().Contains(search) ||
+                                             x.Email.Value.ToLower().Contains(search) ||
+                                             x.Phone.ToLower().Contains(search) ||
+                                             x.TaxId.ToLower().Contains(search) ||
+                                             x.City.ToLower().Contains(search));
                 }
 
                 var pagedCustomers = await _customerRepository.GetPagedAsync(options, request.Page, request.PageSize);

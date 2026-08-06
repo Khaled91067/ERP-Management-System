@@ -40,27 +40,28 @@ public sealed class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, Page
             cacheKey,
             async (ct) =>
             {
-                var options = new QueryOptions<Order>();
+                var options = new QueryOptions<Order> 
+                { 
+                    AsNoTracking = true,
+                    OrderBy = q => System.Linq.Queryable.OrderByDescending(q, o => o.OrderDate)
+                };
                 options.Includes.Add(o => o.Customer);
 
                 if (request.CustomerId.HasValue)
                 {
-                    options.Filter = o => o.CustomerId == request.CustomerId.Value;
+                    options.Filters.Add(o => o.CustomerId == request.CustomerId.Value);
                 }
 
                 if (!string.IsNullOrWhiteSpace(request.Status) && Enum.TryParse<OrderStatus>(request.Status, true, out var statusEnum))
                 {
-                    var existingFilter = options.Filter;
-                    options.Filter = o => (existingFilter == null || existingFilter.Compile()(o)) && o.Status == statusEnum;
+                    options.Filters.Add(o => o.Status == statusEnum);
                 }
 
                 if (!string.IsNullOrWhiteSpace(request.Search))
                 {
                     var search = request.Search.Trim().ToLower();
-                    var existingFilter = options.Filter;
-                    options.Filter = o => (existingFilter == null || existingFilter.Compile()(o)) &&
-                                          ((o.Customer != null && o.Customer.Name.ToLower().Contains(search)) ||
-                                           o.ShippingAddress.ToLower().Contains(search));
+                    options.Filters.Add(o => (o.Customer != null && o.Customer.Name.ToLower().Contains(search)) ||
+                                             o.ShippingAddress.ToLower().Contains(search));
                 }
 
                 var pagedOrders = await _orderRepository.GetPagedAsync(options, request.Page, request.PageSize);
