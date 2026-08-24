@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { APP_CONFIG } from '@core/config/app-config.token';
 import { PaginatedResult } from '@core/models/api-response.model';
 import { PaginationParams } from '@core/models/pagination.model';
@@ -22,7 +22,7 @@ export class ApiService {
   /** GET /resource — paginated list with optional search/filter params */
   getAll<T>(
     resource: string,
-    params?: PaginationParams & Record<string, unknown>
+    params?: PaginationParams | Record<string, unknown>
   ): Observable<PaginatedResult<T>> {
     let httpParams = new HttpParams();
     if (params) {
@@ -32,9 +32,20 @@ export class ApiService {
         }
       });
     }
-    return this.http.get<PaginatedResult<T>>(this.url(resource), {
+    return this.http.get<any>(this.url(resource), {
       params: httpParams,
-    });
+    }).pipe(
+      map(res => {
+        if (res && typeof res === 'object') {
+          return {
+            ...res,
+            total: res.total ?? res.totalCount ?? (Array.isArray(res.items) ? res.items.length : 0),
+            items: res.items ?? []
+          };
+        }
+        return res;
+      })
+    );
   }
 
   /** GET /resource/:id */
