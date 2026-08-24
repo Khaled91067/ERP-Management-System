@@ -21,69 +21,8 @@ import { PageHeaderComponent } from '@shared/components/page-header/page-header.
     MatCardModule,
     PageHeaderComponent
   ],
-  template: `
-    <div class="page-container">
-      <app-page-header
-        title="Add Department"
-        [breadcrumbs]="[
-          { label: 'HR' },
-          { label: 'Departments', link: '/admin/departments' },
-          { label: 'New' }
-        ]"
-      />
-
-      <mat-card class="form-card mat-elevation-z0">
-        <mat-card-content>
-          <form [formGroup]="deptForm" (ngSubmit)="onSubmit()" class="form-layout">
-            
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Department Name</mat-label>
-              <input matInput formControlName="name" placeholder="E.g. Engineering">
-              @if (deptForm.controls.name.hasError('required')) {
-                <mat-error>Name is required</mat-error>
-              }
-            </mat-form-field>
-
-            <div class="form-actions">
-              <button mat-button type="button" (click)="router.navigate(['/admin/departments'])">Cancel</button>
-              <button mat-flat-button color="primary" type="submit" [disabled]="deptForm.invalid || isSaving()">
-                {{ isSaving() ? 'Saving...' : 'Save Department' }}
-              </button>
-            </div>
-            
-          </form>
-        </mat-card-content>
-      </mat-card>
-    </div>
-  `,
-  styles: [`
-    .form-card {
-      max-width: 600px;
-      padding: 24px 16px;
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      background-color: var(--surface-card);
-    }
-
-    .form-layout {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .full-width {
-      width: 100%;
-    }
-
-    .form-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 12px;
-      margin-top: 16px;
-    
-      flex-wrap: wrap;
-    }
-  `]
+  templateUrl: './department-form.component.html',
+  styleUrl: './department-form.component.scss'
 })
 export class DepartmentFormComponent {
   private readonly fb = inject(FormBuilder);

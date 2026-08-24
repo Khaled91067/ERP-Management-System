@@ -8,7 +8,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
 
 import { UsersService } from '../users.service';
-import { RolesService, Role } from '@features/roles/roles.service';
+import { RolesService } from '@features/roles/roles.service';
+import { Role } from '@features/roles/models/role.model';
 import { NotificationService } from '@core/services/notification.service';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header.component';
 
@@ -24,131 +25,8 @@ import { PageHeaderComponent } from '@shared/components/page-header/page-header.
     MatSelectModule,
     PageHeaderComponent
   ],
-  template: `
-    <div class="page-container">
-      <app-page-header
-        [title]="isEditMode() ? 'Edit User' : 'New User'"
-        [breadcrumbs]="[
-          { label: 'Settings' },
-          { label: 'Users', link: '/admin/users' },
-          { label: isEditMode() ? 'Edit' : 'New' }
-        ]"
-      />
-
-      <mat-card class="form-card mat-elevation-z0">
-        <mat-card-content>
-          <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="form-layout">
-            
-            <div class="form-row">
-              <mat-form-field appearance="outline" class="half-width">
-                <mat-label>First Name</mat-label>
-                <input matInput formControlName="firstName" placeholder="John">
-                @if (userForm.controls.firstName.hasError('required')) {
-                  <mat-error>First name is required</mat-error>
-                }
-              </mat-form-field>
-
-              <mat-form-field appearance="outline" class="half-width">
-                <mat-label>Last Name</mat-label>
-                <input matInput formControlName="lastName" placeholder="Doe">
-                @if (userForm.controls.lastName.hasError('required')) {
-                  <mat-error>Last name is required</mat-error>
-                }
-              </mat-form-field>
-            </div>
-
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Email Address</mat-label>
-              <input matInput type="email" formControlName="email" placeholder="john.doe@company.com">
-              @if (userForm.controls.email.hasError('required')) {
-                <mat-error>Email is required</mat-error>
-              }
-              @if (userForm.controls.email.hasError('email')) {
-                <mat-error>Must be a valid email</mat-error>
-              }
-            </mat-form-field>
-
-            @if (!isEditMode()) {
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Password</mat-label>
-                <input matInput type="password" formControlName="password">
-                @if (userForm.controls.password?.hasError('required')) {
-                  <mat-error>Password is required for new users</mat-error>
-                }
-                @if (userForm.controls.password?.hasError('minlength')) {
-                  <mat-error>Password must be at least 6 characters</mat-error>
-                }
-              </mat-form-field>
-            }
-
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Role</mat-label>
-              <mat-select formControlName="roleId">
-                @for (role of availableRoles(); track role.id) {
-                  <mat-option [value]="role.id">{{ role.name }}</mat-option>
-                }
-              </mat-select>
-              @if (userForm.controls.roleId?.hasError('required')) {
-                <mat-error>Role is required</mat-error>
-              }
-            </mat-form-field>
-
-            <div class="form-actions">
-              <button mat-button type="button" (click)="router.navigate(['/admin/users'])">Cancel</button>
-              <button mat-flat-button color="primary" type="submit" [disabled]="userForm.invalid || isSaving()">
-                {{ isSaving() ? 'Saving...' : 'Save User' }}
-              </button>
-            </div>
-            
-          </form>
-        </mat-card-content>
-      </mat-card>
-    </div>
-  `,
-  styles: [`
-    .form-card {
-      max-width: 600px;
-      padding: 24px 16px;
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      background-color: var(--surface-card);
-    }
-
-    .form-layout {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .form-row {
-      display: flex;
-      gap: 16px;
-    }
-
-    @media (max-width: 600px) {
-      .form-row {
-        flex-direction: column;
-        gap: 0;
-      }
-    }
-
-    .half-width {
-      flex: 1;
-    }
-
-    .full-width {
-      width: 100%;
-    }
-
-    .form-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 12px;
-      margin-top: 16px;
-    
-      flex-wrap: wrap;
-    }
-  `]
+  templateUrl: './user-form.component.html',
+  styleUrl: './user-form.component.scss'
 })
 export class UserFormComponent implements OnInit {
   private readonly fb = inject(FormBuilder);

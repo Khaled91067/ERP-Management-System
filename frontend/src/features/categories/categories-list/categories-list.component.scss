@@ -1,0 +1,31 @@
+.table-toolbar {
+  display: flex;
+  margin-bottom: 16px;
+}
+
+.search-field {
+  width: 100%;
+  max-width: 400px;
+}
+
+.table-container {
+  background-color: var(--surface-card);
+  border-radius: 12px;
+  overflow-x: auto;
+  border: 1px solid var(--border-color);
+}
+
+.full-width {
+  width: 100%;
+}
+
+.actions-column {
+  width: 120px;
+  text-align: right;
+}
+
+.empty-cell {
+  text-align: center;
+  padding: 48px;
+  color: var(--text-secondary);
+}

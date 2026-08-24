@@ -1,0 +1,48 @@
+<header class="header">
+  <div class="header-left">
+    <button 
+      type="button" 
+      mat-icon-button 
+      class="mobile-menu-btn"
+      (click)="toggleSidebar.emit()"
+      aria-label="Toggle Sidebar">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <div class="search-box">
+      <mat-icon class="search-icon">search</mat-icon>
+      <input type="text" class="search-input" placeholder="Search..." readonly />
+      <kbd class="search-kbd">Ctrl K</kbd>
+    </div>
+  </div>
+
+  <div class="header-right">
+    <button 
+      type="button"
+      mat-icon-button 
+      class="header-icon-btn"
+      matTooltip="Notifications">
+      <mat-icon>notifications_none</mat-icon>
+    </button>
+
+    @if (authService.currentUser(); as user) {
+      <div class="user-profile">
+        <div class="user-avatar">
+          {{ getUserInitials(user) }}
+        </div>
+        <div class="user-info">
+          <span class="user-name">{{ user.firstName }} {{ user.lastName }}</span>
+          <span class="user-role-badge">{{ user.role || 'User' }}</span>
+        </div>
+        <button 
+          type="button"
+          mat-icon-button 
+          class="logout-icon-btn" 
+          (click)="authService.logout()" 
+          matTooltip="Logout"
+          aria-label="Logout">
+          <mat-icon>logout</mat-icon>
+        </button>
+      </div>
+    }
+  </div>
+</header>

@@ -1,0 +1,33 @@
+<div class="page-container">
+  <app-page-header
+    [title]="isEditMode() ? 'Edit Category' : 'New Category'"
+    [breadcrumbs]="[
+      { label: 'Inventory' },
+      { label: 'Categories', link: '/admin/categories' },
+      { label: isEditMode() ? 'Edit' : 'New' }
+    ]"
+  />
+
+  <mat-card class="form-card mat-elevation-z0">
+    <mat-card-content>
+      <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()" class="form-layout">
+        
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Category Name</mat-label>
+          <input matInput formControlName="name" placeholder="e.g., Electronics">
+          @if (categoryForm.controls.name.hasError('required')) {
+            <mat-error>Category name is required</mat-error>
+          }
+        </mat-form-field>
+
+        <div class="form-actions">
+          <button mat-button type="button" (click)="router.navigate(['/admin/categories'])">Cancel</button>
+          <button mat-flat-button color="primary" type="submit" [disabled]="categoryForm.invalid || isSaving()">
+            {{ isSaving() ? 'Saving...' : 'Save Category' }}
+          </button>
+        </div>
+        
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

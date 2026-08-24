@@ -1,0 +1,92 @@
+.form-card {
+  max-width: 900px;
+  padding: 24px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  background-color: var(--surface-card);
+}
+
+.form-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.half-width {
+  width: 50%;
+}
+
+@media (max-width: 600px) {
+  .half-width {
+    width: 100%;
+  }
+}
+
+.lines-section {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-color);
+}
+
+.lines-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.lines-header h3 {
+  margin: 0;
+  font-weight: 500;
+}
+
+.line-row {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 16px;
+  background-color: var(--surface-ground);
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.product-field {
+  flex: 3;
+  margin-bottom: -22px;
+}
+
+.qty-field {
+  flex: 1;
+  margin-bottom: -22px;
+}
+
+.price-field {
+  flex: 1.5;
+  margin-bottom: -22px;
+}
+
+.line-total {
+  width: 100px;
+  text-align: right;
+  font-weight: 500;
+}
+
+.order-total {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 48px 0 0;
+  font-size: 1.2rem;
+  border-top: 1px dashed var(--border-color);
+  margin-top: 16px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 32px;
+
+  flex-wrap: wrap;
+}

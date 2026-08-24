@@ -1,11 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-export type StatusType = 
-  | 'Pending' | 'Confirmed' | 'Shipped' | 'Delivered' | 'Cancelled' 
-  | 'Draft' | 'Sent' | 'Paid' | 'Overdue'
-  | 'Approved' | 'Received'
-  | 'Active' | 'Inactive';
-
 /**
  * Reusable status badge component with color coding based on status string.
  *
@@ -16,12 +10,8 @@ export type StatusType =
   selector: 'app-status-badge',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: `
-    <span class="badge badge-{{ getStatusClass() }}">
-      {{ status() }}
-    </span>
-  `,
-  styles: []
+  templateUrl: './status-badge.component.html',
+  styleUrl: './status-badge.component.scss'
 })
 export class StatusBadgeComponent {
   readonly status = input.required<string>();

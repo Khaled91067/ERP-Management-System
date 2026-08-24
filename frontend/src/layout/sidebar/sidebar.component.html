@@ -1,0 +1,60 @@
+<aside class="sidebar-inner">
+  <div class="brand" [class.collapsed-brand]="collapsed()">
+    <div class="brand-left">
+      <mat-icon class="brand-icon">business</mat-icon>
+      @if (!collapsed()) {
+        <span class="brand-text">ERP Admin</span>
+      }
+    </div>
+    <button 
+      type="button" 
+      class="collapse-toggle-btn"
+      (click)="toggleCollapse.emit()" 
+      [matTooltip]="collapsed() ? 'Expand Sidebar' : 'Collapse Sidebar'"
+      [attr.aria-label]="collapsed() ? 'Expand Sidebar' : 'Collapse Sidebar'">
+      <mat-icon>{{ collapsed() ? 'menu' : 'menu_open' }}</mat-icon>
+    </button>
+  </div>
+
+  <nav class="nav-menu">
+    @for (group of navGroups; track group.name) {
+      <div class="nav-group" [class.is-expanded]="isGroupExpanded(group.name)">
+        @if (!collapsed() && !group.hideHeader) {
+          <button 
+            type="button" 
+            class="nav-group-header" 
+            (click)="toggleGroup(group.name)"
+            [class.active-group]="isGroupActive(group)">
+            <div class="group-header-left">
+              @if (group.icon) {
+                <mat-icon class="group-icon">{{ group.icon }}</mat-icon>
+              }
+              <span class="group-title">{{ group.name }}</span>
+            </div>
+            <mat-icon class="expand-icon" [class.expanded]="isGroupExpanded(group.name)">
+              chevron_right
+            </mat-icon>
+          </button>
+        }
+
+        @if (collapsed() || isGroupExpanded(group.name)) {
+          <div class="nav-items-container" [class.sub-level]="!collapsed() && !group.hideHeader && group.items.length > 1">
+            @for (item of group.items; track item.route) {
+              <a 
+                [routerLink]="item.route" 
+                routerLinkActive="active" 
+                class="nav-item-link"
+                [matTooltip]="collapsed() ? item.label : ''"
+                matTooltipPosition="right">
+                <mat-icon class="nav-icon">{{ item.icon }}</mat-icon>
+                @if (!collapsed()) {
+                  <span class="nav-label">{{ item.label }}</span>
+                }
+              </a>
+            }
+          </div>
+        }
+      </div>
+    }
+  </nav>
+</aside>

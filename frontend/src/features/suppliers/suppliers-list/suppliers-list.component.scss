@@ -1,0 +1,45 @@
+.table-toolbar {
+  display: flex;
+  margin-bottom: 16px;
+}
+
+.search-field {
+  width: 100%;
+  max-width: 400px;
+}
+
+.table-container {
+  background-color: var(--surface-card);
+  border-radius: 12px;
+  overflow-x: auto;
+  border: 1px solid var(--border-color);
+}
+
+.full-width {
+  width: 100%;
+}
+
+.supplier-info {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0;
+}
+
+.supplier-name {
+  font-weight: 500;
+}
+
+.supplier-email {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.actions-column {
+  width: 120px;
+  text-align: right;
+}
+
+.empty-cell {
+  text-align: center;
+  padding: 24px;
+}

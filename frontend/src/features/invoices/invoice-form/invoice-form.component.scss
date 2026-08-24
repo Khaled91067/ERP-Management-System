@@ -1,0 +1,92 @@
+.form-card {
+  max-width: 1000px;
+  padding: 24px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  background-color: var(--surface-card);
+}
+
+.form-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+}
+
+@media (max-width: 600px) {
+  .form-row {
+    flex-direction: column;
+  }
+}
+
+.half-width {
+  flex: 1;
+}
+
+.lines-section {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-color);
+}
+
+.lines-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.lines-header h3 {
+  margin: 0;
+  font-weight: 500;
+}
+
+.line-row {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 16px;
+  background-color: var(--surface-ground);
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.desc-field {
+  flex: 2;
+  margin-bottom: -22px;
+}
+
+.qty-field, .cost-field, .tax-field {
+  flex: 1;
+  margin-bottom: -22px;
+}
+
+.line-total {
+  width: 100px;
+  text-align: right;
+  font-weight: 500;
+}
+
+.order-total {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 48px 0 0;
+  font-size: 1.2rem;
+  border-top: 1px dashed var(--border-color);
+  margin-top: 16px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 32px;
+
+  flex-wrap: wrap;
+}

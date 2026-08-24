@@ -1,0 +1,29 @@
+<mat-sidenav-container class="layout-wrapper" [hasBackdrop]="true">
+  <mat-sidenav 
+    #sidenav 
+    mode="over" 
+    [opened]="isMobile() && mobileSidenavOpen()" 
+    class="mobile-sidenav"
+    (closedStart)="onSidenavClosed()">
+    @if (isMobile()) {
+      <app-sidebar [collapsed]="false" (toggleCollapse)="toggleSidebar()" (navigationEnded)="onNavigationEnded()" />
+    }
+  </mat-sidenav>
+
+  <mat-sidenav-content class="main-content-wrapper">
+    <div class="layout-grid" [class.collapsed]="!isMobile() && sidebarCollapsed()" [class.mobile]="isMobile()">
+      
+      @if (!isMobile()) {
+        <app-sidebar class="desktop-sidebar" [collapsed]="!isMobile() && sidebarCollapsed()" (toggleCollapse)="toggleSidebar()" (navigationEnded)="onNavigationEnded()" />
+      }
+
+      <div class="layout-main">
+        <app-header (toggleSidebar)="toggleSidebar()" />
+        <main class="content-area">
+          <router-outlet />
+        </main>
+        <app-footer />
+      </div>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

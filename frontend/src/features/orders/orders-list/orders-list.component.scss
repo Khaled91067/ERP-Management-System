@@ -1,0 +1,46 @@
+.table-toolbar {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .table-toolbar {
+    flex-direction: column;
+  }
+}
+
+.search-field {
+  flex: 1;
+  max-width: 400px;
+}
+
+.filter-field {
+  width: 200px;
+}
+
+.table-container {
+  background-color: var(--surface-card);
+  border-radius: 12px;
+  overflow-x: auto;
+  border: 1px solid var(--border-color);
+}
+
+.full-width {
+  width: 100%;
+}
+
+.order-id {
+  font-weight: 500;
+}
+
+.actions-column {
+  width: 80px;
+  text-align: right;
+}
+
+.empty-cell {
+  text-align: center;
+  padding: 24px;
+}
