@@ -95,7 +95,13 @@ namespace ERP.Infrastructure.Repositories
                     query = options.OrderBy(query);
                 }
             }
+            if (options?.OrderBy == null)
+            {
+                throw new InvalidOperationException(
+                    "Paged queries require an OrderBy clause.");
+            }
 
+            query = options.OrderBy(query);
             var totalCount = await query.CountAsync(cancellationToken);
             var items = await query
                 .Skip((page - 1) * pageSize)
