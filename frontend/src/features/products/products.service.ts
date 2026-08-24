@@ -1,27 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { ApiService } from '@core/services/api.service';
 import { Observable } from 'rxjs';
-import { PaginatedResult, PaginationParams } from '@core/models/pagination.model';
-
-export interface Product {
-  id: number;
-  name: string;
-  sku: string;
-  categoryId: number;
-  categoryName?: string;
-  unitPrice: number;
-  costPrice: number;
-  stockQuantity: number;
-  reorderLevel: number;
-}
-
-export interface AdjustStockDto {
-  quantityChange: number;
-}
-
-export interface ProductPaginationParams extends PaginationParams {
-  categoryId?: number;
-}
+import { PaginatedResult } from '@core/models/api-response.model';
+import { AdjustStockDto, Product, ProductPaginationParams } from './models/product.model';
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +12,7 @@ export class ProductsService {
   private readonly endpoint = 'products';
 
   getProducts(params?: ProductPaginationParams): Observable<PaginatedResult<Product>> {
-    return this.apiService.getAll<Product>(this.endpoint, params as any);
+    return this.apiService.getAll<Product>(this.endpoint, params);
   }
 
   getProduct(id: number): Observable<Product> {
@@ -50,7 +31,8 @@ export class ProductsService {
     return this.apiService.delete<void>(this.endpoint, id);
   }
 
-  adjustStock(id: number, quantityChange: number): Observable<void> {
-    return this.apiService.patch<AdjustStockDto, void>(this.endpoint, id, 'stock', { quantityChange });
+  adjustStock(id: number, data: AdjustStockDto): Observable<void> {
+    const quantityChange = data.quantity ?? (data as any).quantityChange ?? 0;
+    return this.apiService.patch<{ quantityChange: number }, void>(this.endpoint, id, 'stock', { quantityChange });
   }
 }

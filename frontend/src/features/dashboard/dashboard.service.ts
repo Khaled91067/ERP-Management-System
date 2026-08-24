@@ -1,35 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { ApiService } from '@core/services/api.service';
 import { Observable, forkJoin, map } from 'rxjs';
-
-export interface DashboardMetrics {
-  totalRevenue: number;
-  totalOrders: number;
-  totalProducts: number;
-  totalCustomers: number;
-}
-
-export interface LowStockAlert {
-  id: number;
-  name: string;
-  sku: string;
-  stockQuantity: number;
-  reorderLevel: number;
-}
-
-export interface RecentOrder {
-  id: number;
-  orderDate: string;
-  customerName: string;
-  status: string;
-  totalAmount: number;
-}
-
-export interface DashboardData {
-  metrics: DashboardMetrics;
-  recentOrders: RecentOrder[];
-  lowStockProducts: LowStockAlert[];
-}
+import { DashboardData, LowStockAlert, RecentOrder } from './models/dashboard.model';
 
 @Injectable({
   providedIn: 'root'
@@ -51,7 +23,7 @@ export class DashboardService {
         const totalRevenue = orderItems.reduce((sum: number, order: any) => sum + (order.totalAmount || 0), 0);
         
         // Find low stock products
-        const lowStockProducts = productItems
+        const lowStockProducts: LowStockAlert[] = productItems
           .filter((p: any) => (p.stockQuantity ?? 0) <= (p.reorderLevel ?? 0))
           .slice(0, 5)
           .map((p: any) => ({
@@ -63,7 +35,7 @@ export class DashboardService {
           }));
 
         // Get recent orders
-        const recentOrders = [...orderItems]
+        const recentOrders: RecentOrder[] = [...orderItems]
           .sort((a: any, b: any) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime())
           .slice(0, 5)
           .map((o: any) => ({

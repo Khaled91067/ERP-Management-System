@@ -1,40 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { ApiService } from '@core/services/api.service';
 import { Observable } from 'rxjs';
-import { PaginatedResult, PaginationParams } from '@core/models/pagination.model';
-
-export interface InvoiceLine {
-  id: number;
-  description: string;
-  quantity: number;
-  unitPrice: number;
-  taxRate: number;
-  totalPrice: number;
-}
-
-export interface Invoice {
-  id: number;
-  orderId?: number;
-  customerId: number;
-  customerName: string;
-  invoiceDate: string;
-  dueDate: string;
-  status: string;
-  totalAmount: number;
-  paidAt?: string;
-  lines: InvoiceLine[];
-}
-
-export interface GenerateInvoiceDto {
-  orderId: number;
-  dueDate: string;
-}
-
-export interface InvoicePaginationParams extends PaginationParams {
-  customerId?: number;
-  status?: string;
-  search?: string;
-}
+import { PaginatedResult } from '@core/models/api-response.model';
+import { GenerateInvoiceDto, Invoice, InvoicePaginationParams } from './models/invoice.model';
 
 @Injectable({
   providedIn: 'root'
@@ -44,7 +12,7 @@ export class InvoicesService {
   private readonly endpoint = 'invoices';
 
   getInvoices(params?: InvoicePaginationParams): Observable<PaginatedResult<Invoice>> {
-    return this.apiService.getAll<Invoice>(this.endpoint, params as any);
+    return this.apiService.getAll<Invoice>(this.endpoint, params);
   }
 
   getInvoice(id: number): Observable<Invoice> {

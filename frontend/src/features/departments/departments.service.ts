@@ -1,16 +1,9 @@
 import { Injectable, inject } from '@angular/core';
 import { ApiService } from '@core/services/api.service';
 import { Observable } from 'rxjs';
-import { PaginatedResult, PaginationParams } from '@core/models/pagination.model';
-
-export interface Department {
-  id: number;
-  name: string;
-}
-
-export interface DepartmentPaginationParams extends PaginationParams {
-  search?: string;
-}
+import { PaginatedResult } from '@core/models/api-response.model';
+import { PaginationParams } from '@core/models/pagination.model';
+import { Department } from './models/department.model';
 
 @Injectable({
   providedIn: 'root'
@@ -19,8 +12,8 @@ export class DepartmentsService {
   private readonly apiService = inject(ApiService);
   private readonly endpoint = 'departments';
 
-  getDepartments(params?: DepartmentPaginationParams): Observable<PaginatedResult<Department>> {
-    return this.apiService.getAll<Department>(this.endpoint, params as any);
+  getDepartments(params?: PaginationParams): Observable<PaginatedResult<Department>> {
+    return this.apiService.getAll<Department>(this.endpoint, params);
   }
 
   createDepartment(data: Partial<Department>): Observable<{ id: number }> {
