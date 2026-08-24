@@ -1,17 +1,9 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
-import { User, AuthState } from '../models/user.model';
-import { APP_CONFIG } from '../config/app-config.token';
+import { User } from '../models/user.model';
+import { AuthResponse, AuthState } from '../models/auth.model';
 import { ApiService } from '../services/api.service';
-
-export interface AuthResponse {
-  accessToken?: string;
-  token?: string;
-  refreshToken?: string;
-  user?: User;
-}
 
 @Injectable({
   providedIn: 'root'
@@ -45,35 +37,59 @@ export class AuthService {
     }
   }
 
-  private extractUserFromToken(token: string, emailFallback: string): User {
+  private extractUserFromToken(token: string, emailFallback: string = ''): User | null {
+    if (!token) return null;
     try {
-      const payloadBase64 = token.split('.')[1];
-      if (payloadBase64) {
-        const decoded = JSON.parse(atob(payloadBase64));
-        const email = decoded.email || decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'] || emailFallback;
-        const role = decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] || 'ADMIN';
-        return {
-          id: decoded.sub || '1',
-          email,
-          firstName: email.split('@')[0] || 'User',
-          lastName: '',
-          role: role as any,
-          permissions: [],
-          isActive: true
-        };
+      const parts = token.split('.');
+      if (parts.length < 2) return null;
+
+      let base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+      while (base64.length % 4 !== 0) {
+        base64 += '=';
       }
+
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split('')
+          .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join('')
+      );
+      const decoded = JSON.parse(jsonPayload);
+
+      const email = decoded.email 
+        || decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'] 
+        || emailFallback 
+        || '';
+
+      const rawRole = decoded.role 
+        || decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] 
+        || 'VIEWER';
+      const role = typeof rawRole === 'string' ? rawRole : (Array.isArray(rawRole) ? rawRole[0] : 'VIEWER');
+
+      const id = decoded.sub 
+        || decoded.nameid 
+        || decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'] 
+        || '';
+
+      const firstName = decoded.given_name 
+        || decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname'] 
+        || (email ? email.split('@')[0] : 'User');
+      const lastName = decoded.family_name 
+        || decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname'] 
+        || '';
+
+      return {
+        id,
+        email,
+        firstName,
+        lastName,
+        role: role as any,
+        permissions: decoded.permissions ? (Array.isArray(decoded.permissions) ? decoded.permissions : [decoded.permissions]) : [],
+        isActive: true
+      };
     } catch {
-      // fallback
+      return null;
     }
-    return {
-      id: '1',
-      email: emailFallback || 'admin@erp.com',
-      firstName: 'Admin',
-      lastName: 'User',
-      role: 'ADMIN',
-      permissions: [],
-      isActive: true
-    };
   }
 
   login(credentials: Record<string, string>): Observable<AuthResponse> {
@@ -81,8 +97,11 @@ export class AuthService {
       .pipe(
         tap(response => {
           const token = response.accessToken || response.token || '';
+          if (!token) return;
           const user = response.user || this.extractUserFromToken(token, credentials['email']);
-          this.setSession(user, token);
+          if (user) {
+            this.setSession(user, token);
+          }
         })
       );
   }
@@ -91,9 +110,13 @@ export class AuthService {
     return this.apiService.create<Record<string, string>, any>('auth/register', userData)
       .pipe(
         tap(response => {
-          const token = response.accessToken || response.token || '';
-          const user = response.user || this.extractUserFromToken(token, userData['email']);
-          this.setSession(user, token);
+          const token = response?.accessToken || response?.token;
+          if (token) {
+            const user = response?.user || this.extractUserFromToken(token, userData['email']);
+            if (user) {
+              this.setSession(user, token);
+            }
+          }
         })
       );
   }
@@ -108,7 +131,7 @@ export class AuthService {
     this.state.set({
       user,
       token,
-      isAuthenticated: !!token
+      isAuthenticated: !!token && !!user
     });
   }
 
