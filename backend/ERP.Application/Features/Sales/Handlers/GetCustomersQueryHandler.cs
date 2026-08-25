@@ -1,23 +1,26 @@
 namespace ERP.Application.Features.Sales.Handlers;
 
-using global::ERP.Application.Abstractions.Repositories;
-using global::ERP.Application.Common.Models;
-using global::ERP.Application.Features.Sales.Dtos;
-using global::ERP.Application.Features.Sales.Queries;
-using global::ERP.Domain.Sales.Customers;
+using ERP.Application.Common.Caching;
+using Microsoft.Extensions.Options;
+using ERP.Application.Abstractions.Caching;
+using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Common.Models;
+using ERP.Application.Features.Sales.Dtos;
+using ERP.Application.Features.Sales.Queries;
+using ERP.Domain.Sales.Customers;
 
 using MediatR;
 
 public sealed class GetCustomersQueryHandler : IRequestHandler<GetCustomersQuery, PagedResult<CustomerDto>>
 {
     private readonly ICustomerRepository _customerRepository;
-    private readonly global::ERP.Application.Abstractions.Caching.ICacheService _cacheService;
-    private readonly global::Microsoft.Extensions.Options.IOptions<global::ERP.Application.Common.Caching.CacheSettings> _cacheSettings;
+    private readonly ICacheService _cacheService;
+    private readonly IOptions<CacheSettings> _cacheSettings;
 
     public GetCustomersQueryHandler(
         ICustomerRepository customerRepository,
-        global::ERP.Application.Abstractions.Caching.ICacheService cacheService,
-        global::Microsoft.Extensions.Options.IOptions<global::ERP.Application.Common.Caching.CacheSettings> cacheSettings)
+        ICacheService cacheService,
+        IOptions<CacheSettings> cacheSettings)
     {
         _customerRepository = customerRepository;
         _cacheService = cacheService;

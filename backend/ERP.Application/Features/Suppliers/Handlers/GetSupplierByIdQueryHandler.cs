@@ -1,22 +1,25 @@
 
 namespace ERP.Application.Features.Suppliers.Handlers;
 
-using global::ERP.Application.Abstractions.Repositories;
-using global::ERP.Application.Features.Suppliers.DTOs;
-using global::ERP.Application.Features.Suppliers.Queries;
+using ERP.Application.Common.Caching;
+using Microsoft.Extensions.Options;
+using ERP.Application.Abstractions.Caching;
+using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Features.Suppliers.DTOs;
+using ERP.Application.Features.Suppliers.Queries;
 
 using MediatR;
 
 public sealed class GetSupplierByIdQueryHandler : IRequestHandler<GetSupplierByIdQuery, SupplierDto?>
 {
     private readonly ISupplierRepository _supplierRepository;
-    private readonly global::ERP.Application.Abstractions.Caching.ICacheService _cacheService;
-    private readonly global::Microsoft.Extensions.Options.IOptions<global::ERP.Application.Common.Caching.CacheSettings> _cacheSettings;
+    private readonly ICacheService _cacheService;
+    private readonly IOptions<CacheSettings> _cacheSettings;
 
     public GetSupplierByIdQueryHandler(
         ISupplierRepository supplierRepository,
-        global::ERP.Application.Abstractions.Caching.ICacheService cacheService,
-        global::Microsoft.Extensions.Options.IOptions<global::ERP.Application.Common.Caching.CacheSettings> cacheSettings)
+        ICacheService cacheService,
+        IOptions<CacheSettings> cacheSettings)
     {
         _supplierRepository = supplierRepository;
         _cacheService = cacheService;
@@ -25,7 +28,7 @@ public sealed class GetSupplierByIdQueryHandler : IRequestHandler<GetSupplierByI
 
     public async Task<SupplierDto?> Handle(GetSupplierByIdQuery request, CancellationToken cancellationToken)
     {
-        var cacheKey = global::ERP.Application.Common.Caching.CacheKeys.Purchasing.SupplierById(request.Id);
+        var cacheKey = CacheKeys.Purchasing.SupplierById(request.Id);
         var expiration = TimeSpan.FromMinutes(_cacheSettings.Value.FrequentDataExpirationMinutes);
 
         return await _cacheService.GetOrCreateAsync(

@@ -1,7 +1,7 @@
 
 namespace ERP.Application.Features.Suppliers.Queries;
 
-using global::ERP.Application.Features.Suppliers.DTOs;
+using ERP.Application.Features.Suppliers.DTOs;
 
 using MediatR;
 

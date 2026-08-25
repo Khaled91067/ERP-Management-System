@@ -1,25 +1,28 @@
 namespace ERP.Application.Features.PurchaseOrders.Handlers;
 
+using ERP.Application.Common.Caching;
+using Microsoft.Extensions.Options;
+using ERP.Application.Abstractions.Caching;
 using System;
 
-using global::ERP.Application.Abstractions.Repositories;
-using global::ERP.Application.Common.Models;
-using global::ERP.Application.Features.PurchaseOrders.Dtos;
-using global::ERP.Application.Features.PurchaseOrders.Queries;
-using global::ERP.Domain.Purchasing.PurchaseOrders;
+using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Common.Models;
+using ERP.Application.Features.PurchaseOrders.Dtos;
+using ERP.Application.Features.PurchaseOrders.Queries;
+using ERP.Domain.Purchasing.PurchaseOrders;
 
 using MediatR;
 
 public sealed class GetPurchaseOrdersQueryHandler : IRequestHandler<GetPurchaseOrdersQuery, PagedResult<PurchaseOrderDto>>
 {
     private readonly IPurchaseOrderRepository _repository;
-    private readonly global::ERP.Application.Abstractions.Caching.ICacheService _cacheService;
-    private readonly global::Microsoft.Extensions.Options.IOptions<global::ERP.Application.Common.Caching.CacheSettings> _cacheSettings;
+    private readonly ICacheService _cacheService;
+    private readonly IOptions<CacheSettings> _cacheSettings;
 
     public GetPurchaseOrdersQueryHandler(
         IPurchaseOrderRepository repository,
-        global::ERP.Application.Abstractions.Caching.ICacheService cacheService,
-        global::Microsoft.Extensions.Options.IOptions<global::ERP.Application.Common.Caching.CacheSettings> cacheSettings)
+        ICacheService cacheService,
+        IOptions<CacheSettings> cacheSettings)
     {
         _repository = repository;
         _cacheService = cacheService;

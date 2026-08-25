@@ -3,12 +3,12 @@ namespace ERP.Application.Features.Finance.Handlers;
 using System.Threading;
 using System.Threading.Tasks;
 
-using global::ERP.Application.Abstractions;
-using global::ERP.Application.Abstractions.Repositories;
-using global::ERP.Application.Features.Finance.Commands;
-using global::ERP.Domain.Sales.Invoices;
-using global::ERP.Domain.Sales.Orders;
-using global::ERP.Domain.Shared.Exceptions;
+using ERP.Application.Abstractions;
+using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Features.Finance.Commands;
+using ERP.Domain.Sales.Invoices;
+using ERP.Domain.Sales.Orders;
+using ERP.Domain.Shared.Exceptions;
 
 using MediatR;
 

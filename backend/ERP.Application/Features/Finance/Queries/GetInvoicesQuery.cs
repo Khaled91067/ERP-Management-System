@@ -1,8 +1,8 @@
 
 namespace ERP.Application.Features.Finance.Queries;
 
-using global::ERP.Application.Common.Models;
-using global::ERP.Application.Features.Finance.Dtos;
+using ERP.Application.Common.Models;
+using ERP.Application.Features.Finance.Dtos;
 
 using MediatR;
 

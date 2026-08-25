@@ -1,25 +1,28 @@
 
 namespace ERP.Application.Features.HR.Handlers;
 
+using ERP.Application.Common.Caching;
+using Microsoft.Extensions.Options;
+using ERP.Application.Abstractions.Caching;
 using System.Threading;
 using System.Threading.Tasks;
 
-using global::ERP.Application.Abstractions.Repositories;
-using global::ERP.Application.Features.HR.Dtos;
-using global::ERP.Application.Features.HR.Queries;
+using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Features.HR.Dtos;
+using ERP.Application.Features.HR.Queries;
 
 using MediatR;
 
 public sealed class GetEmployeeByIdQueryHandler : IRequestHandler<GetEmployeeByIdQuery, EmployeeDto?>
 {
     private readonly IEmployeeRepository _employeeRepository;
-    private readonly global::ERP.Application.Abstractions.Caching.ICacheService _cacheService;
-    private readonly global::Microsoft.Extensions.Options.IOptions<global::ERP.Application.Common.Caching.CacheSettings> _cacheSettings;
+    private readonly ICacheService _cacheService;
+    private readonly IOptions<CacheSettings> _cacheSettings;
 
     public GetEmployeeByIdQueryHandler(
         IEmployeeRepository employeeRepository,
-        global::ERP.Application.Abstractions.Caching.ICacheService cacheService,
-        global::Microsoft.Extensions.Options.IOptions<global::ERP.Application.Common.Caching.CacheSettings> cacheSettings)
+        ICacheService cacheService,
+        IOptions<CacheSettings> cacheSettings)
     {
         _employeeRepository = employeeRepository;
         _cacheService = cacheService;

@@ -1,8 +1,8 @@
 namespace ERP.Application.Features.Identity.Handlers;
 
-using global::ERP.Application.Abstractions.Repositories;
-using global::ERP.Application.Features.Identity.DTOs;
-using global::ERP.Application.Features.Identity.Queries;
+using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Features.Identity.DTOs;
+using ERP.Application.Features.Identity.Queries;
 
 using MediatR;
 

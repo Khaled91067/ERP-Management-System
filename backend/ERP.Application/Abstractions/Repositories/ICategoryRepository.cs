@@ -1,7 +1,7 @@
 
 namespace ERP.Application.Abstractions.Repositories;
 
-using global::ERP.Domain.Catalog.Categories;
+using ERP.Domain.Catalog.Categories;
 
 public interface ICategoryRepository : IGenericRepository<Category>
 {

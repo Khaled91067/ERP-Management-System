@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-using global::ERP.Domain.HR.Employees;
+using ERP.Domain.HR.Employees;
 
 public interface IEmployeeRepository : IGenericRepository<Employee>
 {

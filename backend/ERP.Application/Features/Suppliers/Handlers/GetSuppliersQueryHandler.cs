@@ -1,23 +1,26 @@
 namespace ERP.Application.Features.Suppliers.Handlers;
 
-using global::ERP.Application.Abstractions.Repositories;
-using global::ERP.Application.Common.Models;
-using global::ERP.Application.Features.Suppliers.DTOs;
-using global::ERP.Application.Features.Suppliers.Queries;
-using global::ERP.Domain.Purchasing.Suppliers;
+using ERP.Application.Common.Caching;
+using Microsoft.Extensions.Options;
+using ERP.Application.Abstractions.Caching;
+using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Common.Models;
+using ERP.Application.Features.Suppliers.DTOs;
+using ERP.Application.Features.Suppliers.Queries;
+using ERP.Domain.Purchasing.Suppliers;
 
 using MediatR;
 
 public sealed class GetSuppliersQueryHandler : IRequestHandler<GetSuppliersQuery, PagedResult<SupplierDto>>
 {
     private readonly ISupplierRepository _supplierRepository;
-    private readonly global::ERP.Application.Abstractions.Caching.ICacheService _cacheService;
-    private readonly global::Microsoft.Extensions.Options.IOptions<global::ERP.Application.Common.Caching.CacheSettings> _cacheSettings;
+    private readonly ICacheService _cacheService;
+    private readonly IOptions<CacheSettings> _cacheSettings;
 
     public GetSuppliersQueryHandler(
         ISupplierRepository supplierRepository,
-        global::ERP.Application.Abstractions.Caching.ICacheService cacheService,
-        global::Microsoft.Extensions.Options.IOptions<global::ERP.Application.Common.Caching.CacheSettings> cacheSettings)
+        ICacheService cacheService,
+        IOptions<CacheSettings> cacheSettings)
     {
         _supplierRepository = supplierRepository;
         _cacheService = cacheService;
@@ -27,7 +30,7 @@ public sealed class GetSuppliersQueryHandler : IRequestHandler<GetSuppliersQuery
     public async Task<PagedResult<SupplierDto>> Handle(GetSuppliersQuery request, CancellationToken cancellationToken)
     {
         var searchPart = !string.IsNullOrWhiteSpace(request.Search) ? request.Search.Trim() : "none";
-        var cacheKey = global::ERP.Application.Common.Caching.CacheKeys.Purchasing.SuppliersList(searchPart, request.Page, request.PageSize);
+        var cacheKey = CacheKeys.Purchasing.SuppliersList(searchPart, request.Page, request.PageSize);
         var expiration = TimeSpan.FromMinutes(_cacheSettings.Value.PaginatedListExpirationMinutes);
 
         return await _cacheService.GetOrCreateAsync(

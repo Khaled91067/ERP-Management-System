@@ -1,8 +1,8 @@
 namespace ERP.Application.Features.Finance.Handlers;
 
-using global::ERP.Application.Abstractions.Repositories;
-using global::ERP.Application.Features.Finance.Queries;
-using global::ERP.Domain.Shared.Exceptions;
+using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Features.Finance.Queries;
+using ERP.Domain.Shared.Exceptions;
 
 using MediatR;
 

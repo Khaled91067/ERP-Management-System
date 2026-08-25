@@ -2,7 +2,7 @@
 
 namespace ERP.Application.Abstractions.Repositories
 {
-    using global::ERP.Domain.Identity.Roles;
+    using ERP.Domain.Identity.Roles;
 
     public interface IRoleRepository : IGenericRepository<Role>
     {

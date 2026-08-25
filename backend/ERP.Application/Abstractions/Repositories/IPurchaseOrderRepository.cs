@@ -1,7 +1,7 @@
 
 namespace ERP.Application.Abstractions.Repositories;
 
-using global::ERP.Domain.Purchasing.PurchaseOrders;
+using ERP.Domain.Purchasing.PurchaseOrders;
 
 public interface IPurchaseOrderRepository
     : IGenericRepository<PurchaseOrder>

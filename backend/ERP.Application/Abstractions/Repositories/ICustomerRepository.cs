@@ -4,7 +4,7 @@ namespace ERP.Application.Abstractions.Repositories;
 using System.Threading;
 using System.Threading.Tasks;
 
-using global::ERP.Domain.Sales.Customers;
+using ERP.Domain.Sales.Customers;
 
 public interface ICustomerRepository : IGenericRepository<Customer>
 {

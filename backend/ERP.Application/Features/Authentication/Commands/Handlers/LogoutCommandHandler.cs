@@ -3,10 +3,10 @@ namespace ERP.Application.Features.Authentication.Commands.Handlers;
 using System.Threading;
 using System.Threading.Tasks;
 
-using global::ERP.Application.Abstractions;
-using global::ERP.Application.Abstractions.Repositories;
-using global::ERP.Application.Common.Exceptions;
-using global::ERP.Application.Features.Authentication.Commands;
+using ERP.Application.Abstractions;
+using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Common.Exceptions;
+using ERP.Application.Features.Authentication.Commands;
 
 using MediatR;
 

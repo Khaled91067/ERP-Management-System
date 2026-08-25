@@ -1,8 +1,9 @@
 namespace ERP.Application.Features.Sales.Handlers;
 
-using global::ERP.Application.Abstractions;
-using global::ERP.Application.Abstractions.Repositories;
-using global::ERP.Application.Features.Sales.Commands;
+using ERP.Application.Abstractions.Caching;
+using ERP.Application.Abstractions;
+using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Features.Sales.Commands;
 
 using MediatR;
 
@@ -14,14 +15,14 @@ public sealed class DeleteOrderCommandHandler : IRequestHandler<DeleteOrderComma
     public DeleteOrderCommandHandler(
         IOrderRepository orderRepository,
         IUnitOfWork unitOfWork,
-        global::ERP.Application.Abstractions.Caching.ICacheService cacheService)
+        ICacheService cacheService)
     {
         _orderRepository = orderRepository;
         _unitOfWork = unitOfWork;
         _cacheService = cacheService;
     }
 
-    private readonly global::ERP.Application.Abstractions.Caching.ICacheService _cacheService;
+    private readonly ICacheService _cacheService;
 
     public async Task<bool> Handle(DeleteOrderCommand request, CancellationToken cancellationToken)
     {

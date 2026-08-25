@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-using global::ERP.Domain.Sales.Invoices;
+using ERP.Domain.Sales.Invoices;
 
 public interface IInvoiceRepository : IGenericRepository<Invoice>
 {

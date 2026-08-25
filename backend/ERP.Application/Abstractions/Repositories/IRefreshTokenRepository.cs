@@ -1,7 +1,7 @@
 
 namespace ERP.Application.Abstractions.Repositories
 {
-    using global::ERP.Domain.Identity.Users;
+    using ERP.Domain.Identity.Users;
 
     public interface IRefreshTokenRepository
     {

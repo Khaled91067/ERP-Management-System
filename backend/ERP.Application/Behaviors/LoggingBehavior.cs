@@ -3,7 +3,7 @@ namespace ERP.Application.Behaviors;
 
 using System.Diagnostics;
 
-using global::Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 
 using MediatR;
 

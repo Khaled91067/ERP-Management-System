@@ -1,7 +1,7 @@
 
 namespace ERP.Application.Features.Finance.Queries;
 
-using global::ERP.Application.Features.Finance.Dtos;
+using ERP.Application.Features.Finance.Dtos;
 
 using MediatR;
 

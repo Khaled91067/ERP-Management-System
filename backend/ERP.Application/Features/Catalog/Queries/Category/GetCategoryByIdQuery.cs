@@ -1,7 +1,7 @@
 
 namespace ERP.Application.Features.Catalog.Queries;
 
-using global::ERP.Application.Features.Catalog.DTOs;
+using ERP.Application.Features.Catalog.DTOs;
 
 using MediatR;
 

@@ -1,9 +1,9 @@
 namespace ERP.Application.Features.Catalog.Handlers;
 
-using global::ERP.Application.Abstractions;
-using global::ERP.Application.Abstractions.Caching;
-using global::ERP.Application.Abstractions.Repositories;
-using global::ERP.Application.Features.Catalog.Commands;
+using ERP.Application.Abstractions;
+using ERP.Application.Abstractions.Caching;
+using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Features.Catalog.Commands;
 
 using MediatR;
 

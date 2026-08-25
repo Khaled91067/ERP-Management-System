@@ -1,16 +1,17 @@
 
 namespace ERP.Application.Features.Sales.Handlers;
 
+using ERP.Application.Abstractions.Caching;
 using System.Threading;
 using System.Threading.Tasks;
 
-using global::ERP.Application.Abstractions;
-using global::ERP.Application.Abstractions.Repositories;
-using global::ERP.Application.Features.Sales.Commands;
-using global::ERP.Domain.Catalog.Products;
-using global::ERP.Domain.Sales.Customers;
-using global::ERP.Domain.Sales.Orders;
-using global::ERP.Domain.Shared.Exceptions;
+using ERP.Application.Abstractions;
+using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Features.Sales.Commands;
+using ERP.Domain.Catalog.Products;
+using ERP.Domain.Sales.Customers;
+using ERP.Domain.Sales.Orders;
+using ERP.Domain.Shared.Exceptions;
 
 using MediatR;
 
@@ -26,7 +27,7 @@ public sealed class CreateOrderCommandHandler : IRequestHandler<CreateOrderComma
         IGenericRepository<Customer> customerRepository,
         IGenericRepository<Product> productRepository,
         IUnitOfWork unitOfWork,
-        global::ERP.Application.Abstractions.Caching.ICacheService cacheService)
+        ICacheService cacheService)
     {
         _orderRepository = orderRepository;
         _customerRepository = customerRepository;
@@ -35,7 +36,7 @@ public sealed class CreateOrderCommandHandler : IRequestHandler<CreateOrderComma
         _cacheService = cacheService;
     }
 
-    private readonly global::ERP.Application.Abstractions.Caching.ICacheService _cacheService;
+    private readonly ICacheService _cacheService;
 
     public async Task<int> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
     {

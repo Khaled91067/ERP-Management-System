@@ -1,11 +1,12 @@
 namespace ERP.Application.Features.Finance.Handlers;
 
+using ERP.Application.Abstractions.Caching;
 using System.Threading;
 using System.Threading.Tasks;
 
-using global::ERP.Application.Abstractions;
-using global::ERP.Application.Abstractions.Repositories;
-using global::ERP.Application.Features.Finance.Commands;
+using ERP.Application.Abstractions;
+using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Features.Finance.Commands;
 
 using MediatR;
 
@@ -17,14 +18,14 @@ public sealed class DeleteInvoiceCommandHandler : IRequestHandler<DeleteInvoiceC
     public DeleteInvoiceCommandHandler(
         IInvoiceRepository invoiceRepository,
         IUnitOfWork unitOfWork,
-        global::ERP.Application.Abstractions.Caching.ICacheService cacheService)
+        ICacheService cacheService)
     {
         _invoiceRepository = invoiceRepository;
         _unitOfWork = unitOfWork;
         _cacheService = cacheService;
     }
 
-    private readonly global::ERP.Application.Abstractions.Caching.ICacheService _cacheService;
+    private readonly ICacheService _cacheService;
 
     public async Task<bool> Handle(DeleteInvoiceCommand request, CancellationToken cancellationToken)
     {

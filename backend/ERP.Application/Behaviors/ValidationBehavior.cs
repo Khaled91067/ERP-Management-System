@@ -3,7 +3,7 @@ namespace ERP.Application.Behaviors;
 
 using FluentValidation;
 
-using global::Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 
 using MediatR;
 

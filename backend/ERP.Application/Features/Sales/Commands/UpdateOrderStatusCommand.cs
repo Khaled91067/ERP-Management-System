@@ -1,7 +1,7 @@
 
 namespace ERP.Application.Features.Sales.Commands;
 
-using global::ERP.Domain.Sales.Orders;
+using ERP.Domain.Sales.Orders;
 
 using MediatR;
 

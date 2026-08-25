@@ -1,13 +1,15 @@
 namespace ERP.Application.Features.Sales.Handlers;
 
+using ERP.Application.Common.Caching;
+using ERP.Application.Abstractions.Caching;
 using System.Threading;
 using System.Threading.Tasks;
 
-using global::ERP.Application.Abstractions;
-using global::ERP.Application.Abstractions.Repositories;
-using global::ERP.Application.Features.Sales.Commands;
-using global::ERP.Domain.Sales.Orders;
-using global::ERP.Domain.Shared.Exceptions;
+using ERP.Application.Abstractions;
+using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Features.Sales.Commands;
+using ERP.Domain.Sales.Orders;
+using ERP.Domain.Shared.Exceptions;
 
 using MediatR;
 
@@ -15,12 +17,12 @@ public sealed class UpdateOrderStatusCommandHandler : IRequestHandler<UpdateOrde
 {
     private readonly IOrderRepository _orderRepository;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly global::ERP.Application.Abstractions.Caching.ICacheService _cacheService;
+    private readonly ICacheService _cacheService;
 
     public UpdateOrderStatusCommandHandler(
         IOrderRepository orderRepository,
         IUnitOfWork unitOfWork,
-        global::ERP.Application.Abstractions.Caching.ICacheService cacheService)
+        ICacheService cacheService)
     {
         _orderRepository = orderRepository;
         _unitOfWork = unitOfWork;
@@ -51,8 +53,8 @@ public sealed class UpdateOrderStatusCommandHandler : IRequestHandler<UpdateOrde
         _orderRepository.Update(order);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        await _cacheService.RemoveAsync(global::ERP.Application.Common.Caching.CacheKeys.Sales.OrderById(order.Id), cancellationToken);
-        await _cacheService.RemoveByPrefixAsync(global::ERP.Application.Common.Caching.CacheKeys.Sales.OrdersPrefix(), cancellationToken);
+        await _cacheService.RemoveAsync(CacheKeys.Sales.OrderById(order.Id), cancellationToken);
+        await _cacheService.RemoveByPrefixAsync(CacheKeys.Sales.OrdersPrefix(), cancellationToken);
 
         return true;
     }

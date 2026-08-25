@@ -1,26 +1,29 @@
 namespace ERP.Application.Features.Sales.Handlers;
 
+using ERP.Application.Common.Caching;
+using Microsoft.Extensions.Options;
+using ERP.Application.Abstractions.Caching;
 using System;
 using System.Collections.Generic;
 
-using global::ERP.Application.Abstractions.Repositories;
-using global::ERP.Application.Common.Models;
-using global::ERP.Application.Features.Sales.Dtos;
-using global::ERP.Application.Features.Sales.Queries;
-using global::ERP.Domain.Sales.Orders;
+using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Common.Models;
+using ERP.Application.Features.Sales.Dtos;
+using ERP.Application.Features.Sales.Queries;
+using ERP.Domain.Sales.Orders;
 
 using MediatR;
 
 public sealed class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, PagedResult<OrderDto>>
 {
     private readonly IOrderRepository _orderRepository;
-    private readonly global::ERP.Application.Abstractions.Caching.ICacheService _cacheService;
-    private readonly global::Microsoft.Extensions.Options.IOptions<global::ERP.Application.Common.Caching.CacheSettings> _cacheSettings;
+    private readonly ICacheService _cacheService;
+    private readonly IOptions<CacheSettings> _cacheSettings;
 
     public GetOrdersQueryHandler(
         IOrderRepository orderRepository,
-        global::ERP.Application.Abstractions.Caching.ICacheService cacheService,
-        global::Microsoft.Extensions.Options.IOptions<global::ERP.Application.Common.Caching.CacheSettings> cacheSettings)
+        ICacheService cacheService,
+        IOptions<CacheSettings> cacheSettings)
     {
         _orderRepository = orderRepository;
         _cacheService = cacheService;
@@ -33,7 +36,7 @@ public sealed class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, Page
         var statPart = !string.IsNullOrWhiteSpace(request.Status) ? request.Status : "all";
         var searchPart = !string.IsNullOrWhiteSpace(request.Search) ? request.Search.Trim() : "none";
         
-        var cacheKey = global::ERP.Application.Common.Caching.CacheKeys.Sales.OrdersList(custPart, statPart, searchPart, request.Page, request.PageSize);
+        var cacheKey = CacheKeys.Sales.OrdersList(custPart, statPart, searchPart, request.Page, request.PageSize);
         var expiration = TimeSpan.FromMinutes(_cacheSettings.Value.PaginatedListExpirationMinutes);
 
         return await _cacheService.GetOrCreateAsync(

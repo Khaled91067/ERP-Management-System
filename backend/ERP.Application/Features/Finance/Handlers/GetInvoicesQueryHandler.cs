@@ -3,14 +3,14 @@ namespace ERP.Application.Features.Finance.Handlers;
 using System;
 using System.Collections.Generic;
 
-using global::ERP.Application.Abstractions.Caching;
-using global::ERP.Application.Abstractions.Repositories;
-using global::ERP.Application.Common.Caching;
-using global::ERP.Application.Common.Models;
-using global::ERP.Application.Features.Finance.Dtos;
-using global::ERP.Application.Features.Finance.Queries;
-using global::ERP.Domain.Sales.Invoices;
-using global::Microsoft.Extensions.Options;
+using ERP.Application.Abstractions.Caching;
+using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Common.Caching;
+using ERP.Application.Common.Models;
+using ERP.Application.Features.Finance.Dtos;
+using ERP.Application.Features.Finance.Queries;
+using ERP.Domain.Sales.Invoices;
+using Microsoft.Extensions.Options;
 
 using MediatR;
 

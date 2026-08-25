@@ -1,8 +1,8 @@
 
 namespace ERP.Application.Features.HR.Queries;
 
-using global::ERP.Application.Common.Models;
-using global::ERP.Application.Features.HR.Dtos;
+using ERP.Application.Common.Models;
+using ERP.Application.Features.HR.Dtos;
 
 using MediatR;
 

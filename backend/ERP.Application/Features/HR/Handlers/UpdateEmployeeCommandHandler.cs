@@ -1,12 +1,13 @@
 namespace ERP.Application.Features.HR.Handlers;
 
+using ERP.Application.Abstractions.Caching;
 using System.Threading;
 using System.Threading.Tasks;
 
-using global::ERP.Application.Abstractions;
-using global::ERP.Application.Abstractions.Repositories;
-using global::ERP.Application.Features.HR.Commands;
-using global::ERP.Domain.Shared.Exceptions;
+using ERP.Application.Abstractions;
+using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Features.HR.Commands;
+using ERP.Domain.Shared.Exceptions;
 
 using MediatR;
 
@@ -20,7 +21,7 @@ public sealed class UpdateEmployeeCommandHandler : IRequestHandler<UpdateEmploye
         IEmployeeRepository employeeRepository,
         IDepartmentRepository departmentRepository,
         IUnitOfWork unitOfWork,
-        global::ERP.Application.Abstractions.Caching.ICacheService cacheService)
+        ICacheService cacheService)
     {
         _employeeRepository = employeeRepository;
         _departmentRepository = departmentRepository;
@@ -28,7 +29,7 @@ public sealed class UpdateEmployeeCommandHandler : IRequestHandler<UpdateEmploye
         _cacheService = cacheService;
     }
 
-    private readonly global::ERP.Application.Abstractions.Caching.ICacheService _cacheService;
+    private readonly ICacheService _cacheService;
 
     public async Task<bool> Handle(UpdateEmployeeCommand request, CancellationToken cancellationToken)
     {

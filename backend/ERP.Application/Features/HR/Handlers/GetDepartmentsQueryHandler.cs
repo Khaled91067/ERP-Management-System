@@ -1,25 +1,28 @@
 namespace ERP.Application.Features.HR.Handlers;
 
+using ERP.Application.Common.Caching;
+using Microsoft.Extensions.Options;
+using ERP.Application.Abstractions.Caching;
 using System.Collections.Generic;
 
-using global::ERP.Application.Abstractions.Repositories;
-using global::ERP.Application.Common.Models;
-using global::ERP.Application.Features.HR.Dtos;
-using global::ERP.Application.Features.HR.Queries;
-using global::ERP.Domain.HR.Departments;
+using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Common.Models;
+using ERP.Application.Features.HR.Dtos;
+using ERP.Application.Features.HR.Queries;
+using ERP.Domain.HR.Departments;
 
 using MediatR;
 
 public sealed class GetDepartmentsQueryHandler : IRequestHandler<GetDepartmentsQuery, PagedResult<DepartmentDto>>
 {
     private readonly IDepartmentRepository _departmentRepository;
-    private readonly global::ERP.Application.Abstractions.Caching.ICacheService _cacheService;
-    private readonly global::Microsoft.Extensions.Options.IOptions<global::ERP.Application.Common.Caching.CacheSettings> _cacheSettings;
+    private readonly ICacheService _cacheService;
+    private readonly IOptions<CacheSettings> _cacheSettings;
 
     public GetDepartmentsQueryHandler(
         IDepartmentRepository departmentRepository,
-        global::ERP.Application.Abstractions.Caching.ICacheService cacheService,
-        global::Microsoft.Extensions.Options.IOptions<global::ERP.Application.Common.Caching.CacheSettings> cacheSettings)
+        ICacheService cacheService,
+        IOptions<CacheSettings> cacheSettings)
     {
         _departmentRepository = departmentRepository;
         _cacheService = cacheService;

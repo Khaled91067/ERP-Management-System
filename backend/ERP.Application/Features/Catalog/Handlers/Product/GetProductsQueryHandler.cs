@@ -1,13 +1,13 @@
 namespace ERP.Application.Features.Catalog.Handlers;
 
-using global::ERP.Application.Abstractions.Caching;
-using global::ERP.Application.Abstractions.Repositories;
-using global::ERP.Application.Common.Caching;
-using global::ERP.Application.Common.Models;
-using global::ERP.Application.Features.Catalog.DTOs;
-using global::ERP.Application.Features.Catalog.Queries;
-using global::ERP.Domain.Catalog.Products;
-using global::Microsoft.Extensions.Options;
+using ERP.Application.Abstractions.Caching;
+using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Common.Caching;
+using ERP.Application.Common.Models;
+using ERP.Application.Features.Catalog.DTOs;
+using ERP.Application.Features.Catalog.Queries;
+using ERP.Domain.Catalog.Products;
+using Microsoft.Extensions.Options;
 
 using MediatR;
 

@@ -1,7 +1,7 @@
 
 namespace ERP.Application.Features.Identity.Queries;
 
-using global::ERP.Application.Features.Identity.DTOs;
+using ERP.Application.Features.Identity.DTOs;
 
 using MediatR;
 

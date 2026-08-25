@@ -3,7 +3,7 @@ namespace ERP.Application.Features.Sales.Commands;
 
 using System.Collections.Generic;
 
-using global::ERP.Domain.Sales.Orders;
+using ERP.Domain.Sales.Orders;
 
 using MediatR;
 

@@ -2,11 +2,12 @@
 namespace ERP.Application.Features.Finance.Handlers;
 
 
-using global::ERP.Application.Abstractions;
-using global::ERP.Application.Abstractions.Repositories;
-using global::ERP.Application.Features.Finance.Commands;
-using global::ERP.Domain.Sales.Invoices;
-using global::ERP.Domain.Shared.Exceptions;
+using ERP.Application.Abstractions.Caching;
+using ERP.Application.Abstractions;
+using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Features.Finance.Commands;
+using ERP.Domain.Sales.Invoices;
+using ERP.Domain.Shared.Exceptions;
 
 using MediatR;
 
@@ -14,12 +15,12 @@ public sealed class UpdateInvoiceCommandHandler : IRequestHandler<UpdateInvoiceC
 {
     private readonly IInvoiceRepository _invoiceRepository;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly global::ERP.Application.Abstractions.Caching.ICacheService _cacheService;
+    private readonly ICacheService _cacheService;
 
     public UpdateInvoiceCommandHandler(
         IInvoiceRepository invoiceRepository,
         IUnitOfWork unitOfWork,
-        global::ERP.Application.Abstractions.Caching.ICacheService cacheService)
+        ICacheService cacheService)
     {
         _invoiceRepository = invoiceRepository;
         _unitOfWork = unitOfWork;

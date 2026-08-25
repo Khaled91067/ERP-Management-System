@@ -1,9 +1,10 @@
 
 namespace ERP.Application.Features.PurchaseOrders.Commands.Handlers;
 
-using global::ERP.Application.Abstractions;
-using global::ERP.Application.Abstractions.Repositories;
-using global::ERP.Application.Features.PurchaseOrders.Commands;
+using ERP.Application.Abstractions.Caching;
+using ERP.Application.Abstractions;
+using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Features.PurchaseOrders.Commands;
 
 using MediatR;
 
@@ -15,14 +16,14 @@ public sealed class ReceivePurchaseOrderCommandHandler : IRequestHandler<Receive
     public ReceivePurchaseOrderCommandHandler(
         IPurchaseOrderRepository purchaseOrderRepository,
         IUnitOfWork unitOfWork,
-        global::ERP.Application.Abstractions.Caching.ICacheService cacheService)
+        ICacheService cacheService)
     {
         _purchaseOrderRepository = purchaseOrderRepository;
         _unitOfWork = unitOfWork;
         _cacheService = cacheService;
     }
 
-    private readonly global::ERP.Application.Abstractions.Caching.ICacheService _cacheService;
+    private readonly ICacheService _cacheService;
 
     public async Task Handle(ReceivePurchaseOrderCommand request, CancellationToken cancellationToken)
     {

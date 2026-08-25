@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-using global::ERP.Domain.Sales.Orders;
+using ERP.Domain.Sales.Orders;
 
 public interface IOrderRepository : IGenericRepository<Order>
 {

@@ -1,8 +1,8 @@
 
 namespace ERP.Application.Features.Sales.Queries;
 
-using global::ERP.Application.Common.Models;
-using global::ERP.Application.Features.Sales.Dtos;
+using ERP.Application.Common.Models;
+using ERP.Application.Features.Sales.Dtos;
 
 using MediatR;
 

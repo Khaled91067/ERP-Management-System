@@ -5,12 +5,12 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-using global::ERP.Application.Abstractions.Caching;
-using global::ERP.Application.Abstractions.Repositories;
-using global::ERP.Application.Common.Caching;
-using global::ERP.Application.Features.Finance.Dtos;
-using global::ERP.Application.Features.Finance.Queries;
-using global::Microsoft.Extensions.Options;
+using ERP.Application.Abstractions.Caching;
+using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Common.Caching;
+using ERP.Application.Features.Finance.Dtos;
+using ERP.Application.Features.Finance.Queries;
+using Microsoft.Extensions.Options;
 
 using MediatR;
 

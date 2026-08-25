@@ -1,12 +1,13 @@
 
 namespace ERP.Application.Features.HR.Handlers;
 
+using ERP.Application.Abstractions.Caching;
 using System.Threading;
 using System.Threading.Tasks;
 
-using global::ERP.Application.Abstractions;
-using global::ERP.Application.Abstractions.Repositories;
-using global::ERP.Application.Features.HR.Commands;
+using ERP.Application.Abstractions;
+using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Features.HR.Commands;
 
 using MediatR;
 
@@ -18,14 +19,14 @@ public sealed class DeleteEmployeeCommandHandler : IRequestHandler<DeleteEmploye
     public DeleteEmployeeCommandHandler(
         IEmployeeRepository employeeRepository,
         IUnitOfWork unitOfWork,
-        global::ERP.Application.Abstractions.Caching.ICacheService cacheService)
+        ICacheService cacheService)
     {
         _employeeRepository = employeeRepository;
         _unitOfWork = unitOfWork;
         _cacheService = cacheService;
     }
 
-    private readonly global::ERP.Application.Abstractions.Caching.ICacheService _cacheService;
+    private readonly ICacheService _cacheService;
 
     public async Task<bool> Handle(DeleteEmployeeCommand request, CancellationToken cancellationToken)
     {
