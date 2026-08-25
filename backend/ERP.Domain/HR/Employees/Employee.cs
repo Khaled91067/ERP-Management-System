@@ -1,9 +1,9 @@
 namespace ERP.Domain.HR.Employees;
 
 using System;
+
 using ERP.Domain.HR.Departments;
 using ERP.Domain.Shared.Base;
-using ERP.Domain.Shared.Abstractions;
 using ERP.Domain.Shared.Exceptions;
 using ERP.Domain.Shared.ValueObjects;
 

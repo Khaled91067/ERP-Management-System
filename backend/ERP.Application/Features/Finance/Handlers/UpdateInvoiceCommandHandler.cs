@@ -28,7 +28,7 @@ public sealed class UpdateInvoiceCommandHandler : IRequestHandler<UpdateInvoiceC
 
     public async Task<bool> Handle(UpdateInvoiceCommand request, CancellationToken cancellationToken)
     {
-        var invoice = await _invoiceRepository.GetByIdAsync(request.Id);
+        var invoice = await _invoiceRepository.GetByIdAsync(request.Id, cancellationToken);
 
         if (invoice is null)
             return false;

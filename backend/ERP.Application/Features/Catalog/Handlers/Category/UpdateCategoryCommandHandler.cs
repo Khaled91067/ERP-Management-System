@@ -1,12 +1,11 @@
 namespace ERP.Application.Features.Catalog.Handlers;
 
 using global::ERP.Application.Abstractions;
+using global::ERP.Application.Abstractions.Caching;
 using global::ERP.Application.Abstractions.Repositories;
 using global::ERP.Application.Features.Catalog.Commands;
 
 using MediatR;
-
-using global::ERP.Application.Abstractions.Caching;
 
 public sealed class UpdateCategoryCommandHandler(
     ICategoryRepository categoryRepository,
@@ -16,7 +15,7 @@ public sealed class UpdateCategoryCommandHandler(
 {
     public async Task<bool> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
     {
-        var category = await categoryRepository.GetByIdAsync(request.Id);
+        var category = await categoryRepository.GetByIdAsync(request.Id, cancellationToken);
         if (category is null) return false;
 
         var name = request.Name.Trim();

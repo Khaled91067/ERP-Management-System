@@ -1,13 +1,12 @@
 namespace ERP.Application.Features.Catalog.Handlers;
 
 using global::ERP.Application.Abstractions;
+using global::ERP.Application.Abstractions.Caching;
 using global::ERP.Application.Abstractions.Repositories;
 using global::ERP.Application.Features.Catalog.Commands;
 using global::ERP.Domain.Catalog.Products;
 
 using MediatR;
-
-using global::ERP.Application.Abstractions.Caching;
 
 public sealed class CreateProductCommandHandler(
     IProductRepository productRepository,

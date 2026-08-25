@@ -10,7 +10,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 
 import { EmployeesService } from '../employees.service';
-import { DepartmentsService, Department } from '@features/departments/departments.service';
+import { DepartmentsService } from '@features/departments/departments.service';
+import { Department } from '@features/departments/models/department.model';
 import { NotificationService } from '@core/services/notification.service';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header.component';
 
@@ -28,154 +29,8 @@ import { PageHeaderComponent } from '@shared/components/page-header/page-header.
     MatNativeDateModule,
     PageHeaderComponent
   ],
-  template: `
-    <div class="page-container">
-      <app-page-header
-        [title]="isEditMode() ? 'Edit Employee' : 'Add Employee'"
-        [breadcrumbs]="[
-          { label: 'HR' },
-          { label: 'Employees', link: '/admin/employees' },
-          { label: isEditMode() ? 'Edit' : 'New' }
-        ]"
-      />
-
-      <mat-card class="form-card mat-elevation-z0">
-        <mat-card-content>
-          <form [formGroup]="empForm" (ngSubmit)="onSubmit()" class="form-layout">
-            
-            <div class="form-row">
-              <mat-form-field appearance="outline" class="half-width">
-                <mat-label>First Name</mat-label>
-                <input matInput formControlName="firstName" placeholder="John">
-                @if (empForm.controls.firstName.hasError('required')) {
-                  <mat-error>First name is required</mat-error>
-                }
-              </mat-form-field>
-
-              <mat-form-field appearance="outline" class="half-width">
-                <mat-label>Last Name</mat-label>
-                <input matInput formControlName="lastName" placeholder="Doe">
-                @if (empForm.controls.lastName.hasError('required')) {
-                  <mat-error>Last name is required</mat-error>
-                }
-              </mat-form-field>
-            </div>
-
-            <div class="form-row">
-              <mat-form-field appearance="outline" class="half-width">
-                <mat-label>Email</mat-label>
-                <input matInput type="email" formControlName="email" placeholder="john.doe@example.com">
-                @if (empForm.controls.email.hasError('required')) {
-                  <mat-error>Email is required</mat-error>
-                }
-                @if (empForm.controls.email.hasError('email')) {
-                  <mat-error>Invalid email format</mat-error>
-                }
-              </mat-form-field>
-
-              <mat-form-field appearance="outline" class="half-width">
-                <mat-label>Phone</mat-label>
-                <input matInput type="tel" formControlName="phone" placeholder="+1234567890">
-                @if (empForm.controls.phone.hasError('required')) {
-                  <mat-error>Phone is required</mat-error>
-                }
-              </mat-form-field>
-            </div>
-
-            <div class="form-row">
-              <mat-form-field appearance="outline" class="half-width">
-                <mat-label>Department</mat-label>
-                <mat-select formControlName="departmentId">
-                  @for (dept of availableDepartments(); track dept.id) {
-                    <mat-option [value]="dept.id">{{ dept.name }}</mat-option>
-                  }
-                </mat-select>
-                @if (empForm.controls.departmentId.hasError('required')) {
-                  <mat-error>Department is required</mat-error>
-                }
-              </mat-form-field>
-
-              <mat-form-field appearance="outline" class="half-width">
-                <mat-label>Position</mat-label>
-                <input matInput formControlName="position" placeholder="Software Engineer">
-                @if (empForm.controls.position.hasError('required')) {
-                  <mat-error>Position is required</mat-error>
-                }
-              </mat-form-field>
-            </div>
-
-            <div class="form-row">
-              <mat-form-field appearance="outline" class="half-width">
-                <mat-label>Hire Date</mat-label>
-                <input matInput [matDatepicker]="picker" formControlName="hireDate">
-                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-                @if (empForm.controls.hireDate.hasError('required')) {
-                  <mat-error>Hire date is required</mat-error>
-                }
-              </mat-form-field>
-
-              <mat-form-field appearance="outline" class="half-width">
-                <mat-label>Salary</mat-label>
-                <span matTextPrefix>$&nbsp;</span>
-                <input matInput type="number" formControlName="salary" min="0">
-                @if (empForm.controls.salary.hasError('required')) {
-                  <mat-error>Salary is required</mat-error>
-                }
-              </mat-form-field>
-            </div>
-
-            <div class="form-actions">
-              <button mat-button type="button" (click)="router.navigate(['/admin/employees'])">Cancel</button>
-              <button mat-flat-button color="primary" type="submit" [disabled]="empForm.invalid || isSaving()">
-                {{ isSaving() ? 'Saving...' : (isEditMode() ? 'Update Employee' : 'Create Employee') }}
-              </button>
-            </div>
-            
-          </form>
-        </mat-card-content>
-      </mat-card>
-    </div>
-  `,
-  styles: [`
-    .form-card {
-      max-width: 800px;
-      padding: 24px 16px;
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      background-color: var(--surface-card);
-    }
-
-    .form-layout {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .form-row {
-      display: flex;
-      gap: 16px;
-    }
-    
-    @media (max-width: 600px) {
-      .form-row {
-        flex-direction: column;
-      }
-    }
-
-    .half-width {
-      flex: 1;
-    }
-
-    .form-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 12px;
-      margin-top: 16px;
-    
-      flex-wrap: wrap;
-    }
-  `]
+  templateUrl: './employee-form.component.html',
+  styleUrl: './employee-form.component.scss'
 })
 export class EmployeeFormComponent implements OnInit {
   private readonly fb = inject(FormBuilder);

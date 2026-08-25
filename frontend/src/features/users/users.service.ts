@@ -1,22 +1,9 @@
 import { Injectable, inject } from '@angular/core';
 import { ApiService } from '@core/services/api.service';
 import { Observable } from 'rxjs';
-import { PaginatedResult, PaginationParams } from '@core/models/pagination.model';
-
-export interface UserDto {
-  id: number;
-  firstName: string;
-  lastName: string;
-  email: string;
-  isActive: boolean;
-  role?: string;
-  roleId?: number;
-  roleName?: string;
-}
-
-export interface ChangeRoleDto {
-  roleId: number;
-}
+import { PaginatedResult } from '@core/models/api-response.model';
+import { PaginationParams } from '@core/models/pagination.model';
+import { ChangeRoleDto, UserDto } from './models/user-management.model';
 
 @Injectable({
   providedIn: 'root'
@@ -26,19 +13,19 @@ export class UsersService {
   private readonly endpoint = 'admin/users';
 
   getUsers(params?: PaginationParams): Observable<PaginatedResult<UserDto>> {
-    return this.apiService.getAll<UserDto>(this.endpoint, params as any);
+    return this.apiService.getAll<UserDto>(this.endpoint, params);
   }
 
   getUser(id: number): Observable<UserDto> {
     return this.apiService.getById<UserDto>(this.endpoint, id);
   }
 
-  createUser(data: any): Observable<number> {
-    return this.apiService.create<any, number>(this.endpoint, data);
+  createUser(data: any): Observable<{ id: number }> {
+    return this.apiService.create<any, { id: number }>(this.endpoint, data);
   }
 
-  updateUser(id: number, data: any): Observable<void> {
-    return this.apiService.update<any, void>(this.endpoint, id, data);
+  updateUser(id: number, data: Partial<UserDto>): Observable<void> {
+    return this.apiService.update<Partial<UserDto>, void>(this.endpoint, id, data);
   }
 
   changeRole(id: number, roleId: number): Observable<void> {

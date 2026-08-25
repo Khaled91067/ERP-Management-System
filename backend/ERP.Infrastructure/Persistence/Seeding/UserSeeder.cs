@@ -1,11 +1,13 @@
 namespace ERP.Infrastructure.Persistence.Seeding;
 
+using System.Threading;
+using System.Threading.Tasks;
+
 using ERP.Application.Abstractions.Authentication;
 using ERP.Domain.Identity.Users;
 using ERP.Domain.Shared.ValueObjects;
+
 using Microsoft.EntityFrameworkCore;
-using System.Threading;
-using System.Threading.Tasks;
 
 public class UserSeeder : ISeeder
 {

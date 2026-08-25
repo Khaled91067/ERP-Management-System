@@ -1,5 +1,3 @@
-using ERP.Domain.Shared.Base;
-
 namespace ERP.Domain.Shared.Base;
 
 using ERP.Domain.Shared.Abstractions;

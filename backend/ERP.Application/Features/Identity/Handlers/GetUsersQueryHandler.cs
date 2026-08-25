@@ -1,10 +1,7 @@
 namespace ERP.Application.Features.Identity.Handlers;
 
-using global::ERP.Application.Abstractions;
-using global::ERP.Application.Abstractions.Authentication;
 using global::ERP.Application.Abstractions.Repositories;
 using global::ERP.Application.Common.Models;
-using global::ERP.Application.Features.Identity.Commands;
 using global::ERP.Application.Features.Identity.DTOs;
 using global::ERP.Application.Features.Identity.Queries;
 using global::ERP.Domain.Identity.Users;
@@ -16,18 +13,22 @@ public sealed class GetUsersQueryHandler(IUserRepository userRepository)
 {
     public async Task<PagedResult<UserDto>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
     {
-        var options = new QueryOptions<User>();
+        var options = new QueryOptions<User> 
+        { 
+            AsNoTracking = true,
+            OrderBy = q => System.Linq.Queryable.ThenBy(System.Linq.Queryable.OrderBy(q, u => u.FirstName), u => u.LastName)
+        };
         options.Includes.Add(u => u.Role);
 
         if (!string.IsNullOrWhiteSpace(request.Search))
         {
-            var search = request.Search.Trim().ToLower();
-            options.Filter = u => u.FirstName.ToLower().Contains(search) ||
-                                  u.LastName.ToLower().Contains(search) ||
-                                  u.Email.Value.ToLower().Contains(search);
+            var search = request.Search.Trim();
+            options.Filters.Add(u => u.FirstName.Contains(search) ||
+                                     u.LastName.Contains(search) ||
+                                     u.Email.Value.Contains(search));
         }
 
-        var pagedUsers = await userRepository.GetPagedAsync(options, request.Page, request.PageSize);
+        var pagedUsers = await userRepository.GetPagedAsync(options, request.Page, request.PageSize, cancellationToken);
         return pagedUsers.Map(ToDto);
     }
 

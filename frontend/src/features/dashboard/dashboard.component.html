@@ -1,0 +1,173 @@
+<div class="dashboard-container">
+  <div class="page-header">
+    <h1 class="page-title">Dashboard Overview</h1>
+  </div>
+
+  @if (isLoading() && !data()) {
+    <div class="loading-state">
+      <mat-spinner diameter="48"></mat-spinner>
+      <p>Loading dashboard data...</p>
+    </div>
+  } @else if (hasError()) {
+    <div class="error-state">
+      <mat-icon class="error-icon">error_outline</mat-icon>
+      <h3>Failed to load dashboard data</h3>
+      <p>An error occurred while communicating with the server.</p>
+      <button type="button" mat-flat-button color="primary" (click)="loadData()">
+        <mat-icon>refresh</mat-icon>
+        <span>Retry</span>
+      </button>
+    </div>
+  } @else if (data()) {
+    <!-- KPI Cards -->
+    <div class="kpi-grid">
+      <mat-card class="kpi-card">
+        <mat-card-content class="kpi-content">
+          <div class="kpi-details">
+            <span class="kpi-label">Total Revenue</span>
+            <span class="kpi-value">{{ data()!.metrics.totalRevenue | currency }}</span>
+          </div>
+          <div class="kpi-icon-wrapper kpi-revenue">
+            <mat-icon>payments</mat-icon>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="kpi-card interactive" [routerLink]="'/admin/orders'" matTooltip="View all orders">
+        <mat-card-content class="kpi-content">
+          <div class="kpi-details">
+            <span class="kpi-label">Total Orders</span>
+            <span class="kpi-value">{{ data()!.metrics.totalOrders }}</span>
+          </div>
+          <div class="kpi-icon-wrapper kpi-orders">
+            <mat-icon>shopping_cart</mat-icon>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="kpi-card interactive" [routerLink]="'/admin/products'" matTooltip="View all products">
+        <mat-card-content class="kpi-content">
+          <div class="kpi-details">
+            <span class="kpi-label">Total Products</span>
+            <span class="kpi-value">{{ data()!.metrics.totalProducts }}</span>
+          </div>
+          <div class="kpi-icon-wrapper kpi-products">
+            <mat-icon>inventory_2</mat-icon>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="kpi-card interactive" [routerLink]="'/admin/customers'" matTooltip="View all customers">
+        <mat-card-content class="kpi-content">
+          <div class="kpi-details">
+            <span class="kpi-label">Total Customers</span>
+            <span class="kpi-value">{{ data()!.metrics.totalCustomers }}</span>
+          </div>
+          <div class="kpi-icon-wrapper kpi-customers">
+            <mat-icon>people</mat-icon>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Data Tables -->
+    <div class="tables-grid">
+      <!-- Recent Orders -->
+      <mat-card class="table-card">
+        <div class="table-card-header">
+          <span class="table-title">Recent Orders</span>
+          <a [routerLink]="'/admin/orders'" class="view-all-link">
+            <span>View All</span>
+            <mat-icon>arrow_forward</mat-icon>
+          </a>
+        </div>
+        <mat-card-content>
+          <div class="table-container mat-elevation-z0">
+            <table mat-table [dataSource]="data()!.recentOrders" class="full-width">
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef>Order #</th>
+              <td mat-cell *matCellDef="let order">
+                <a [routerLink]="['/admin/orders']" class="row-link">ORD-{{ order.id }}</a>
+              </td>
+            </ng-container>
+            
+            <ng-container matColumnDef="customerName">
+              <th mat-header-cell *matHeaderCellDef>Customer</th>
+              <td mat-cell *matCellDef="let order">{{ order.customerName }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="orderDate">
+              <th mat-header-cell *matHeaderCellDef>Date</th>
+              <td mat-cell *matCellDef="let order">{{ order.orderDate | date:'shortDate' }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>Status</th>
+              <td mat-cell *matCellDef="let order">
+                <app-status-badge [status]="order.status"></app-status-badge>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="totalAmount">
+              <th mat-header-cell *matHeaderCellDef>Total</th>
+              <td mat-cell *matCellDef="let order" class="amount-cell">{{ order.totalAmount | currency }}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="recentOrdersColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: recentOrdersColumns;"></tr>
+            
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell empty-cell" colspan="5">No recent orders found</td>
+            </tr>
+          </table>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Low Stock Alerts -->
+      <mat-card class="table-card">
+        <div class="table-card-header">
+          <span class="table-title">Low Stock Alerts</span>
+          <a [routerLink]="'/admin/products'" class="view-all-link">
+            <span>View All</span>
+            <mat-icon>arrow_forward</mat-icon>
+          </a>
+        </div>
+        <mat-card-content>
+          <div class="table-container mat-elevation-z0">
+            <table mat-table [dataSource]="data()!.lowStockProducts" class="full-width">
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef>Product</th>
+              <td mat-cell *matCellDef="let product">
+                <div class="product-info">
+                  <a [routerLink]="['/admin/products']" class="product-name row-link">{{ product.name }}</a>
+                  <span class="product-sku">{{ product.sku }}</span>
+                </div>
+              </td>
+            </ng-container>
+            
+            <ng-container matColumnDef="stock">
+              <th mat-header-cell *matHeaderCellDef>Stock</th>
+              <td mat-cell *matCellDef="let product" class="stock-critical">
+                {{ product.stockQuantity }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="reorderLevel">
+              <th mat-header-cell *matHeaderCellDef>Reorder At</th>
+              <td mat-cell *matCellDef="let product">{{ product.reorderLevel }}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="lowStockColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: lowStockColumns;"></tr>
+            
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell empty-cell" colspan="3">No low stock alerts</td>
+            </tr>
+          </table>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  }
+</div>

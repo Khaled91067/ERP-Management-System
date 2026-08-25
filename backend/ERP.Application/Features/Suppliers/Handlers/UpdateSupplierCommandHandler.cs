@@ -28,7 +28,7 @@ public sealed class UpdateSupplierCommandHandler : IRequestHandler<UpdateSupplie
 
     public async Task<bool> Handle(UpdateSupplierCommand request, CancellationToken cancellationToken)
     {
-        var supplier = await _supplierRepository.GetByIdAsync(request.Id);
+        var supplier = await _supplierRepository.GetByIdAsync(request.Id, cancellationToken);
 
         if (supplier is null)
             return false;

@@ -1,25 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { ApiService } from '@core/services/api.service';
 import { Observable } from 'rxjs';
-import { PaginatedResult, PaginationParams } from '@core/models/pagination.model';
-
-export interface Employee {
-  id: number;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  departmentId: number;
-  departmentName: string;
-  position: string;
-  hireDate: string;
-  salary: number;
-}
-
-export interface EmployeePaginationParams extends PaginationParams {
-  departmentId?: number;
-  searchTerm?: string;
-}
+import { PaginatedResult } from '@core/models/api-response.model';
+import { Employee, EmployeePaginationParams } from './models/employee.model';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +12,7 @@ export class EmployeesService {
   private readonly endpoint = 'employees';
 
   getEmployees(params?: EmployeePaginationParams): Observable<PaginatedResult<Employee>> {
-    return this.apiService.getAll<Employee>(this.endpoint, params as any);
+    return this.apiService.getAll<Employee>(this.endpoint, params);
   }
 
   getEmployee(id: number): Observable<Employee> {

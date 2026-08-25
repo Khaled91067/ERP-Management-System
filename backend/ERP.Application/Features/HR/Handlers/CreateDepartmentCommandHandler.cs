@@ -31,12 +31,10 @@ public sealed class CreateDepartmentCommandHandler : IRequestHandler<CreateDepar
 
     public async Task<int> Handle(CreateDepartmentCommand request, CancellationToken cancellationToken)
     {
-        var options = new QueryOptions<Department>
-        {
-            Filter = d => d.Name == request.Name.Trim()
-        };
+        var options = new QueryOptions<Department>();
+        options.Filters.Add(d => d.Name == request.Name.Trim());
 
-        var existing = await _departmentRepository.GetAllAsync(options);
+        var existing = await _departmentRepository.GetAllAsync(options, cancellationToken);
         if (existing.Any())
             throw new ConflictException($"Department with name '{request.Name}' already exists.");
 

@@ -1,8 +1,6 @@
 
 namespace ERP.Infrastructure.Persistence.Configurations
 {
-    using System;
-
     using ERP.Domain.HR.Employees;
     using ERP.Domain.Shared.ValueObjects;
 

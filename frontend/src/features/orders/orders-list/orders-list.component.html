@@ -1,0 +1,134 @@
+<div class="page-container">
+  <app-page-header
+    title="Sales Orders"
+    [breadcrumbs]="[{ label: 'Sales' }, { label: 'Orders' }]"
+    actionLabel="New Order"
+    actionIcon="add"
+    (action)="router.navigate(['/admin/orders/new'])"
+  />
+
+  <div class="table-toolbar">
+    <mat-form-field appearance="outline" class="search-field" subscriptSizing="dynamic">
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput [formControl]="searchControl" placeholder="Search orders...">
+    </mat-form-field>
+    
+    <mat-form-field appearance="outline" class="filter-field" subscriptSizing="dynamic">
+      <mat-label>Customer</mat-label>
+      <mat-select [formControl]="customerControl">
+        <mat-option [value]="null">All Customers</mat-option>
+        @for (customer of customers(); track customer.id) {
+          <mat-option [value]="customer.id">{{ customer.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filter-field" subscriptSizing="dynamic">
+      <mat-label>Status</mat-label>
+      <mat-select [formControl]="statusControl">
+        <mat-option [value]="null">All Statuses</mat-option>
+        <mat-option value="Pending">Pending</mat-option>
+        <mat-option value="Confirmed">Confirmed</mat-option>
+        <mat-option value="Shipped">Shipped</mat-option>
+        <mat-option value="Delivered">Delivered</mat-option>
+        <mat-option value="Cancelled">Cancelled</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="table-container mat-elevation-z0">
+    <table mat-table [dataSource]="orders()" class="full-width">
+      
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>Order #</th>
+        <td mat-cell *matCellDef="let order" class="order-id">ORD-{{ order.id.toString().padStart(5, '0') }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="customer">
+        <th mat-header-cell *matHeaderCellDef>Customer</th>
+        <td mat-cell *matCellDef="let order">{{ order.customerName }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef>Order Date</th>
+        <td mat-cell *matCellDef="let order">{{ order.orderDate | date:'mediumDate' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="total">
+        <th mat-header-cell *matHeaderCellDef class="text-right">Total Amount</th>
+        <td mat-cell *matCellDef="let order" class="text-right">{{ order.totalAmount | currency }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let order">
+          <app-status-badge [status]="order.status"></app-status-badge>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="actions-column">Actions</th>
+        <td mat-cell *matCellDef="let order" class="actions-column">
+          <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Order options">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="generateInvoice(order)" [disabled]="order.status === 'Cancelled'">
+              <mat-icon>receipt</mat-icon>
+              <span>Generate Invoice</span>
+            </button>
+            <button mat-menu-item (click)="updateStatus(order, 'Confirmed')" [disabled]="order.status !== 'Pending'">
+              <mat-icon>check_circle</mat-icon>
+              <span>Confirm Order</span>
+            </button>
+            <button mat-menu-item (click)="updateStatus(order, 'Shipped')" [disabled]="order.status !== 'Confirmed'">
+              <mat-icon>local_shipping</mat-icon>
+              <span>Mark as Shipped</span>
+            </button>
+            <button mat-menu-item (click)="updateStatus(order, 'Delivered')" [disabled]="order.status !== 'Shipped'">
+              <mat-icon>done_all</mat-icon>
+              <span>Mark as Delivered</span>
+            </button>
+            <button mat-menu-item (click)="updateStatus(order, 'Cancelled')" [disabled]="order.status === 'Delivered' || order.status === 'Cancelled'">
+              <mat-icon>cancel</mat-icon>
+              <span>Cancel Order</span>
+            </button>
+            <button mat-menu-item (click)="deleteOrder(order)">
+              <mat-icon color="warn">delete</mat-icon>
+              <span>Delete</span>
+            </button>
+          </mat-menu>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columns"></tr>
+      <tr mat-row *matRowDef="let row; columns: columns;"></tr>
+      
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell empty-cell" [attr.colspan]="columns.length">
+          @if (isLoading()) {
+            <div class="table-empty-state">
+              <mat-icon>sync</mat-icon>
+              <span class="empty-title">Loading orders...</span>
+            </div>
+          } @else {
+            <div class="table-empty-state">
+              <mat-icon>shopping_bag</mat-icon>
+              <span class="empty-title">No orders found</span>
+              <span class="empty-subtitle">Try adjusting your filters or search</span>
+            </div>
+          }
+        </td>
+      </tr>
+    </table>
+
+    <mat-paginator
+      [length]="totalItems()"
+      [pageSize]="pageSize()"
+      [pageIndex]="pageIndex()"
+      [pageSizeOptions]="[10, 20, 50]"
+      (page)="onPageChange($event)"
+      showFirstLastButtons>
+    </mat-paginator>
+  </div>
+</div>

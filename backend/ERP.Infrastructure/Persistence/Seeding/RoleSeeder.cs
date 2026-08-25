@@ -1,9 +1,11 @@
 namespace ERP.Infrastructure.Persistence.Seeding;
 
-using ERP.Domain.Identity.Roles;
-using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
+
+using ERP.Domain.Identity.Roles;
+
+using Microsoft.EntityFrameworkCore;
 
 public class RoleSeeder : ISeeder
 {

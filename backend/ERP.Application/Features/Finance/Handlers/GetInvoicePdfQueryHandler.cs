@@ -1,13 +1,13 @@
 namespace ERP.Application.Features.Finance.Handlers;
 
-using System.Linq;
 using global::ERP.Application.Abstractions.Repositories;
 using global::ERP.Application.Features.Finance.Queries;
 using global::ERP.Domain.Shared.Exceptions;
+
 using MediatR;
+
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
-using QuestPDF.Infrastructure;
 
 public sealed class GetInvoicePdfQueryHandler : IRequestHandler<GetInvoicePdfQuery, byte[]>
 {

@@ -1,9 +1,11 @@
 namespace ERP.Domain.Tests.Entities;
 
 using System;
+
 using ERP.Domain.Identity.Users;
 
 using FluentAssertions;
+
 using Xunit;
 
 public class RefreshTokenTests

@@ -1,0 +1,100 @@
+<div class="page-container">
+  <app-page-header
+    title="Create Manual Invoice"
+    [breadcrumbs]="[
+      { label: 'Finance' },
+      { label: 'Invoices', link: '/admin/invoices' },
+      { label: 'New' }
+    ]"
+  />
+
+  <mat-card class="form-card mat-elevation-z0">
+    <mat-card-content>
+      <form [formGroup]="invoiceForm" (ngSubmit)="onSubmit()" class="form-layout">
+        
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Customer</mat-label>
+            <mat-select formControlName="customerId">
+              @for (customer of availableCustomers(); track customer.id) {
+                <mat-option [value]="customer.id">{{ customer.name }}</mat-option>
+              }
+            </mat-select>
+            @if (invoiceForm.controls.customerId.hasError('required')) {
+              <mat-error>Customer is required</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Due Date</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="dueDate">
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            @if (invoiceForm.controls.dueDate.hasError('required')) {
+              <mat-error>Due date is required</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div class="lines-section">
+          <div class="lines-header">
+            <h3>Invoice Lines</h3>
+            <button mat-stroked-button color="primary" type="button" (click)="addLine()">
+              <mat-icon>add</mat-icon> Add Line
+            </button>
+          </div>
+
+          <div formArrayName="lines" class="lines-container">
+            @for (line of lines.controls; track i; let i = $index) {
+              <div [formGroupName]="i" class="line-row">
+                
+                <mat-form-field appearance="outline" class="desc-field">
+                  <mat-label>Description</mat-label>
+                  <input matInput formControlName="description" placeholder="Consulting Services">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="qty-field">
+                  <mat-label>Qty</mat-label>
+                  <input matInput type="number" formControlName="quantity" min="1">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="cost-field">
+                  <mat-label>Unit Price</mat-label>
+                  <span matTextPrefix>$&nbsp;</span>
+                  <input matInput type="number" formControlName="unitPrice" min="0" step="0.01">
+                </mat-form-field>
+                
+                <mat-form-field appearance="outline" class="tax-field">
+                  <mat-label>Tax Rate</mat-label>
+                  <span matTextSuffix>%</span>
+                  <input matInput type="number" formControlName="taxRate" min="0" max="100" step="1">
+                </mat-form-field>
+                
+                <div class="line-total">
+                  {{ calculateLineTotal(i) | currency }}
+                </div>
+
+                <button mat-icon-button color="warn" type="button" (click)="removeLine(i)" [disabled]="lines.length === 1">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            }
+          </div>
+          
+          <div class="order-total">
+            <strong>Total Amount:</strong>
+            <span>{{ calculateOrderTotal() | currency }}</span>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button mat-button type="button" (click)="router.navigate(['/admin/invoices'])">Cancel</button>
+          <button mat-flat-button color="primary" type="submit" [disabled]="invoiceForm.invalid || isSaving()">
+            {{ isSaving() ? 'Submitting...' : 'Create Invoice' }}
+          </button>
+        </div>
+        
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

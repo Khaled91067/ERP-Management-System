@@ -1,9 +1,9 @@
 namespace ERP.Domain.Identity.Users;
 
 using System;
-using ERP.Domain.Shared.Exceptions;
 
 using ERP.Domain.Shared.Base;
+using ERP.Domain.Shared.Exceptions;
 
 public class RefreshToken : BaseEntity
 {

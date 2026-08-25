@@ -1,0 +1,100 @@
+<div class="page-container">
+  <app-page-header
+    [title]="isEditMode() ? 'Edit Supplier' : 'New Supplier'"
+    [breadcrumbs]="[
+      { label: 'Purchasing' },
+      { label: 'Suppliers', link: '/admin/suppliers' },
+      { label: isEditMode() ? 'Edit' : 'New' }
+    ]"
+  />
+
+  <mat-card class="form-card mat-elevation-z0">
+    <mat-card-content>
+      <form [formGroup]="supplierForm" (ngSubmit)="onSubmit()" class="form-layout">
+        
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Company Name</mat-label>
+            <input matInput formControlName="name" placeholder="Global Logistics Corp">
+            @if (supplierForm.controls.name.hasError('required')) {
+              <mat-error>Name is required</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Contact Person</mat-label>
+            <input matInput formControlName="contactPerson" placeholder="Jane Doe">
+            @if (supplierForm.controls.contactPerson.hasError('required')) {
+              <mat-error>Contact person is required</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Email Address</mat-label>
+            <input matInput type="email" formControlName="email" placeholder="contact@supplier.com">
+            @if (supplierForm.controls.email.hasError('required')) {
+              <mat-error>Email is required</mat-error>
+            }
+            @if (supplierForm.controls.email.hasError('email')) {
+              <mat-error>Must be a valid email</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Phone</mat-label>
+            <input matInput formControlName="phone" placeholder="+1 (555) 019-2834">
+            @if (supplierForm.controls.phone.hasError('required')) {
+              <mat-error>Phone is required</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Tax / VAT ID</mat-label>
+            <input matInput formControlName="taxId" placeholder="TAX-998877">
+            @if (supplierForm.controls.taxId.hasError('required')) {
+              <mat-error>Tax ID is required</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Address</mat-label>
+          <textarea matInput formControlName="address" rows="2" placeholder="789 Industrial Pkwy"></textarea>
+          @if (supplierForm.controls.address.hasError('required')) {
+            <mat-error>Address is required</mat-error>
+          }
+        </mat-form-field>
+        
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>City</mat-label>
+            <input matInput formControlName="city" placeholder="Chicago">
+            @if (supplierForm.controls.city.hasError('required')) {
+              <mat-error>City is required</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Country</mat-label>
+            <input matInput formControlName="country" placeholder="USA">
+            @if (supplierForm.controls.country.hasError('required')) {
+              <mat-error>Country is required</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div class="form-actions">
+          <button mat-button type="button" (click)="router.navigate(['/admin/suppliers'])">Cancel</button>
+          <button mat-flat-button color="primary" type="submit" [disabled]="supplierForm.invalid || isSaving()">
+            {{ isSaving() ? 'Saving...' : 'Save Supplier' }}
+          </button>
+        </div>
+        
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

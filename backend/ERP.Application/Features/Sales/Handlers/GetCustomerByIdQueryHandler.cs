@@ -35,7 +35,7 @@ public sealed class GetCustomerByIdQueryHandler : IRequestHandler<GetCustomerByI
             cacheKey,
             async (ct) =>
             {
-                var customer = await _customerRepository.GetByIdAsync(request.Id);
+                var customer = await _customerRepository.GetByIdAsync(request.Id, ct);
                 if (customer is null)
                     return null;
 

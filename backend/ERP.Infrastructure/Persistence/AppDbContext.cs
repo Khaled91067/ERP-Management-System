@@ -15,8 +15,7 @@ namespace ERP.Infrastructure.Persistence
     using ERP.Domain.Sales.Customers;
     using ERP.Domain.Sales.Invoices;
     using ERP.Domain.Sales.Orders;
-    using ERP.Domain.Shared.Base;
-using ERP.Domain.Shared.Abstractions;
+    using ERP.Domain.Shared.Abstractions;
 
     using Microsoft.EntityFrameworkCore;
 

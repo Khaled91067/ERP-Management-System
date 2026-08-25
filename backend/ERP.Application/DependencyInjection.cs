@@ -1,12 +1,11 @@
 
 namespace ERP.Application;
 
+using FluentValidation;
+
 using global::ERP.Application.Abstractions.Messaging;
 using global::ERP.Application.Behaviors;
 using global::ERP.Application.Messaging;
-
-using FluentValidation;
-
 using global::Microsoft.Extensions.DependencyInjection;
 
 public static class DependencyInjection

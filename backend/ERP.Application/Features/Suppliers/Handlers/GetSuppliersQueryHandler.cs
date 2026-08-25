@@ -26,7 +26,7 @@ public sealed class GetSuppliersQueryHandler : IRequestHandler<GetSuppliersQuery
 
     public async Task<PagedResult<SupplierDto>> Handle(GetSuppliersQuery request, CancellationToken cancellationToken)
     {
-        var searchPart = !string.IsNullOrWhiteSpace(request.Search) ? request.Search.Trim().ToLower() : "none";
+        var searchPart = !string.IsNullOrWhiteSpace(request.Search) ? request.Search.Trim() : "none";
         var cacheKey = global::ERP.Application.Common.Caching.CacheKeys.Purchasing.SuppliersList(searchPart, request.Page, request.PageSize);
         var expiration = TimeSpan.FromMinutes(_cacheSettings.Value.PaginatedListExpirationMinutes);
 
@@ -34,18 +34,22 @@ public sealed class GetSuppliersQueryHandler : IRequestHandler<GetSuppliersQuery
             cacheKey,
             async (ct) =>
             {
-                var options = new QueryOptions<Supplier>();
+                var options = new QueryOptions<Supplier> 
+                { 
+                    AsNoTracking = true,
+                    OrderBy = q => System.Linq.Queryable.OrderBy(q, s => s.CompanyName)
+                };
 
                 if (!string.IsNullOrWhiteSpace(request.Search))
                 {
-                    var term = request.Search.Trim().ToLower();
-                    options.Filter = s =>
-                        s.CompanyName.ToLower().Contains(term) ||
-                        s.ContactName.ToLower().Contains(term) ||
-                        s.Email.Value.ToLower().Contains(term);
+                    var term = request.Search.Trim();
+                    options.Filters.Add(s =>
+                        s.CompanyName.Contains(term) ||
+                        s.ContactName.Contains(term) ||
+                        s.Email.Value.Contains(term));
                 }
 
-                var pagedSuppliers = await _supplierRepository.GetPagedAsync(options, request.Page, request.PageSize);
+                var pagedSuppliers = await _supplierRepository.GetPagedAsync(options, request.Page, request.PageSize, ct);
 
                 return pagedSuppliers.Map(s => new SupplierDto(
                     s.Id,

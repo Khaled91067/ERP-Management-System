@@ -31,7 +31,7 @@ public sealed class CreateInvoiceCommandHandler : IRequestHandler<CreateInvoiceC
 
     public async Task<int> Handle(CreateInvoiceCommand request, CancellationToken cancellationToken)
     {
-        var customer = await _customerRepository.GetByIdAsync(request.CustomerId);
+        var customer = await _customerRepository.GetByIdAsync(request.CustomerId, cancellationToken);
         if (customer is null)
             throw new NotFoundException("Customer", request.CustomerId);
 

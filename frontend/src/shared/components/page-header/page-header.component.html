@@ -1,0 +1,43 @@
+<div class="page-header">
+  @if (breadcrumbs().length > 0) {
+    <nav class="page-header__breadcrumbs" aria-label="Breadcrumb">
+      @for (crumb of breadcrumbs(); track crumb.label; let last = $last) {
+        @if (crumb.link && !last) {
+          <a [routerLink]="crumb.link" class="page-header__crumb page-header__crumb--link">
+            {{ crumb.label }}
+          </a>
+        } @else {
+          <span class="page-header__crumb" [class.page-header__crumb--active]="last">
+            {{ crumb.label }}
+          </span>
+        }
+        @if (!last) {
+          <span class="page-header__separator" aria-hidden="true">/</span>
+        }
+      }
+    </nav>
+  }
+
+  <div class="page-header__main">
+    <div class="page-header__text">
+      <h1 class="page-header__title">{{ title() }}</h1>
+      @if (description()) {
+        <p class="page-header__description">{{ description() }}</p>
+      }
+    </div>
+
+    @if (actionLabel()) {
+      <button
+        mat-flat-button
+        color="primary"
+        class="page-header__action"
+        (click)="action.emit()"
+      >
+        @if (actionIcon()) {
+          <mat-icon>{{ actionIcon() }}</mat-icon>
+        }
+        {{ actionLabel() }}
+      </button>
+    }
+  </div>
+</div>

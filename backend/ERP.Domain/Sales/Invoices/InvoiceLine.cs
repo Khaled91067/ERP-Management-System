@@ -1,7 +1,6 @@
 namespace ERP.Domain.Sales.Invoices;
-using ERP.Domain.Shared.Base;
-using ERP.Domain.Shared.Abstractions;
 
+using ERP.Domain.Shared.Base;
 using ERP.Domain.Shared.Exceptions;
 using ERP.Domain.Shared.ValueObjects;
 

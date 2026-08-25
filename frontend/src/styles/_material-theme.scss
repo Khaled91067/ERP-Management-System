@@ -3,7 +3,6 @@
 // ---------------------------------------------------------
 // Uses Angular Material M3 theming with a custom color palette
 // that matches the existing ERP design tokens (CSS variables).
-// Dark mode is handled via [data-theme="dark"] attribute on <html>.
 // ---------------------------------------------------------
 
 @use '@angular/material' as mat;
@@ -24,28 +23,8 @@ $erp-light-theme: mat.define-theme((
   ),
 ));
 
-// --- Dark theme definition ---
-$erp-dark-theme: mat.define-theme((
-  color: (
-    theme-type: dark,
-    primary: mat.$blue-palette,
-    tertiary: mat.$violet-palette,
-  ),
-  typography: (
-    brand-family: 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-    plain-family: 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-  ),
-  density: (
-    scale: 0,
-  ),
-));
-
 // --- Apply light theme by default ---
 html {
   @include mat.all-component-themes($erp-light-theme);
 }
 
-// --- Apply dark theme when data-theme="dark" ---
-html[data-theme="dark"] {
-  @include mat.all-component-colors($erp-dark-theme);
-}

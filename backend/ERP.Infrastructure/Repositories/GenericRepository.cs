@@ -29,9 +29,14 @@ namespace ERP.Infrastructure.Repositories
             _dbSet.Remove(entity);
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync(QueryOptions<T>? options = null)
+        public async Task<IEnumerable<T>> GetAllAsync(QueryOptions<T>? options = null, CancellationToken cancellationToken = default)
         {
             IQueryable<T> query = _dbSet;
+
+            if (options?.AsNoTracking == true)
+            {
+                query = query.AsNoTracking();
+            }
 
             if(options != null)
             {
@@ -40,10 +45,9 @@ namespace ERP.Infrastructure.Repositories
                     query = query.IgnoreQueryFilters();
                 }
 
-                if(options.Filter != null)
+                foreach (var filter in options.Filters)
                 {
-                    query = query.Where(options.Filter);
-
+                    query = query.Where(filter);
                 }
                
                 foreach (var include in options.Includes)
@@ -51,14 +55,23 @@ namespace ERP.Infrastructure.Repositories
                     query = query.Include(include);
                 }
 
+                if (options.OrderBy != null)
+                {
+                    query = options.OrderBy(query);
+                }
             }
 
-            return await query.ToListAsync();
+            return await query.ToListAsync(cancellationToken);
         }
 
-        public async Task<ERP.Application.Common.Models.PagedResult<T>> GetPagedAsync(QueryOptions<T>? options = null, int page = 1, int pageSize = 20)
+        public async Task<ERP.Application.Common.Models.PagedResult<T>> GetPagedAsync(QueryOptions<T>? options = null, int page = 1, int pageSize = 20, CancellationToken cancellationToken = default)
         {
             IQueryable<T> query = _dbSet;
+
+            if (options?.AsNoTracking == true)
+            {
+                query = query.AsNoTracking();
+            }
 
             if (options != null)
             {
@@ -67,29 +80,40 @@ namespace ERP.Infrastructure.Repositories
                     query = query.IgnoreQueryFilters();
                 }
 
-                if (options.Filter != null)
+                foreach (var filter in options.Filters)
                 {
-                    query = query.Where(options.Filter);
+                    query = query.Where(filter);
                 }
 
                 foreach (var include in options.Includes)
                 {
                     query = query.Include(include);
                 }
+
+                if (options.OrderBy != null)
+                {
+                    query = options.OrderBy(query);
+                }
+            }
+            if (options?.OrderBy == null)
+            {
+                throw new InvalidOperationException(
+                    "Paged queries require an OrderBy clause.");
             }
 
-            var totalCount = await query.CountAsync();
+            query = options.OrderBy(query);
+            var totalCount = await query.CountAsync(cancellationToken);
             var items = await query
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             return new ERP.Application.Common.Models.PagedResult<T>(items, totalCount, page, pageSize);
         }
 
-        public async Task<T?> GetByIdAsync(int id)
+        public async Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
-            return await _dbSet.FindAsync(id);
+            return await _dbSet.FindAsync(new object[] { id }, cancellationToken);
         }
 
         public void Update(T entity)

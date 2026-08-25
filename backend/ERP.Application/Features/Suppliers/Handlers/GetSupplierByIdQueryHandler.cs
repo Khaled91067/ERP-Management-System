@@ -32,7 +32,7 @@ public sealed class GetSupplierByIdQueryHandler : IRequestHandler<GetSupplierByI
             cacheKey,
             async (ct) =>
             {
-                var supplier = await _supplierRepository.GetByIdAsync(request.Id);
+                var supplier = await _supplierRepository.GetByIdAsync(request.Id, ct);
 
                 if (supplier is null)
                     return null;

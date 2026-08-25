@@ -31,7 +31,7 @@ public sealed class PurchaseOrderReceivedDomainEventHandler: IDomainEventHandler
         foreach (var line in purchaseOrder.PurchaseOrderLines)
         {
             var product =
-                await _productRepository.GetByIdAsync(line.ProductId);
+                await _productRepository.GetByIdAsync(line.ProductId, cancellationToken);
 
             if (product is null)
                 throw new InvalidOperationException(

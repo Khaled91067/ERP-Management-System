@@ -28,7 +28,7 @@ public sealed class GetDepartmentsQueryHandler : IRequestHandler<GetDepartmentsQ
 
     public async Task<PagedResult<DepartmentDto>> Handle(GetDepartmentsQuery request, CancellationToken cancellationToken)
     {
-        var searchPart = !string.IsNullOrWhiteSpace(request.Search) ? request.Search.Trim().ToLower() : "none";
+        var searchPart = !string.IsNullOrWhiteSpace(request.Search) ? request.Search.Trim() : "none";
         var cacheKey = $"HR:Departments:Search={searchPart}:Page={request.Page}:Size={request.PageSize}";
         var expiration = TimeSpan.FromMinutes(_cacheSettings.Value.ReferenceDataExpirationMinutes);
 
@@ -38,6 +38,8 @@ public sealed class GetDepartmentsQueryHandler : IRequestHandler<GetDepartmentsQ
             {
                 var options = new QueryOptions<Department>
                 {
+                    AsNoTracking = true,
+                    OrderBy = q => System.Linq.Queryable.OrderBy(q, d => d.Name),
                     Includes = new List<System.Linq.Expressions.Expression<System.Func<Department, object>>>
                     {
                         d => d.Employees
@@ -46,11 +48,11 @@ public sealed class GetDepartmentsQueryHandler : IRequestHandler<GetDepartmentsQ
 
                 if (!string.IsNullOrWhiteSpace(request.Search))
                 {
-                    var search = request.Search.Trim().ToLower();
-                    options.Filter = d => d.Name.ToLower().Contains(search);
+                    var search = request.Search.Trim();
+                    options.Filters.Add(d => d.Name.Contains(search));
                 }
 
-                var pagedDepartments = await _departmentRepository.GetPagedAsync(options, request.Page, request.PageSize);
+                var pagedDepartments = await _departmentRepository.GetPagedAsync(options, request.Page, request.PageSize, ct);
 
                 return pagedDepartments.Map(d => new DepartmentDto(
                     d.Id,

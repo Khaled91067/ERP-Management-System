@@ -1,8 +1,6 @@
 
 namespace ERP.Infrastructure.Persistence.Configurations
 {
-    using System;
-
     using ERP.Domain.Sales.Orders;
     using ERP.Domain.Shared.ValueObjects;
 

@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using global::ERP.Application.Abstractions;
 using global::ERP.Application.Abstractions.Repositories;
 using global::ERP.Application.Features.Finance.Commands;
-using global::ERP.Domain.Sales.Invoices;
 
 using MediatR;
 
@@ -29,7 +28,7 @@ public sealed class DeleteInvoiceCommandHandler : IRequestHandler<DeleteInvoiceC
 
     public async Task<bool> Handle(DeleteInvoiceCommand request, CancellationToken cancellationToken)
     {
-        var invoice = await _invoiceRepository.GetByIdAsync(request.InvoiceId);
+        var invoice = await _invoiceRepository.GetByIdAsync(request.InvoiceId, cancellationToken);
         if (invoice is null)
             return false;
 

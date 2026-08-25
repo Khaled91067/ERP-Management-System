@@ -1,6 +1,7 @@
 namespace ERP.Domain.Sales.Customers;
 
 using System.Collections.Generic;
+
 using ERP.Domain.Sales.Invoices;
 using ERP.Domain.Sales.Orders;
 using ERP.Domain.Shared.Base;

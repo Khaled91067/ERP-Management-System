@@ -1,8 +1,6 @@
 
 namespace ERP.Infrastructure.Persistence.Configurations
 {
-    using System;
-
     using ERP.Domain.Purchasing.Suppliers;
     using ERP.Domain.Shared.ValueObjects;
 
