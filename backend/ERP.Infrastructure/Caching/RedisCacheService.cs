@@ -101,7 +101,7 @@ public class RedisCacheService : ICacheService
         }
     }
 
-    public async Task<T?> GetOrCreateAsync<T>(string key, Func<CancellationToken, Task<T?>> factory, TimeSpan? expiration = null, bool cacheNullValue = false, CancellationToken cancellationToken = default)
+    public async Task<T> GetOrCreateAsync<T>(string key, Func<CancellationToken, Task<T>> factory, TimeSpan? expiration = null, bool cacheNullValue = false, CancellationToken cancellationToken = default)
     {
         var cachedResult = await GetAsync<T>(key, cancellationToken);
         if (cachedResult is not null)

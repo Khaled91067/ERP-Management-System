@@ -9,7 +9,7 @@ namespace ERP.Application.Abstractions.Repositories
     {
         public List<Expression<Func<T, bool>>> Filters { get; set; } = new();
 
-        public List<Expression<Func<T, object>>> Includes { get; set; } = new();
+        public List<Expression<Func<T, object?>>> Includes { get; set; } = new();
 
         public int? Skip { get; set; }
 

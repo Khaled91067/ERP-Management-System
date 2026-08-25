@@ -42,12 +42,9 @@ public sealed class GetDepartmentsQueryHandler : IRequestHandler<GetDepartmentsQ
                 var options = new QueryOptions<Department>
                 {
                     AsNoTracking = true,
-                    OrderBy = q => System.Linq.Queryable.OrderBy(q, d => d.Name),
-                    Includes = new List<System.Linq.Expressions.Expression<System.Func<Department, object>>>
-                    {
-                        d => d.Employees
-                    }
+                    OrderBy = q => System.Linq.Queryable.OrderBy(q, d => d.Name)
                 };
+                options.Includes.Add(d => d.Employees);
 
                 if (!string.IsNullOrWhiteSpace(request.Search))
                 {
