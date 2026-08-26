@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  apiUrl: 'https://localhost:7245/api',
+  apiUrl: 'http://localhost:8080/api',
   appName: 'ERP Management System (Dev)',
   defaultLanguage: 'en'
 };
