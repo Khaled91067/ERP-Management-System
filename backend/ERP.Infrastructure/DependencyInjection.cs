@@ -28,8 +28,13 @@ namespace ERP.Infrastructure
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<AppDbContext>(options => options
-                    .UseSqlServer(configuration
-                    .GetConnectionString("DefaultConnection")));
+                    .UseSqlServer(
+                        configuration.GetConnectionString("DefaultConnection"),
+                        sqlOptions => sqlOptions.EnableRetryOnFailure(
+                            maxRetryCount: 10,
+                            maxRetryDelay: TimeSpan.FromSeconds(5),
+                            errorNumbersToAdd: null
+                        )));
 
             var redisConnectionString = configuration.GetConnectionString("RedisConnection");
             if (!string.IsNullOrEmpty(redisConnectionString))

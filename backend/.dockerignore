@@ -1,0 +1,14 @@
+**/.git
+**/.github
+**/.vs
+**/.idea
+**/.vscode
+**/.editorconfig
+**/bin
+**/obj
+**/TestResults
+**/*.user
+**/*.suo
+**/*.userosscache
+**/*.sln.docstates
+**/build.log
