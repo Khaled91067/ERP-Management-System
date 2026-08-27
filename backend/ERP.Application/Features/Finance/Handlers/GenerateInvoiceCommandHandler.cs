@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using ERP.Application.Abstractions;
+using ERP.Application.Abstractions.Caching;
 using ERP.Application.Abstractions.Repositories;
 using ERP.Application.Features.Finance.Commands;
 using ERP.Domain.Sales.Invoices;
@@ -17,15 +18,18 @@ public sealed class GenerateInvoiceCommandHandler : IRequestHandler<GenerateInvo
     private readonly IInvoiceRepository _invoiceRepository;
     private readonly IOrderRepository _orderRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ICacheService _cacheService;
 
     public GenerateInvoiceCommandHandler(
         IInvoiceRepository invoiceRepository,
         IOrderRepository orderRepository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        ICacheService cacheService)
     {
         _invoiceRepository = invoiceRepository;
         _orderRepository = orderRepository;
         _unitOfWork = unitOfWork;
+        _cacheService = cacheService;
     }
 
     public async Task<int> Handle(GenerateInvoiceCommand request, CancellationToken cancellationToken)
@@ -36,6 +40,9 @@ public sealed class GenerateInvoiceCommandHandler : IRequestHandler<GenerateInvo
 
         if (order.Status == OrderStatus.Cancelled)
             throw new BusinessRuleValidationException("Cannot generate an invoice for a cancelled order.");
+
+        if (order.OrderLines.Count == 0)
+            throw new BusinessRuleValidationException("Cannot generate an invoice for an order with no items.");
 
         // Create the Invoice aggregate
         var invoice = new Invoice(
@@ -60,6 +67,8 @@ public sealed class GenerateInvoiceCommandHandler : IRequestHandler<GenerateInvo
 
         _invoiceRepository.Add(invoice);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        await _cacheService.RemoveByPrefixAsync("Finance:Invoices", cancellationToken);
 
         return invoice.Id;
     }
