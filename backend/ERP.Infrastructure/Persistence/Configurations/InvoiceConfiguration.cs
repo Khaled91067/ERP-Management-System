@@ -29,6 +29,7 @@ namespace ERP.Infrastructure.Persistence.Configurations
             builder.HasOne(i => i.Order)
                    .WithMany(o => o.Invoices)
                    .HasForeignKey(i => i.OrderId)
+                   .IsRequired(false)
                    .OnDelete(DeleteBehavior.NoAction);
 
 

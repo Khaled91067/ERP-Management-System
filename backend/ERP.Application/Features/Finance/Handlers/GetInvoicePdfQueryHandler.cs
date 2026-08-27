@@ -62,9 +62,9 @@ public sealed class GetInvoicePdfQueryHandler : IRequestHandler<GetInvoicePdfQue
                             c.Item().Text($"Date: {invoice.InvoiceDate:d}");
                             c.Item().Text($"Due Date: {invoice.DueDate:d}");
                             c.Item().Text($"Status: {invoice.Status}");
-                            if (invoice.OrderId > 0)
+                            if (invoice.OrderId.HasValue && invoice.OrderId.Value > 0)
                             {
-                                c.Item().Text($"Order Ref: ORD-{invoice.OrderId:D5}");
+                                c.Item().Text($"Order Ref: ORD-{invoice.OrderId.Value:D5}");
                             }
                         });
                     });

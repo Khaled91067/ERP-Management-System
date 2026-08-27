@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 public sealed record InvoiceDto(
     int Id,
-    int OrderId,
+    int? OrderId,
     int CustomerId,
     string CustomerName,
     DateTime InvoiceDate,

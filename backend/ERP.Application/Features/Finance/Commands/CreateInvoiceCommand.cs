@@ -6,7 +6,8 @@ using MediatR;
 public sealed record CreateInvoiceCommand(
     int CustomerId,
     DateTime DueDate,
-    List<CreateInvoiceLineCommand> Lines) : IRequest<int>;
+    List<CreateInvoiceLineCommand> Lines,
+    int? OrderId = null) : IRequest<int>;
 
 public sealed record CreateInvoiceLineCommand(
     string Description,

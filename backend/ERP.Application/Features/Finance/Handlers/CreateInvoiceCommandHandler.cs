@@ -38,9 +38,8 @@ public sealed class CreateInvoiceCommandHandler : IRequestHandler<CreateInvoiceC
         if (request.Lines is null || request.Lines.Count == 0)
             throw new BusinessRuleValidationException("Invoice must have at least one line item.");
 
-        // For manual invoices not linked to an order, we create a placeholder order reference
         var invoice = new Invoice(
-            orderId: 0,
+            orderId: request.OrderId,
             customerId: request.CustomerId,
             dueDate: request.DueDate);
 

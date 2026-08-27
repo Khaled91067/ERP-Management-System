@@ -62,7 +62,7 @@ namespace ERP.Infrastructure.Persistence.Migrations
                         .IsUnique()
                         .HasFilter("[IsDeleted] = 0");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("ERP.Domain.Catalog.Products.Product", b =>
@@ -129,7 +129,7 @@ namespace ERP.Infrastructure.Persistence.Migrations
                         .IsUnique()
                         .HasFilter("[IsDeleted] = 0");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("ERP.Domain.HR.Departments.Department", b =>
@@ -172,7 +172,7 @@ namespace ERP.Infrastructure.Persistence.Migrations
                         .IsUnique()
                         .HasFilter("[IsDeleted] = 0");
 
-                    b.ToTable("Departments", (string)null);
+                    b.ToTable("Departments");
                 });
 
             modelBuilder.Entity("ERP.Domain.HR.Employees.Employee", b =>
@@ -247,7 +247,7 @@ namespace ERP.Infrastructure.Persistence.Migrations
                         .IsUnique()
                         .HasFilter("[IsDeleted] = 0");
 
-                    b.ToTable("Employees", (string)null);
+                    b.ToTable("Employees");
                 });
 
             modelBuilder.Entity("ERP.Domain.Identity.Roles.Role", b =>
@@ -272,7 +272,7 @@ namespace ERP.Infrastructure.Persistence.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Roles", (string)null);
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("ERP.Domain.Identity.Users.RefreshToken", b =>
@@ -309,7 +309,7 @@ namespace ERP.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("RefreshTokens", (string)null);
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("ERP.Domain.Identity.Users.User", b =>
@@ -350,7 +350,7 @@ namespace ERP.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("ERP.Domain.Purchasing.PurchaseOrders.PurchaseOrder", b =>
@@ -404,7 +404,7 @@ namespace ERP.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("SupplierId");
 
-                    b.ToTable("PurchaseOrders", (string)null);
+                    b.ToTable("PurchaseOrders");
                 });
 
             modelBuilder.Entity("ERP.Domain.Purchasing.PurchaseOrders.PurchaseOrderLine", b =>
@@ -434,7 +434,7 @@ namespace ERP.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("PurchaseOrderId");
 
-                    b.ToTable("PurchaseOrderLines", (string)null);
+                    b.ToTable("PurchaseOrderLines");
                 });
 
             modelBuilder.Entity("ERP.Domain.Purchasing.Suppliers.Supplier", b =>
@@ -493,7 +493,7 @@ namespace ERP.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Suppliers", (string)null);
+                    b.ToTable("Suppliers");
                 });
 
             modelBuilder.Entity("ERP.Domain.Sales.Customers.Customer", b =>
@@ -562,7 +562,7 @@ namespace ERP.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customers", (string)null);
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("ERP.Domain.Sales.Invoices.Invoice", b =>
@@ -603,7 +603,7 @@ namespace ERP.Infrastructure.Persistence.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("OrderId")
+                    b.Property<int?>("OrderId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("PaidAt")
@@ -624,7 +624,7 @@ namespace ERP.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("Invoices", (string)null);
+                    b.ToTable("Invoices");
                 });
 
             modelBuilder.Entity("ERP.Domain.Sales.Invoices.InvoiceLine", b =>
@@ -658,7 +658,7 @@ namespace ERP.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("InvoiceId");
 
-                    b.ToTable("InvoiceLines", null, t =>
+                    b.ToTable("InvoiceLines", t =>
                         {
                             t.HasCheckConstraint("CK_InvoiceLines_TaxRate", "[TaxRate] >= 0 AND [TaxRate] <= 100");
                         });
@@ -720,7 +720,7 @@ namespace ERP.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("ERP.Domain.Sales.Orders.OrderLine", b =>
@@ -754,7 +754,7 @@ namespace ERP.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderLines", null, t =>
+                    b.ToTable("OrderLines", t =>
                         {
                             t.HasCheckConstraint("CK_OrderLines_DiscountPercentage", "[DiscountPercentage] >= 0 AND [DiscountPercentage] <= 100");
                         });
@@ -845,8 +845,7 @@ namespace ERP.Infrastructure.Persistence.Migrations
                     b.HasOne("ERP.Domain.Sales.Orders.Order", "Order")
                         .WithMany("Invoices")
                         .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Customer");
 

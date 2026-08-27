@@ -14,7 +14,7 @@ public class Invoice : AggregateRoot
 {
     private readonly List<InvoiceLine> _invoiceLines = [];
 
-    public int OrderId { get; private set; }
+    public int? OrderId { get; private set; }
     public int CustomerId { get; private set; }
     public DateTime InvoiceDate { get; private set; }
     public DateTime DueDate { get; private set; }
@@ -28,15 +28,15 @@ public class Invoice : AggregateRoot
 
     private Invoice() { }
 
-    public Invoice(int orderId, int customerId, DateTime dueDate)
+    public Invoice(int? orderId, int customerId, DateTime dueDate)
     {
-        if (orderId <= 0)
+        if (orderId.HasValue && orderId.Value <= 0)
             throw new BusinessRuleValidationException("Order ID must be valid.");
 
         if (customerId <= 0)
             throw new BusinessRuleValidationException("Customer ID must be valid.");
 
-        if (dueDate < DateTime.UtcNow.Date)
+        if (dueDate.Date < DateTime.UtcNow.Date)
             throw new BusinessRuleValidationException("Due date cannot be in the past.");
 
         OrderId = orderId;
@@ -45,6 +45,17 @@ public class Invoice : AggregateRoot
         DueDate = dueDate;
         Status = InvoiceStatus.Draft;
         TotalAmount = new Money(0);
+    }
+
+    public void UpdateDueDate(DateTime dueDate)
+    {
+        if (Status != InvoiceStatus.Draft)
+            throw new BusinessRuleValidationException("Only draft invoices can be updated.");
+
+        if (dueDate.Date < DateTime.UtcNow.Date)
+            throw new BusinessRuleValidationException("Due date cannot be in the past.");
+
+        DueDate = dueDate;
     }
 
     public void AddLine(string description, int quantity, decimal unitPrice, decimal taxRate = 0)
@@ -81,10 +92,30 @@ public class Invoice : AggregateRoot
         Status = InvoiceStatus.Sent;
     }
 
-    public void Pay()
+    public void MarkAsOverdue()
     {
         if (Status != InvoiceStatus.Sent)
-            throw new BusinessRuleValidationException("Only sent invoices can be marked as paid.");
+            throw new BusinessRuleValidationException("Only sent invoices can be marked as overdue.");
+
+        if (DueDate.Date >= DateTime.UtcNow.Date)
+            throw new BusinessRuleValidationException("Cannot mark invoice as overdue before its due date.");
+
+        Status = InvoiceStatus.Overdue;
+    }
+
+    public void Pay()
+    {
+        if (Status == InvoiceStatus.Draft)
+            throw new BusinessRuleValidationException("Draft invoices must be sent before they can be marked as paid.");
+
+        if (Status == InvoiceStatus.Paid)
+            throw new BusinessRuleValidationException("Invoice is already paid.");
+
+        if (Status == InvoiceStatus.Cancelled)
+            throw new BusinessRuleValidationException("Cancelled invoices cannot be paid.");
+
+        if (Status != InvoiceStatus.Sent && Status != InvoiceStatus.Overdue)
+            throw new BusinessRuleValidationException("Only sent or overdue invoices can be marked as paid.");
 
         Status = InvoiceStatus.Paid;
         PaidAt = DateTime.UtcNow;
