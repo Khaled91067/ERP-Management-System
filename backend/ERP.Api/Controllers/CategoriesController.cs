@@ -1,6 +1,8 @@
 
 namespace ERP.Api.Controllers;
 
+using ERP.Domain.Identity.Roles;
+
 using ERP.Application.Features.Catalog.Commands;
 using ERP.Application.Features.Catalog.Queries;
 
@@ -9,7 +11,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-[Authorize(Roles = "Administrator")]
+[Authorize(Roles = RoleConstants.Administrator + "," + RoleConstants.Warehouse)]
 [ApiController]
 [Route("api/categories")]
 public sealed class CategoriesController(ISender sender) : ControllerBase
@@ -52,3 +54,4 @@ public sealed class CategoriesController(ISender sender) : ControllerBase
 }
 
 public sealed record UpdateCategoryRequest(string Name);
+

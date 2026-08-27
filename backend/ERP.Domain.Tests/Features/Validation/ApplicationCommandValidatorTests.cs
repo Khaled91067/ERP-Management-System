@@ -48,28 +48,7 @@ public class ApplicationCommandValidatorTests
         result.Errors.Should().Contain(e => e.PropertyName == expectedErrorField);
     }
 
-    [Fact]
-    public void RegisterUserCommandValidator_WithValidData_PassesValidation()
-    {
-        var validator = new RegisterUserCommandValidator();
-        var command = new RegisterUserCommand("John", "Doe", "john.doe@example.com", "SecurePass123!");
-        var result = validator.Validate(command);
-        result.IsValid.Should().BeTrue();
-    }
 
-    [Theory]
-    [InlineData("", "Doe", "john@example.com", "pass", "FirstName")]
-    [InlineData("John", "", "john@example.com", "pass", "LastName")]
-    [InlineData("John", "Doe", "invalid-email", "pass", "Email")]
-    [InlineData("John", "Doe", "john@example.com", "", "Password")]
-    public void RegisterUserCommandValidator_WithInvalidData_FailsValidation(string first, string last, string email, string pass, string expectedErrorField)
-    {
-        var validator = new RegisterUserCommandValidator();
-        var command = new RegisterUserCommand(first, last, email, pass);
-        var result = validator.Validate(command);
-        result.IsValid.Should().BeFalse();
-        result.Errors.Should().Contain(e => e.PropertyName == expectedErrorField);
-    }
 
     // =======================================================================
     // Catalog

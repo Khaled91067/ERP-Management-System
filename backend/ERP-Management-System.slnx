@@ -2,6 +2,7 @@
   <Folder Name="/Tests/">
     <Project Path="ERP.Domain.Tests/ERP.Domain.Tests.csproj" />
   </Folder>
+  <Project Path="ERP.Api.Tests/ERP.Api.Tests.csproj" />
   <Project Path="ERP.Api/ERP.Api.csproj" />
   <Project Path="ERP.Application/ERP.Application.csproj" />
   <Project Path="ERP.Domain/ERP.Domain.csproj" />

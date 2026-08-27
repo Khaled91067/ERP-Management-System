@@ -1,6 +1,8 @@
 
 namespace ERP.Api.Controllers;
 
+using ERP.Domain.Identity.Roles;
+
 using ERP.Application.Features.PurchaseOrders.Commands;
 using ERP.Application.Features.PurchaseOrders.Queries;
 
@@ -9,7 +11,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-[Authorize]
+[Authorize(Roles = RoleConstants.Administrator + "," + RoleConstants.Purchasing)]
 [ApiController]
 [Route("api/purchase-orders")]
 public sealed class PurchaseOrdersController : ControllerBase

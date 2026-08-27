@@ -1,6 +1,8 @@
 
 namespace ERP.Api.Controllers;
 
+using ERP.Domain.Identity.Roles;
+
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,7 +14,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-[Authorize]
+[Authorize(Roles = RoleConstants.Administrator + "," + RoleConstants.HR)]
 [ApiController]
 [Route("api/employees")]
 public sealed class EmployeesController : ControllerBase
@@ -72,3 +74,4 @@ public sealed class EmployeesController : ControllerBase
         return result ? NoContent() : NotFound();
     }
 }
+

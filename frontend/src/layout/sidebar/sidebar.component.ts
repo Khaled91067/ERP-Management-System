@@ -4,6 +4,7 @@ import { Router, RouterLink, RouterLinkActive, NavigationEnd } from '@angular/ro
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { filter } from 'rxjs/operators';
+import { AuthService } from '../../core/auth/auth.service';
 import { NavGroup, NavItem } from '../models/nav.model';
 
 @Component({
@@ -84,6 +85,23 @@ export class SidebarComponent implements OnInit {
     }
   ];
 
+  private readonly authService = inject(AuthService);
+
+  get filteredNavGroups(): NavGroup[] {
+    const role = this.authService.userRole();
+    if (role === 'Administrator') return this.navGroups;
+
+    return this.navGroups.filter(g => {
+      if (g.name === 'Overview') return true;
+      if (g.name === 'Sales' && (role === 'Sales')) return true;
+      if (g.name === 'Inventory' && (role === 'Warehouse' || role === 'Sales' || role === 'Purchasing')) return true; // supporting read
+      if (g.name === 'Purchasing' && role === 'Purchasing') return true;
+      if (g.name === 'Finance' && role === 'Finance') return true;
+      if (g.name === 'HR' && role === 'HR') return true;
+      return false;
+    });
+  }
+
   ngOnInit(): void {
     this.autoExpandActiveGroup(this.router.url);
 
@@ -132,3 +150,4 @@ export class SidebarComponent implements OnInit {
     }
   }
 }
+

@@ -1,6 +1,8 @@
 
 namespace ERP.Api.Controllers;
 
+using ERP.Domain.Identity.Roles;
+
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,7 +14,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-[Authorize]
+[Authorize(Roles = RoleConstants.Administrator + "," + RoleConstants.Finance + "," + RoleConstants.Sales)]
 [ApiController]
 [Route("api/invoices")]
 public sealed class InvoicesController : ControllerBase
@@ -104,4 +106,5 @@ public sealed class InvoicesController : ControllerBase
         return File(pdfBytes, "application/pdf", $"invoice_{id}.pdf");
     }
 }
+
 

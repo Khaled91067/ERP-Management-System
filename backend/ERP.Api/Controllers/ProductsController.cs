@@ -1,6 +1,8 @@
 
 namespace ERP.Api.Controllers;
 
+using ERP.Domain.Identity.Roles;
+
 using ERP.Application.Features.Catalog.Commands;
 using ERP.Application.Features.Catalog.Queries;
 
@@ -9,7 +11,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-[Authorize(Roles = "Administrator")]
+[Authorize(Roles = RoleConstants.Administrator + "," + RoleConstants.Warehouse + "," + RoleConstants.Purchasing + "," + RoleConstants.Sales)]
 [ApiController]
 [Route("api/products")]
 public sealed class ProductsController(ISender sender) : ControllerBase
@@ -69,3 +71,4 @@ public sealed record UpdateProductRequest(
     int ReorderLevel);
 
 public sealed record AdjustStockRequest(int QuantityChange);
+

@@ -1,5 +1,8 @@
 [
-  { "Id": 1, "Name": "Administrator", "Permissions": "[\"Users.Read\",\"Users.Write\",\"Orders.Read\",\"Orders.Write\",\"Reports.Read\",\"Reports.Write\"]" },
-  { "Id": 2, "Name": "Sales Manager", "Permissions": "[\"Customers.Read\",\"Customers.Write\",\"Orders.Read\",\"Orders.Write\",\"Invoices.Read\"]" },
-  { "Id": 3, "Name": "Warehouse Clerk", "Permissions": "[\"Products.Read\",\"PurchaseOrders.Read\",\"PurchaseOrders.Write\",\"Inventory.Update\"]" }
+  { "Id": 1, "Name": "Administrator", "Permissions": "[]" },
+  { "Id": 2, "Name": "Sales", "Permissions": "[]" },
+  { "Id": 3, "Name": "Warehouse", "Permissions": "[]" },
+  { "Id": 4, "Name": "Purchasing", "Permissions": "[]" },
+  { "Id": 5, "Name": "Finance", "Permissions": "[]" },
+  { "Id": 6, "Name": "HR", "Permissions": "[]" }
 ]

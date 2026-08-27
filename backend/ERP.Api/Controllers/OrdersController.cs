@@ -1,6 +1,8 @@
 
 namespace ERP.Api.Controllers;
 
+using ERP.Domain.Identity.Roles;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +18,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-[Authorize]
+[Authorize(Roles = RoleConstants.Administrator + "," + RoleConstants.Sales)]
 [ApiController]
 [Route("api/orders")]
 public sealed class OrdersController : ControllerBase
@@ -106,3 +108,4 @@ public sealed record CreateOrderLineRequest(
     int Quantity,
     decimal UnitPrice,
     decimal DiscountPercentage = 0);
+

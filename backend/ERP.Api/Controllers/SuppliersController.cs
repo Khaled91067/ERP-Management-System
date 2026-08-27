@@ -1,6 +1,8 @@
 
 namespace ERP.Api.Controllers;
 
+using ERP.Domain.Identity.Roles;
+
 using ERP.Application.Features.Suppliers.Commands;
 using ERP.Application.Features.Suppliers.Queries;
 
@@ -9,7 +11,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-[Authorize]
+[Authorize(Roles = RoleConstants.Administrator + "," + RoleConstants.Purchasing)]
 [ApiController]
 [Route("api/suppliers")]
 public sealed class SuppliersController(ISender sender) : ControllerBase
@@ -53,3 +55,4 @@ public sealed class SuppliersController(ISender sender) : ControllerBase
         return success ? NoContent() : NotFound();
     }
 }
+

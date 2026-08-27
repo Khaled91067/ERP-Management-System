@@ -1,6 +1,8 @@
 
 namespace ERP.Api.Controllers;
 
+using ERP.Domain.Identity.Roles;
+
 using ERP.Application.Features.Identity.Commands;
 using ERP.Application.Features.Identity.Queries;
 
@@ -9,7 +11,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-[Authorize(Roles = "Administrator")]
+[Authorize(Roles = RoleConstants.Administrator)]
 [ApiController]
 [Route("api/admin/roles")]
 public sealed class AdminRolesController(ISender sender) : ControllerBase
@@ -52,3 +54,4 @@ public sealed class AdminRolesController(ISender sender) : ControllerBase
 }
 
 public sealed record UpdateRoleRequest(string Name, string Permissions);
+
