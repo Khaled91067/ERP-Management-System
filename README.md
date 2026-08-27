@@ -411,6 +411,16 @@ Defined in `docker-compose.yml` on the `erp-network` bridge network:
 
 ---
 
+## Demo Credentials
+
+The following Administrator account is available to log in after the automatic database seeding completes:
+
+| Role | Email | Password |
+|---|---|---|
+| Administrator | `admin@erpco.com` | `Admin123456` |
+
+---
+
 ## Development & Tooling
 
 - **Run Backend Tests:** `cd backend && dotnet test` (xUnit v3).
