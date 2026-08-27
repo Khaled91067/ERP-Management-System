@@ -33,12 +33,6 @@ public sealed class PayInvoiceCommandHandler : IRequestHandler<PayInvoiceCommand
         if (invoice is null)
             return false;
 
-        // If the invoice is still a Draft, transition it to Sent first so it can be paid
-        if (invoice.Status == InvoiceStatus.Draft)
-        {
-            invoice.Send();
-        }
-
         invoice.Pay();
 
         _invoiceRepository.Update(invoice);

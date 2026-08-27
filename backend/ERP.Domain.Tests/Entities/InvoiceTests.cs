@@ -32,6 +32,24 @@ public class InvoiceTests
         invoice.InvoiceDate.Should().BeCloseTo(DateTime.UtcNow, precision: TimeSpan.FromSeconds(5));
     }
 
+    [Fact]
+    public void Constructor_WithNullOrderId_SetsPropertiesCorrectly()
+    {
+        // Arrange
+        var dueDate = FutureDueDate;
+
+        // Act
+        var invoice = new Invoice(orderId: null, customerId: 2, dueDate);
+
+        // Assert
+        invoice.OrderId.Should().BeNull();
+        invoice.CustomerId.Should().Be(2);
+        invoice.DueDate.Should().Be(dueDate);
+        invoice.Status.Should().Be(InvoiceStatus.Draft);
+        invoice.TotalAmount.Amount.Should().Be(0);
+        invoice.InvoiceDate.Should().BeCloseTo(DateTime.UtcNow, precision: TimeSpan.FromSeconds(5));
+    }
+
     [Theory]
     [InlineData(0)]
     [InlineData(-1)]
@@ -64,6 +82,53 @@ public class InvoiceTests
 
         // Act
         var act = () => new Invoice(orderId: 1, customerId: 1, pastDate);
+
+        // Assert
+        act.Should().Throw<DomainException>().WithMessage("*Due date cannot be in the past*");
+    }
+
+    // -----------------------------------------------------------------------
+    // UpdateDueDate
+    // -----------------------------------------------------------------------
+
+    [Fact]
+    public void UpdateDueDate_WhenDraftAndFutureDate_UpdatesDueDate()
+    {
+        // Arrange
+        var invoice = new Invoice(1, 1, FutureDueDate);
+        var newDueDate = DateTime.UtcNow.Date.AddDays(45);
+
+        // Act
+        invoice.UpdateDueDate(newDueDate);
+
+        // Assert
+        invoice.DueDate.Should().Be(newDueDate);
+    }
+
+    [Fact]
+    public void UpdateDueDate_WhenNotDraft_ThrowsDomainException()
+    {
+        // Arrange
+        var invoice = new Invoice(1, 1, FutureDueDate);
+        invoice.AddLine(description: "Service A", quantity: 1, unitPrice: 50m);
+        invoice.Send();
+
+        // Act
+        var act = () => invoice.UpdateDueDate(FutureDueDate.AddDays(10));
+
+        // Assert
+        act.Should().Throw<DomainException>().WithMessage("*Only draft invoices can be updated*");
+    }
+
+    [Fact]
+    public void UpdateDueDate_WithPastDate_ThrowsDomainException()
+    {
+        // Arrange
+        var invoice = new Invoice(1, 1, FutureDueDate);
+        var pastDate = DateTime.UtcNow.Date.AddDays(-1);
+
+        // Act
+        var act = () => invoice.UpdateDueDate(pastDate);
 
         // Assert
         act.Should().Throw<DomainException>().WithMessage("*Due date cannot be in the past*");
@@ -200,16 +265,67 @@ public class InvoiceTests
     }
 
     [Fact]
-    public void Pay_WhenNotSent_ThrowsDomainException()
+    public void Pay_WhenOverdue_TransitionsToPaidAndSetsPaidAt()
+    {
+        // Arrange - use a due date of today so that DateTime.UtcNow.Date >= DueDate.Date isn't in future
+        var invoice = new Invoice(1, 1, DateTime.UtcNow.Date);
+        invoice.AddLine(description: "Service A", quantity: 1, unitPrice: 50m);
+        invoice.Send();
+        // Set to overdue
+        typeof(Invoice).GetProperty(nameof(Invoice.Status))!
+            .SetValue(invoice, InvoiceStatus.Overdue);
+
+        // Act
+        invoice.Pay();
+
+        // Assert
+        invoice.Status.Should().Be(InvoiceStatus.Paid);
+        invoice.PaidAt.Should().NotBeNull();
+        invoice.PaidAt.Should().BeCloseTo(DateTime.UtcNow, precision: TimeSpan.FromSeconds(5));
+    }
+
+    [Fact]
+    public void Pay_WhenDraft_ThrowsDomainException()
     {
         // Arrange
         var invoice = new Invoice(1, 1, FutureDueDate);
+        invoice.AddLine(description: "Service A", quantity: 1, unitPrice: 50m);
 
         // Act
         var act = () => invoice.Pay();
 
         // Assert
-        act.Should().Throw<DomainException>().WithMessage("*Only sent invoices can be marked as paid*");
+        act.Should().Throw<DomainException>().WithMessage("*Draft invoices must be sent before they can be marked as paid*");
+    }
+
+    [Fact]
+    public void Pay_WhenAlreadyPaid_ThrowsDomainException()
+    {
+        // Arrange
+        var invoice = new Invoice(1, 1, FutureDueDate);
+        invoice.AddLine(description: "Service A", quantity: 1, unitPrice: 50m);
+        invoice.Send();
+        invoice.Pay();
+
+        // Act
+        var act = () => invoice.Pay();
+
+        // Assert
+        act.Should().Throw<DomainException>().WithMessage("*Invoice is already paid*");
+    }
+
+    [Fact]
+    public void Pay_WhenCancelled_ThrowsDomainException()
+    {
+        // Arrange
+        var invoice = new Invoice(1, 1, FutureDueDate);
+        invoice.Cancel();
+
+        // Act
+        var act = () => invoice.Pay();
+
+        // Assert
+        act.Should().Throw<DomainException>().WithMessage("*Cancelled invoices cannot be paid*");
     }
 
     // -----------------------------------------------------------------------
