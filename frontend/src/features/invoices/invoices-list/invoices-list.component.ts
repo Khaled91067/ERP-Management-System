@@ -129,6 +129,16 @@ export class InvoicesListComponent implements OnInit {
     return new Date(invoice.dueDate) < new Date();
   }
 
+  sendInvoice(invoice: Invoice): void {
+    this.invoicesService.sendInvoice(invoice.id).subscribe({
+      next: () => {
+        this.notification.success('Invoice sent successfully');
+        this.loadInvoices();
+      },
+      error: () => this.notification.error('Failed to send invoice')
+    });
+  }
+
   payInvoice(invoice: Invoice): void {
     this.invoicesService.payInvoice(invoice.id).subscribe({
       next: () => {

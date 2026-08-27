@@ -53,6 +53,14 @@ public sealed class InvoicesController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id }, new { id });
     }
 
+    [HttpPut("{id:int}/send")]
+    public async Task<IActionResult> Send(int id, CancellationToken cancellationToken)
+    {
+        var command = new SendInvoiceCommand(id);
+        var result = await _sender.Send(command, cancellationToken);
+        return result ? NoContent() : NotFound();
+    }
+
     [HttpPut("{id:int}/pay")]
     public async Task<IActionResult> Pay(int id, PayInvoiceCommand command, CancellationToken cancellationToken)
     {

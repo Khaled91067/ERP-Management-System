@@ -27,6 +27,10 @@ export class InvoicesService {
     return this.apiService.create<GenerateInvoiceDto, number>(`${this.endpoint}/generate`, data);
   }
 
+  sendInvoice(id: number): Observable<void> {
+    return this.apiService.update<void, void>(this.endpoint, `${id}/send`, undefined as any);
+  }
+
   payInvoice(id: number): Observable<void> {
     return this.apiService.update<{ invoiceId: number }, void>(this.endpoint, `${id}/pay`, { invoiceId: id });
   }

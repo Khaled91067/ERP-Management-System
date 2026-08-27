@@ -86,10 +86,18 @@
             <mat-icon>more_vert</mat-icon>
           </button>
           <mat-menu #menu="matMenu">
-            <button mat-menu-item (click)="payInvoice(invoice)" [disabled]="invoice.status === 'Paid' || invoice.status === 'Cancelled'">
-              <mat-icon>payments</mat-icon>
-              <span>Mark as Paid</span>
-            </button>
+            @if (invoice.status === 'Draft') {
+              <button mat-menu-item (click)="sendInvoice(invoice)">
+                <mat-icon>send</mat-icon>
+                <span>Send Invoice</span>
+              </button>
+            }
+            @if (invoice.status === 'Sent' || invoice.status === 'Overdue') {
+              <button mat-menu-item (click)="payInvoice(invoice)">
+                <mat-icon>payments</mat-icon>
+                <span>Mark as Paid</span>
+              </button>
+            }
             <button mat-menu-item (click)="downloadPdf(invoice)">
               <mat-icon>picture_as_pdf</mat-icon>
               <span>Download PDF</span>
