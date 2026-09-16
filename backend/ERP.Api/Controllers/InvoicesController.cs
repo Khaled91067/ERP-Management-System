@@ -1,20 +1,17 @@
-
 namespace ERP.Api.Controllers;
-
-using ERP.Domain.Identity.Roles;
 
 using System.Threading;
 using System.Threading.Tasks;
 
 using ERP.Application.Features.Finance.Commands;
 using ERP.Application.Features.Finance.Queries;
+using ERP.Domain.Identity.Permissions;
+using ERP.Infrastructure.Authentication.Permissions;
 
 using MediatR;
 
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-[Authorize(Roles = RoleConstants.Administrator + "," + RoleConstants.Finance + "," + RoleConstants.Sales)]
 [ApiController]
 [Route("api/invoices")]
 public sealed class InvoicesController : ControllerBase
@@ -27,6 +24,7 @@ public sealed class InvoicesController : ControllerBase
     }
 
     [HttpGet]
+    [HasPermission(Permissions.Invoices.Read)]
     public async Task<IActionResult> GetAll(
         [FromQuery] int? customerId,
         [FromQuery] string? status,
@@ -41,6 +39,7 @@ public sealed class InvoicesController : ControllerBase
     }
 
     [HttpGet("{id:int}")]
+    [HasPermission(Permissions.Invoices.Read)]
     public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
     {
         var query = new GetInvoiceByIdQuery(id);
@@ -49,6 +48,7 @@ public sealed class InvoicesController : ControllerBase
     }
 
     [HttpPost("generate")]
+    [HasPermission(Permissions.Invoices.Write)]
     public async Task<IActionResult> Generate(GenerateInvoiceCommand command, CancellationToken cancellationToken)
     {
         var id = await _sender.Send(command, cancellationToken);
@@ -56,6 +56,7 @@ public sealed class InvoicesController : ControllerBase
     }
 
     [HttpPut("{id:int}/send")]
+    [HasPermission(Permissions.Invoices.Send)]
     public async Task<IActionResult> Send(int id, CancellationToken cancellationToken)
     {
         var command = new SendInvoiceCommand(id);
@@ -64,6 +65,7 @@ public sealed class InvoicesController : ControllerBase
     }
 
     [HttpPut("{id:int}/pay")]
+    [HasPermission(Permissions.Invoices.Pay)]
     public async Task<IActionResult> Pay(int id, PayInvoiceCommand command, CancellationToken cancellationToken)
     {
         if (id != command.InvoiceId)
@@ -74,6 +76,7 @@ public sealed class InvoicesController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [HasPermission(Permissions.Invoices.Write)]
     public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
     {
         var command = new DeleteInvoiceCommand(id);
@@ -82,6 +85,7 @@ public sealed class InvoicesController : ControllerBase
     }
 
     [HttpPost]
+    [HasPermission(Permissions.Invoices.Write)]
     public async Task<IActionResult> Create(CreateInvoiceCommand command, CancellationToken cancellationToken)
     {
         var id = await _sender.Send(command, cancellationToken);
@@ -89,6 +93,7 @@ public sealed class InvoicesController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    [HasPermission(Permissions.Invoices.Write)]
     public async Task<IActionResult> Update(int id, UpdateInvoiceCommand command, CancellationToken cancellationToken)
     {
         if (id != command.Id)
@@ -99,6 +104,7 @@ public sealed class InvoicesController : ControllerBase
     }
 
     [HttpGet("{id:int}/pdf")]
+    [HasPermission(Permissions.Invoices.Read)]
     public async Task<IActionResult> GetPdf(int id, CancellationToken cancellationToken)
     {
         var query = new GetInvoicePdfQuery(id);
@@ -106,5 +112,3 @@ public sealed class InvoicesController : ControllerBase
         return File(pdfBytes, "application/pdf", $"invoice_{id}.pdf");
     }
 }
-
-

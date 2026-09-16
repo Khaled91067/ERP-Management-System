@@ -18,10 +18,3 @@ export interface LoginCredentials {
   password: string;
   rememberMe?: boolean;
 }
-
-export interface RegisterData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-}

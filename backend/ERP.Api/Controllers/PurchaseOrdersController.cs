@@ -1,17 +1,14 @@
-
 namespace ERP.Api.Controllers;
-
-using ERP.Domain.Identity.Roles;
 
 using ERP.Application.Features.PurchaseOrders.Commands;
 using ERP.Application.Features.PurchaseOrders.Queries;
+using ERP.Domain.Identity.Permissions;
+using ERP.Infrastructure.Authentication.Permissions;
 
 using MediatR;
 
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-[Authorize(Roles = RoleConstants.Administrator + "," + RoleConstants.Purchasing)]
 [ApiController]
 [Route("api/purchase-orders")]
 public sealed class PurchaseOrdersController : ControllerBase
@@ -24,6 +21,7 @@ public sealed class PurchaseOrdersController : ControllerBase
     }
 
     [HttpGet]
+    [HasPermission(Permissions.PurchaseOrders.Read)]
     public async Task<IActionResult> GetAll(
         [FromQuery] int? supplierId,
         [FromQuery] string? status,
@@ -38,10 +36,10 @@ public sealed class PurchaseOrdersController : ControllerBase
     }
 
     [HttpGet("{id:int}")]
+    [HasPermission(Permissions.PurchaseOrders.Read)]
     public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
     {
         var query = new GetPurchaseOrderByIdQuery(id);
-
         var result = await _sender.Send(query, cancellationToken);
 
         if (result is null)
@@ -51,11 +49,10 @@ public sealed class PurchaseOrdersController : ControllerBase
     }
 
     [HttpPost]
+    [HasPermission(Permissions.PurchaseOrders.Write)]
     public async Task<IActionResult> Create(CreatePurchaseOrderCommand command, CancellationToken cancellationToken)
     {
-        var id = await _sender.Send(
-            command,
-            cancellationToken);
+        var id = await _sender.Send(command, cancellationToken);
 
         return CreatedAtAction(
             nameof(GetById),
@@ -64,6 +61,7 @@ public sealed class PurchaseOrdersController : ControllerBase
     }
 
     [HttpPatch("{id:int}/status")]
+    [HasPermission(Permissions.PurchaseOrders.Write)]
     public async Task<IActionResult> UpdateStatus(int id, UpdatePurchaseOrderStatusRequest request, CancellationToken cancellationToken)
     {
         var command = new UpdatePurchaseOrderStatusCommand(id, request.Status);

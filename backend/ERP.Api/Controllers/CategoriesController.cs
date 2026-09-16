@@ -1,22 +1,20 @@
-
 namespace ERP.Api.Controllers;
-
-using ERP.Domain.Identity.Roles;
 
 using ERP.Application.Features.Catalog.Commands;
 using ERP.Application.Features.Catalog.Queries;
+using ERP.Domain.Identity.Permissions;
+using ERP.Infrastructure.Authentication.Permissions;
 
 using MediatR;
 
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-[Authorize(Roles = RoleConstants.Administrator + "," + RoleConstants.Warehouse)]
 [ApiController]
 [Route("api/categories")]
 public sealed class CategoriesController(ISender sender) : ControllerBase
 {
     [HttpGet]
+    [HasPermission(Permissions.Categories.Read)]
     public async Task<IActionResult> GetAll(
         [FromQuery] string? search,
         [FromQuery] int page = 1,
@@ -25,6 +23,7 @@ public sealed class CategoriesController(ISender sender) : ControllerBase
         Ok(await sender.Send(new GetCategoriesQuery(search, page, pageSize), cancellationToken));
 
     [HttpGet("{id:int}")]
+    [HasPermission(Permissions.Categories.Read)]
     public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
     {
         var category = await sender.Send(new GetCategoryByIdQuery(id), cancellationToken);
@@ -32,6 +31,7 @@ public sealed class CategoriesController(ISender sender) : ControllerBase
     }
 
     [HttpPost]
+    [HasPermission(Permissions.Categories.Write)]
     public async Task<IActionResult> Create(CreateCategoryCommand command, CancellationToken cancellationToken)
     {
         var id = await sender.Send(command, cancellationToken);
@@ -39,6 +39,7 @@ public sealed class CategoriesController(ISender sender) : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    [HasPermission(Permissions.Categories.Write)]
     public async Task<IActionResult> Update(int id, UpdateCategoryRequest request, CancellationToken cancellationToken)
     {
         var updated = await sender.Send(new UpdateCategoryCommand(id, request.Name), cancellationToken);
@@ -46,6 +47,7 @@ public sealed class CategoriesController(ISender sender) : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [HasPermission(Permissions.Categories.Write)]
     public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
     {
         var deleted = await sender.Send(new DeleteCategoryCommand(id), cancellationToken);
@@ -54,4 +56,3 @@ public sealed class CategoriesController(ISender sender) : ControllerBase
 }
 
 public sealed record UpdateCategoryRequest(string Name);
-

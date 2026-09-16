@@ -1,20 +1,17 @@
-
 namespace ERP.Api.Controllers;
-
-using ERP.Domain.Identity.Roles;
 
 using System.Threading;
 using System.Threading.Tasks;
 
 using ERP.Application.Features.Sales.Commands;
 using ERP.Application.Features.Sales.Queries;
+using ERP.Domain.Identity.Permissions;
+using ERP.Infrastructure.Authentication.Permissions;
 
 using MediatR;
 
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-[Authorize(Roles = RoleConstants.Administrator + "," + RoleConstants.Sales + "," + RoleConstants.Finance)]
 [ApiController]
 [Route("api/customers")]
 public sealed class CustomersController : ControllerBase
@@ -27,6 +24,7 @@ public sealed class CustomersController : ControllerBase
     }
 
     [HttpGet]
+    [HasPermission(Permissions.Customers.Read)]
     public async Task<IActionResult> GetAll(
         [FromQuery] string? search,
         [FromQuery] string? searchTerm,
@@ -41,6 +39,7 @@ public sealed class CustomersController : ControllerBase
     }
 
     [HttpGet("{id:int}")]
+    [HasPermission(Permissions.Customers.Read)]
     public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
     {
         var query = new GetCustomerByIdQuery(id);
@@ -49,6 +48,7 @@ public sealed class CustomersController : ControllerBase
     }
 
     [HttpPost]
+    [HasPermission(Permissions.Customers.Write)]
     public async Task<IActionResult> Create(CreateCustomerCommand command, CancellationToken cancellationToken)
     {
         var id = await _sender.Send(command, cancellationToken);
@@ -56,6 +56,7 @@ public sealed class CustomersController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    [HasPermission(Permissions.Customers.Write)]
     public async Task<IActionResult> Update(int id, UpdateCustomerCommand command, CancellationToken cancellationToken)
     {
         if (id != command.Id)
@@ -66,6 +67,7 @@ public sealed class CustomersController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [HasPermission(Permissions.Customers.Write)]
     public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
     {
         var command = new DeleteCustomerCommand(id);
@@ -73,4 +75,3 @@ public sealed class CustomersController : ControllerBase
         return result ? NoContent() : NotFound();
     }
 }
-

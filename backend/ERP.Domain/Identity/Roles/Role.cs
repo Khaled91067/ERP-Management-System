@@ -32,4 +32,25 @@ public class Role : BaseEntity
         Name = name.Trim();
         Permissions = permissions?.Trim() ?? string.Empty;
     }
+
+    public IReadOnlyList<string> GetPermissions()
+    {
+        if (string.IsNullOrWhiteSpace(Permissions))
+            return [];
+
+        try
+        {
+            return System.Text.Json.JsonSerializer.Deserialize<List<string>>(Permissions) ?? [];
+        }
+        catch
+        {
+            return [];
+        }
+    }
+
+    public void SetPermissions(IEnumerable<string> permissions)
+    {
+        var list = permissions?.Distinct().ToList() ?? [];
+        Permissions = System.Text.Json.JsonSerializer.Serialize(list);
+    }
 }

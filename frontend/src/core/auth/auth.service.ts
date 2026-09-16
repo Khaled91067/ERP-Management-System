@@ -26,6 +26,7 @@ export class AuthService {
   readonly token = computed(() => this.state().token);
   readonly isAuthenticated = computed(() => this.state().isAuthenticated);
   readonly userRole = computed(() => this.state().user?.role ?? null);
+  readonly userPermissions = computed(() => this.state().user?.permissions ?? []);
 
   private loadSavedUser(): User | null {
     const saved = localStorage.getItem('erp_user');
@@ -63,8 +64,8 @@ export class AuthService {
 
       const rawRole = decoded.role 
         || decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] 
-        || 'VIEWER';
-      const role = typeof rawRole === 'string' ? rawRole : (Array.isArray(rawRole) ? rawRole[0] : 'VIEWER');
+        || '';
+      const role = typeof rawRole === 'string' ? rawRole : (Array.isArray(rawRole) ? rawRole[0] : '');
 
       const id = decoded.sub 
         || decoded.nameid 
@@ -78,13 +79,18 @@ export class AuthService {
         || decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname'] 
         || '';
 
+      const rawPerms = decoded.permission || decoded.permissions || [];
+      const permissions: string[] = Array.isArray(rawPerms) 
+        ? rawPerms 
+        : (typeof rawPerms === 'string' && rawPerms ? [rawPerms] : []);
+
       return {
         id,
         email,
         firstName,
         lastName,
         role: role as any,
-        permissions: decoded.permissions ? (Array.isArray(decoded.permissions) ? decoded.permissions : [decoded.permissions]) : [],
+        permissions,
         isActive: true
       };
     } catch {
@@ -101,21 +107,6 @@ export class AuthService {
           const user = response.user || this.extractUserFromToken(token, credentials['email']);
           if (user) {
             this.setSession(user, token);
-          }
-        })
-      );
-  }
-
-  register(userData: Record<string, string>): Observable<any> {
-    return this.apiService.create<Record<string, string>, any>('auth/register', userData)
-      .pipe(
-        tap(response => {
-          const token = response?.accessToken || response?.token;
-          if (token) {
-            const user = response?.user || this.extractUserFromToken(token, userData['email']);
-            if (user) {
-              this.setSession(user, token);
-            }
           }
         })
       );
@@ -149,5 +140,19 @@ export class AuthService {
   hasRole(role: string): boolean {
     const user = this.currentUser();
     return user ? user.role === role : false;
+  }
+
+  hasPermission(permission: string): boolean {
+    const user = this.currentUser();
+    if (!user) return false;
+    if (user.role === 'Administrator') return true;
+    return user.permissions?.includes(permission) ?? false;
+  }
+
+  hasAnyPermission(permissions: string[]): boolean {
+    const user = this.currentUser();
+    if (!user) return false;
+    if (user.role === 'Administrator') return true;
+    return permissions.some(p => user.permissions?.includes(p));
   }
 }

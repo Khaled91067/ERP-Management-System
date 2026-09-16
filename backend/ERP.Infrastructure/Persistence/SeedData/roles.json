@@ -1,8 +1,32 @@
 [
-  { "Id": 1, "Name": "Administrator", "Permissions": "[]" },
-  { "Id": 2, "Name": "Sales", "Permissions": "[]" },
-  { "Id": 3, "Name": "Warehouse", "Permissions": "[]" },
-  { "Id": 4, "Name": "Purchasing", "Permissions": "[]" },
-  { "Id": 5, "Name": "Finance", "Permissions": "[]" },
-  { "Id": 6, "Name": "HR", "Permissions": "[]" }
+  {
+    "Id": 1,
+    "Name": "Administrator",
+    "Permissions": "[\"Customers.Read\",\"Customers.Write\",\"Orders.Read\",\"Orders.Write\",\"Products.Read\",\"Products.Write\",\"Products.AdjustStock\",\"Categories.Read\",\"Categories.Write\",\"Suppliers.Read\",\"Suppliers.Write\",\"PurchaseOrders.Read\",\"PurchaseOrders.Write\",\"Invoices.Read\",\"Invoices.Write\",\"Invoices.Send\",\"Invoices.Pay\",\"Employees.Read\",\"Employees.Write\",\"Departments.Read\",\"Departments.Write\",\"Users.Read\",\"Users.Write\",\"Roles.Read\",\"Roles.Write\"]"
+  },
+  {
+    "Id": 2,
+    "Name": "Sales",
+    "Permissions": "[\"Customers.Read\",\"Customers.Write\",\"Orders.Read\",\"Orders.Write\",\"Products.Read\",\"Categories.Read\",\"Invoices.Read\"]"
+  },
+  {
+    "Id": 3,
+    "Name": "Warehouse",
+    "Permissions": "[\"Products.Read\",\"Products.Write\",\"Products.AdjustStock\",\"Categories.Read\",\"Categories.Write\"]"
+  },
+  {
+    "Id": 4,
+    "Name": "Purchasing",
+    "Permissions": "[\"Suppliers.Read\",\"Suppliers.Write\",\"PurchaseOrders.Read\",\"PurchaseOrders.Write\",\"Products.Read\",\"Categories.Read\"]"
+  },
+  {
+    "Id": 5,
+    "Name": "Finance",
+    "Permissions": "[\"Customers.Read\",\"Invoices.Read\",\"Invoices.Write\",\"Invoices.Send\",\"Invoices.Pay\"]"
+  },
+  {
+    "Id": 6,
+    "Name": "HR",
+    "Permissions": "[\"Employees.Read\",\"Employees.Write\",\"Departments.Read\",\"Departments.Write\"]"
+  }
 ]

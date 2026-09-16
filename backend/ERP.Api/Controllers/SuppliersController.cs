@@ -1,22 +1,20 @@
-
 namespace ERP.Api.Controllers;
-
-using ERP.Domain.Identity.Roles;
 
 using ERP.Application.Features.Suppliers.Commands;
 using ERP.Application.Features.Suppliers.Queries;
+using ERP.Domain.Identity.Permissions;
+using ERP.Infrastructure.Authentication.Permissions;
 
 using MediatR;
 
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-[Authorize(Roles = RoleConstants.Administrator + "," + RoleConstants.Purchasing)]
 [ApiController]
 [Route("api/suppliers")]
 public sealed class SuppliersController(ISender sender) : ControllerBase
 {
     [HttpGet]
+    [HasPermission(Permissions.Suppliers.Read)]
     public async Task<IActionResult> GetAll(
         [FromQuery] string? search,
         [FromQuery] int page = 1,
@@ -25,6 +23,7 @@ public sealed class SuppliersController(ISender sender) : ControllerBase
         Ok(await sender.Send(new GetSuppliersQuery(search, page, pageSize), cancellationToken));
 
     [HttpGet("{id:int}")]
+    [HasPermission(Permissions.Suppliers.Read)]
     public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
     {
         var result = await sender.Send(new GetSupplierByIdQuery(id), cancellationToken);
@@ -32,6 +31,7 @@ public sealed class SuppliersController(ISender sender) : ControllerBase
     }
 
     [HttpPost]
+    [HasPermission(Permissions.Suppliers.Write)]
     public async Task<IActionResult> Create(CreateSupplierCommand command, CancellationToken cancellationToken)
     {
         var id = await sender.Send(command, cancellationToken);
@@ -39,6 +39,7 @@ public sealed class SuppliersController(ISender sender) : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    [HasPermission(Permissions.Suppliers.Write)]
     public async Task<IActionResult> Update(int id, UpdateSupplierCommand command, CancellationToken cancellationToken)
     {
         if (id != command.Id)
@@ -49,10 +50,10 @@ public sealed class SuppliersController(ISender sender) : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [HasPermission(Permissions.Suppliers.Write)]
     public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
     {
         var success = await sender.Send(new DeleteSupplierCommand(id), cancellationToken);
         return success ? NoContent() : NotFound();
     }
 }
-

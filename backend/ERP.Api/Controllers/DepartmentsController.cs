@@ -1,20 +1,17 @@
-
 namespace ERP.Api.Controllers;
-
-using ERP.Domain.Identity.Roles;
 
 using System.Threading;
 using System.Threading.Tasks;
 
 using ERP.Application.Features.HR.Commands;
 using ERP.Application.Features.HR.Queries;
+using ERP.Domain.Identity.Permissions;
+using ERP.Infrastructure.Authentication.Permissions;
 
 using MediatR;
 
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-[Authorize(Roles = RoleConstants.Administrator + "," + RoleConstants.HR)]
 [ApiController]
 [Route("api/departments")]
 public sealed class DepartmentsController : ControllerBase
@@ -27,6 +24,7 @@ public sealed class DepartmentsController : ControllerBase
     }
 
     [HttpGet]
+    [HasPermission(Permissions.Departments.Read)]
     public async Task<IActionResult> GetAll(
         [FromQuery] string? search,
         [FromQuery] int page = 1,
@@ -39,6 +37,7 @@ public sealed class DepartmentsController : ControllerBase
     }
 
     [HttpPost]
+    [HasPermission(Permissions.Departments.Write)]
     public async Task<IActionResult> Create(CreateDepartmentCommand command, CancellationToken cancellationToken)
     {
         var id = await _sender.Send(command, cancellationToken);
@@ -46,6 +45,7 @@ public sealed class DepartmentsController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [HasPermission(Permissions.Departments.Write)]
     public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
     {
         var command = new DeleteDepartmentCommand(id);
@@ -53,4 +53,3 @@ public sealed class DepartmentsController : ControllerBase
         return result ? NoContent() : NotFound();
     }
 }
-

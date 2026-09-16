@@ -20,7 +20,8 @@ namespace ERP.Infrastructure.Repositories
         {
             return await _context.RefreshTokens
                 .Include(rt => rt.User)
-                .FirstOrDefaultAsync(rt => rt.Token == token,cancellationToken);
+                .ThenInclude(u => u.Role)
+                .FirstOrDefaultAsync(rt => rt.Token == token, cancellationToken);
         }
 
         public async Task AddAsync(RefreshToken refreshToken, CancellationToken cancellationToken)

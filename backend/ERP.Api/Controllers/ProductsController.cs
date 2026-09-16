@@ -1,22 +1,20 @@
-
 namespace ERP.Api.Controllers;
-
-using ERP.Domain.Identity.Roles;
 
 using ERP.Application.Features.Catalog.Commands;
 using ERP.Application.Features.Catalog.Queries;
+using ERP.Domain.Identity.Permissions;
+using ERP.Infrastructure.Authentication.Permissions;
 
 using MediatR;
 
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-[Authorize(Roles = RoleConstants.Administrator + "," + RoleConstants.Warehouse + "," + RoleConstants.Purchasing + "," + RoleConstants.Sales)]
 [ApiController]
 [Route("api/products")]
 public sealed class ProductsController(ISender sender) : ControllerBase
 {
     [HttpGet]
+    [HasPermission(Permissions.Products.Read)]
     public async Task<IActionResult> GetAll(
         [FromQuery] int? categoryId,
         [FromQuery] string? search,
@@ -26,6 +24,7 @@ public sealed class ProductsController(ISender sender) : ControllerBase
         Ok(await sender.Send(new GetProductsQuery(categoryId, search, page, pageSize), cancellationToken));
 
     [HttpGet("{id:int}")]
+    [HasPermission(Permissions.Products.Read)]
     public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
     {
         var product = await sender.Send(new GetProductByIdQuery(id), cancellationToken);
@@ -33,6 +32,7 @@ public sealed class ProductsController(ISender sender) : ControllerBase
     }
 
     [HttpPost]
+    [HasPermission(Permissions.Products.Write)]
     public async Task<IActionResult> Create(CreateProductCommand command, CancellationToken cancellationToken)
     {
         var id = await sender.Send(command, cancellationToken);
@@ -40,6 +40,7 @@ public sealed class ProductsController(ISender sender) : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    [HasPermission(Permissions.Products.Write)]
     public async Task<IActionResult> Update(int id, UpdateProductRequest request, CancellationToken cancellationToken)
     {
         var updated = await sender.Send(new UpdateProductCommand(id, request.Name, request.Sku, request.CategoryId,
@@ -48,6 +49,7 @@ public sealed class ProductsController(ISender sender) : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [HasPermission(Permissions.Products.Write)]
     public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
     {
         var deleted = await sender.Send(new DeleteProductCommand(id), cancellationToken);
@@ -55,6 +57,7 @@ public sealed class ProductsController(ISender sender) : ControllerBase
     }
 
     [HttpPatch("{id:int}/stock")]
+    [HasPermission(Permissions.Products.AdjustStock)]
     public async Task<IActionResult> AdjustStock(int id, [FromBody] AdjustStockRequest request, CancellationToken cancellationToken)
     {
         var result = await sender.Send(new AdjustStockCommand(id, request.QuantityChange), cancellationToken);
@@ -71,4 +74,3 @@ public sealed record UpdateProductRequest(
     int ReorderLevel);
 
 public sealed record AdjustStockRequest(int QuantityChange);
-

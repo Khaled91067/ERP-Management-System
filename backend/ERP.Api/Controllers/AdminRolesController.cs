@@ -1,22 +1,20 @@
-
 namespace ERP.Api.Controllers;
-
-using ERP.Domain.Identity.Roles;
 
 using ERP.Application.Features.Identity.Commands;
 using ERP.Application.Features.Identity.Queries;
+using ERP.Domain.Identity.Permissions;
+using ERP.Infrastructure.Authentication.Permissions;
 
 using MediatR;
 
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-[Authorize(Roles = RoleConstants.Administrator)]
 [ApiController]
 [Route("api/admin/roles")]
 public sealed class AdminRolesController(ISender sender) : ControllerBase
 {
     [HttpGet]
+    [HasPermission(Permissions.Roles.Read)]
     public async Task<IActionResult> GetAll(
         [FromQuery] string? search,
         [FromQuery] int page = 1,
@@ -25,6 +23,7 @@ public sealed class AdminRolesController(ISender sender) : ControllerBase
         Ok(await sender.Send(new GetRolesQuery(search, page, pageSize), cancellationToken));
 
     [HttpGet("{id:int}")]
+    [HasPermission(Permissions.Roles.Read)]
     public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
     {
         var role = await sender.Send(new GetRoleByIdQuery(id), cancellationToken);
@@ -32,6 +31,7 @@ public sealed class AdminRolesController(ISender sender) : ControllerBase
     }
 
     [HttpPost]
+    [HasPermission(Permissions.Roles.Write)]
     public async Task<IActionResult> Create(CreateRoleCommand command, CancellationToken cancellationToken)
     {
         var id = await sender.Send(command, cancellationToken);
@@ -39,6 +39,7 @@ public sealed class AdminRolesController(ISender sender) : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    [HasPermission(Permissions.Roles.Write)]
     public async Task<IActionResult> Update(int id, UpdateRoleRequest request, CancellationToken cancellationToken)
     {
         var updated = await sender.Send(new UpdateRoleCommand(id, request.Name, request.Permissions), cancellationToken);
@@ -46,6 +47,7 @@ public sealed class AdminRolesController(ISender sender) : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [HasPermission(Permissions.Roles.Write)]
     public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
     {
         var deleted = await sender.Send(new DeleteRoleCommand(id), cancellationToken);
@@ -54,4 +56,3 @@ public sealed class AdminRolesController(ISender sender) : ControllerBase
 }
 
 public sealed record UpdateRoleRequest(string Name, string Permissions);
-

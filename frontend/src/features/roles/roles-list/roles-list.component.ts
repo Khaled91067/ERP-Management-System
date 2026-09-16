@@ -42,7 +42,7 @@ export class RolesListComponent implements OnInit {
   private readonly dialog = inject(MatDialog);
   readonly router = inject(Router);
 
-  readonly columns = ['id', 'name', 'description', 'actions'];
+  readonly columns = ['id', 'name', 'permissions', 'actions'];
   readonly roles = signal<Role[]>([]);
   readonly totalItems = signal(0);
   readonly pageSize = signal(20);
@@ -50,6 +50,35 @@ export class RolesListComponent implements OnInit {
   readonly isLoading = signal(false);
 
   readonly searchControl = new FormControl('');
+  readonly maxVisiblePermissions = 3;
+
+  private static readonly PERMISSION_LABEL_MAP: Record<string, string> = {
+    'Customers.Read': 'Customers Read',
+    'Customers.Write': 'Customers Write',
+    'Orders.Read': 'Orders Read',
+    'Orders.Write': 'Orders Write',
+    'Products.Read': 'Products Read',
+    'Products.Write': 'Products Write',
+    'Products.AdjustStock': 'Products Adjust Stock',
+    'Categories.Read': 'Categories Read',
+    'Categories.Write': 'Categories Write',
+    'Suppliers.Read': 'Suppliers Read',
+    'Suppliers.Write': 'Suppliers Write',
+    'PurchaseOrders.Read': 'Purchase Orders Read',
+    'PurchaseOrders.Write': 'Purchase Orders Write',
+    'Invoices.Read': 'Invoices Read',
+    'Invoices.Write': 'Invoices Write',
+    'Invoices.Send': 'Invoices Send',
+    'Invoices.Pay': 'Invoices Pay',
+    'Employees.Read': 'Employees Read',
+    'Employees.Write': 'Employees Write',
+    'Departments.Read': 'Departments Read',
+    'Departments.Write': 'Departments Write',
+    'Users.Read': 'Users Read',
+    'Users.Write': 'Users Write',
+    'Roles.Read': 'Roles Read',
+    'Roles.Write': 'Roles Write'
+  };
 
   ngOnInit(): void {
     this.loadRoles();
@@ -80,6 +109,55 @@ export class RolesListComponent implements OnInit {
         this.isLoading.set(false);
       }
     });
+  }
+
+  getParsedPermissions(role: Role): string[] {
+    if (!role.permissions) return [];
+    try {
+      const parsed = typeof role.permissions === 'string'
+        ? JSON.parse(role.permissions)
+        : role.permissions;
+      return Array.isArray(parsed)
+        ? parsed.filter((p): p is string => typeof p === 'string' && p.trim().length > 0)
+        : [];
+    } catch {
+      return [];
+    }
+  }
+
+  isFullAccess(role: Role): boolean {
+    if (role.name?.trim().toLowerCase() === 'administrator') {
+      return true;
+    }
+    return this.getParsedPermissions(role).length >= 23;
+  }
+
+  formatPermissionLabel(permission: string): string {
+    if (!permission) return '';
+    if (RolesListComponent.PERMISSION_LABEL_MAP[permission]) {
+      return RolesListComponent.PERMISSION_LABEL_MAP[permission];
+    }
+    return permission
+      .split('.')
+      .map(part => part.replace(/([a-z])([A-Z])/g, '$1 $2'))
+      .join(' ');
+  }
+
+  getVisiblePermissions(role: Role): string[] {
+    const perms = this.getParsedPermissions(role);
+    return perms.slice(0, this.maxVisiblePermissions).map(p => this.formatPermissionLabel(p));
+  }
+
+  getHiddenPermissionsCount(role: Role): number {
+    const perms = this.getParsedPermissions(role);
+    return Math.max(0, perms.length - this.maxVisiblePermissions);
+  }
+
+  getHiddenPermissionsTooltip(role: Role): string {
+    const perms = this.getParsedPermissions(role);
+    if (perms.length <= this.maxVisiblePermissions) return '';
+    const hidden = perms.slice(this.maxVisiblePermissions).map(p => this.formatPermissionLabel(p));
+    return hidden.join(', ');
   }
 
   onPageChange(event: PageEvent): void {

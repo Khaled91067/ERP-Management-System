@@ -1,7 +1,4 @@
-
 namespace ERP.Api.Controllers;
-
-using ERP.Domain.Identity.Roles;
 
 using System;
 using System.Collections.Generic;
@@ -11,14 +8,14 @@ using System.Threading.Tasks;
 
 using ERP.Application.Features.Sales.Commands;
 using ERP.Application.Features.Sales.Queries;
+using ERP.Domain.Identity.Permissions;
 using ERP.Domain.Sales.Orders;
+using ERP.Infrastructure.Authentication.Permissions;
 
 using MediatR;
 
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-[Authorize(Roles = RoleConstants.Administrator + "," + RoleConstants.Sales)]
 [ApiController]
 [Route("api/orders")]
 public sealed class OrdersController : ControllerBase
@@ -31,6 +28,7 @@ public sealed class OrdersController : ControllerBase
     }
 
     [HttpGet]
+    [HasPermission(Permissions.Orders.Read)]
     public async Task<IActionResult> GetAll(
         [FromQuery] int? customerId,
         [FromQuery] string? status,
@@ -47,6 +45,7 @@ public sealed class OrdersController : ControllerBase
     }
 
     [HttpGet("{id:int}")]
+    [HasPermission(Permissions.Orders.Read)]
     public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
     {
         var query = new GetOrderByIdQuery(id);
@@ -55,6 +54,7 @@ public sealed class OrdersController : ControllerBase
     }
 
     [HttpPost]
+    [HasPermission(Permissions.Orders.Write)]
     public async Task<IActionResult> Create(CreateOrderRequest request, CancellationToken cancellationToken)
     {
         if (!Enum.TryParse<PaymentMethod>(request.PaymentMethod, true, out var paymentMethod))
@@ -79,6 +79,7 @@ public sealed class OrdersController : ControllerBase
     }
 
     [HttpPut("{id:int}/status")]
+    [HasPermission(Permissions.Orders.Write)]
     public async Task<IActionResult> UpdateStatus(int id, UpdateOrderStatusCommand command, CancellationToken cancellationToken)
     {
         if (id != command.OrderId)
@@ -89,6 +90,7 @@ public sealed class OrdersController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [HasPermission(Permissions.Orders.Write)]
     public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
     {
         var command = new DeleteOrderCommand(id);
@@ -108,4 +110,3 @@ public sealed record CreateOrderLineRequest(
     int Quantity,
     decimal UnitPrice,
     decimal DiscountPercentage = 0);
-

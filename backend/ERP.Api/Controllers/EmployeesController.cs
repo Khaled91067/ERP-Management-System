@@ -1,20 +1,17 @@
-
 namespace ERP.Api.Controllers;
-
-using ERP.Domain.Identity.Roles;
 
 using System.Threading;
 using System.Threading.Tasks;
 
 using ERP.Application.Features.HR.Commands;
 using ERP.Application.Features.HR.Queries;
+using ERP.Domain.Identity.Permissions;
+using ERP.Infrastructure.Authentication.Permissions;
 
 using MediatR;
 
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-[Authorize(Roles = RoleConstants.Administrator + "," + RoleConstants.HR)]
 [ApiController]
 [Route("api/employees")]
 public sealed class EmployeesController : ControllerBase
@@ -27,6 +24,7 @@ public sealed class EmployeesController : ControllerBase
     }
 
     [HttpGet]
+    [HasPermission(Permissions.Employees.Read)]
     public async Task<IActionResult> GetAll(
         [FromQuery] int? departmentId,
         [FromQuery] string? search,
@@ -42,6 +40,7 @@ public sealed class EmployeesController : ControllerBase
     }
 
     [HttpGet("{id:int}")]
+    [HasPermission(Permissions.Employees.Read)]
     public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
     {
         var query = new GetEmployeeByIdQuery(id);
@@ -50,6 +49,7 @@ public sealed class EmployeesController : ControllerBase
     }
 
     [HttpPost]
+    [HasPermission(Permissions.Employees.Write)]
     public async Task<IActionResult> Create(CreateEmployeeCommand command, CancellationToken cancellationToken)
     {
         var id = await _sender.Send(command, cancellationToken);
@@ -57,6 +57,7 @@ public sealed class EmployeesController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
+    [HasPermission(Permissions.Employees.Write)]
     public async Task<IActionResult> Update(int id, UpdateEmployeeCommand command, CancellationToken cancellationToken)
     {
         if (id != command.Id)
@@ -67,6 +68,7 @@ public sealed class EmployeesController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
+    [HasPermission(Permissions.Employees.Write)]
     public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
     {
         var command = new DeleteEmployeeCommand(id);
@@ -74,4 +76,3 @@ public sealed class EmployeesController : ControllerBase
         return result ? NoContent() : NotFound();
     }
 }
-

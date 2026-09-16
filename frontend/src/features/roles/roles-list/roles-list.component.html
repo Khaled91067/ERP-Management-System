@@ -18,18 +18,47 @@
     <table mat-table [dataSource]="roles()" class="full-width">
       
       <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef>ID</th>
-        <td mat-cell *matCellDef="let role">{{ role.id }}</td>
+        <th mat-header-cell *matHeaderCellDef class="id-column">ID</th>
+        <td mat-cell *matCellDef="let role" class="id-column">{{ role.id }}</td>
       </ng-container>
 
       <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef>Role Name</th>
-        <td mat-cell *matCellDef="let role" class="role-name">{{ role.name }}</td>
+        <th mat-header-cell *matHeaderCellDef class="name-column">Role Name</th>
+        <td mat-cell *matCellDef="let role" class="name-column role-name">
+          <span class="role-badge">{{ role.name }}</span>
+        </td>
       </ng-container>
 
-      <ng-container matColumnDef="description">
-        <th mat-header-cell *matHeaderCellDef>Description</th>
-        <td mat-cell *matCellDef="let role">{{ role.description || role.permissions || 'No description provided' }}</td>
+      <ng-container matColumnDef="permissions">
+        <th mat-header-cell *matHeaderCellDef class="permissions-header">Permissions</th>
+        <td mat-cell *matCellDef="let role" class="permissions-cell">
+          @if (isFullAccess(role)) {
+            <span class="full-access-badge">
+              <mat-icon class="badge-icon">star</mat-icon>
+              Full Access
+            </span>
+          } @else if (getParsedPermissions(role).length === 0) {
+            <span class="no-permissions-badge">
+              <mat-icon class="badge-icon">block</mat-icon>
+              No Permissions
+            </span>
+          } @else {
+            <div class="permissions-list">
+              @for (perm of getVisiblePermissions(role); track perm) {
+                <span class="permission-chip">{{ perm }}</span>
+              }
+              @if (getHiddenPermissionsCount(role) > 0) {
+                <span
+                  class="more-chip"
+                  [matTooltip]="getHiddenPermissionsTooltip(role)"
+                  matTooltipPosition="above"
+                  aria-label="Remaining permissions">
+                  +{{ getHiddenPermissionsCount(role) }} more
+                </span>
+              }
+            </div>
+          }
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="actions">
@@ -38,9 +67,11 @@
           <button mat-icon-button color="primary" [routerLink]="['/admin/roles', role.id, 'edit']" matTooltip="Edit Role" aria-label="Edit role">
             <mat-icon>edit</mat-icon>
           </button>
-          <button mat-icon-button color="warn" (click)="deleteRole(role)" matTooltip="Delete Role" aria-label="Delete role">
-            <mat-icon>delete</mat-icon>
-          </button>
+          @if (role.name !== 'Administrator') {
+            <button mat-icon-button color="warn" (click)="deleteRole(role)" matTooltip="Delete Role" aria-label="Delete role">
+              <mat-icon>delete</mat-icon>
+            </button>
+          }
         </td>
       </ng-container>
 

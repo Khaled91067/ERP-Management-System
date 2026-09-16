@@ -16,10 +16,13 @@ namespace ERP.Infrastructure
     using ERP.Infrastructure.Repositories;
 
     using Microsoft.AspNetCore.Authentication.JwtBearer;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.IdentityModel.Tokens;
+
+    using ERP.Infrastructure.Authentication.Permissions;
 
     using StackExchange.Redis;
 
@@ -39,7 +42,9 @@ namespace ERP.Infrastructure
             var redisConnectionString = configuration.GetConnectionString("RedisConnection");
             if (!string.IsNullOrEmpty(redisConnectionString))
             {
-                var multiplexer = ConnectionMultiplexer.Connect(redisConnectionString);
+                var redisOptions = ConfigurationOptions.Parse(redisConnectionString);
+                redisOptions.AbortOnConnectFail = false;
+                var multiplexer = ConnectionMultiplexer.Connect(redisOptions);
                 services.AddSingleton<IConnectionMultiplexer>(multiplexer);
             }
 
@@ -98,6 +103,8 @@ namespace ERP.Infrastructure
                 });
 
             services.AddAuthorization();
+            services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+            services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
 
 
 
