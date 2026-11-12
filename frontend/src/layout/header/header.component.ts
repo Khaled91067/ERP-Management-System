@@ -3,16 +3,19 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AuthService } from '@core/auth/auth.service';
+import { TranslationService } from '@core/i18n/translation.service';
+import { TranslatePipe } from '@shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [MatButtonModule, MatIconModule, MatTooltipModule],
+  imports: [MatButtonModule, MatIconModule, MatTooltipModule, TranslatePipe],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
   readonly authService = inject(AuthService);
+  readonly i18n = inject(TranslationService);
 
   readonly toggleSidebar = output<void>();
 
@@ -20,5 +23,9 @@ export class HeaderComponent {
     const first = user.firstName ? user.firstName.charAt(0).toUpperCase() : '';
     const last = user.lastName ? user.lastName.charAt(0).toUpperCase() : '';
     return first + last || 'U';
+  }
+
+  toggleLanguage(): void {
+    this.i18n.toggleLanguage();
   }
 }

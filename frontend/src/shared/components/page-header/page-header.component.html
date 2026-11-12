@@ -4,11 +4,11 @@
       @for (crumb of breadcrumbs(); track crumb.label; let last = $last) {
         @if (crumb.link && !last) {
           <a [routerLink]="crumb.link" class="page-header__crumb page-header__crumb--link">
-            {{ crumb.label }}
+            {{ translateCrumb(crumb.label) }}
           </a>
         } @else {
           <span class="page-header__crumb" [class.page-header__crumb--active]="last">
-            {{ crumb.label }}
+            {{ translateCrumb(crumb.label) }}
           </span>
         }
         @if (!last) {

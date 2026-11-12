@@ -1,7 +1,8 @@
-<mat-sidenav-container class="layout-wrapper" [hasBackdrop]="true">
+<mat-sidenav-container class="layout-wrapper" [dir]="i18n.dir()" [hasBackdrop]="true">
   <mat-sidenav 
     #sidenav 
     mode="over" 
+    position="start"
     [opened]="isMobile() && mobileSidenavOpen()" 
     class="mobile-sidenav"
     (closedStart)="onSidenavClosed()">

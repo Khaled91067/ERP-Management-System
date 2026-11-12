@@ -1,7 +1,9 @@
 import { Component, signal, ViewChild, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MatSidenavModule, MatSidenav } from '@angular/material/sidenav';
+import { BidiModule } from '@angular/cdk/bidi';
 import { BreakpointObserver } from '@angular/cdk/layout';
+import { TranslationService } from '@core/i18n/translation.service';
 import { HeaderComponent } from '../header/header.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { FooterComponent } from '../footer/footer.component';
@@ -9,13 +11,14 @@ import { FooterComponent } from '../footer/footer.component';
 @Component({
   selector: 'app-admin-layout',
   standalone: true,
-  imports: [RouterOutlet, MatSidenavModule, HeaderComponent, SidebarComponent, FooterComponent],
+  imports: [RouterOutlet, MatSidenavModule, BidiModule, HeaderComponent, SidebarComponent, FooterComponent],
   templateUrl: './admin-layout.component.html',
   styleUrl: './admin-layout.component.scss'
 })
 export class AdminLayoutComponent implements OnInit {
   private readonly breakpointObserver = inject(BreakpointObserver);
-  
+  readonly i18n = inject(TranslationService);
+
   readonly sidebarCollapsed = signal<boolean>(false);
   readonly isMobile = signal<boolean>(false);
   readonly mobileSidenavOpen = signal<boolean>(false);
@@ -34,13 +37,13 @@ export class AdminLayoutComponent implements OnInit {
       this.isMobile.set(mobile);
 
       if (mobile) {
-         this.mobileSidenavOpen.set(false);
+        this.mobileSidenavOpen.set(false);
       } else if (tablet) {
-         this.sidebarCollapsed.set(true);
-         this.mobileSidenavOpen.set(false);
+        this.sidebarCollapsed.set(true);
+        this.mobileSidenavOpen.set(false);
       } else {
-         this.sidebarCollapsed.set(false);
-         this.mobileSidenavOpen.set(false);
+        this.sidebarCollapsed.set(false);
+        this.mobileSidenavOpen.set(false);
       }
     });
   }
@@ -61,7 +64,7 @@ export class AdminLayoutComponent implements OnInit {
   onSidenavClosed(): void {
     this.mobileSidenavOpen.set(false);
   }
-  
+
   onNavigationEnded(): void {
     if (this.isMobile()) {
       this.sidenav.close();

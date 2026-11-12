@@ -1,4 +1,15 @@
-<div class="auth-layout-container">
+<div class="auth-layout-container" [dir]="i18n.dir()">
+  <div class="auth-lang-bar">
+    <button
+      type="button"
+      mat-stroked-button
+      class="auth-lang-btn"
+      (click)="toggleLanguage()"
+      [attr.aria-label]="(i18n.currentLang() === 'en' ? 'header.switchToArabic' : 'header.switchToEnglish') | translate">
+      <mat-icon>language</mat-icon>
+      <span>{{ i18n.currentLang() === 'en' ? ('header.arabic' | translate) : ('header.english' | translate) }}</span>
+    </button>
+  </div>
   <div class="auth-layout-content">
     <router-outlet />
   </div>

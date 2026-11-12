@@ -5,18 +5,21 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { filter } from 'rxjs/operators';
 import { AuthService } from '../../core/auth/auth.service';
-import { NavGroup, NavItem } from '../models/nav.model';
+import { TranslationService } from '../../core/i18n/translation.service';
+import { TranslatePipe } from '../../shared/pipes/translate.pipe';
+import { NavGroup } from '../models/nav.model';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, MatIconModule, MatTooltipModule],
+  imports: [RouterLink, RouterLinkActive, MatIconModule, MatTooltipModule, TranslatePipe],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
 export class SidebarComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
+  readonly i18n = inject(TranslationService);
 
   readonly collapsed = input<boolean>(false);
   readonly toggleCollapse = output<void>();
@@ -94,7 +97,7 @@ export class SidebarComponent implements OnInit {
     return this.navGroups.filter(g => {
       if (g.name === 'Overview') return true;
       if (g.name === 'Sales' && (role === 'Sales')) return true;
-      if (g.name === 'Inventory' && (role === 'Warehouse' || role === 'Sales' || role === 'Purchasing')) return true; // supporting read
+      if (g.name === 'Inventory' && (role === 'Warehouse' || role === 'Sales' || role === 'Purchasing')) return true;
       if (g.name === 'Purchasing' && role === 'Purchasing') return true;
       if (g.name === 'Finance' && role === 'Finance') return true;
       if (g.name === 'HR' && role === 'HR') return true;
@@ -150,4 +153,3 @@ export class SidebarComponent implements OnInit {
     }
   }
 }
-

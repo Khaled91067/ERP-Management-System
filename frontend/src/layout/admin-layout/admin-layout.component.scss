@@ -36,7 +36,7 @@
   height: 100%;
   width: 100%;
   overflow: hidden;
-  border-right: 1px solid var(--sidebar-border);
+  border-inline-end: 1px solid var(--sidebar-border);
 }
 
 .mobile-sidenav {

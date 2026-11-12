@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { APP_CONFIG } from '@core/config/app-config.token';
 import { PaginatedResult } from '@core/models/api-response.model';
@@ -22,7 +22,8 @@ export class ApiService {
   /** GET /resource — paginated list with optional search/filter params */
   getAll<T>(
     resource: string,
-    params?: PaginationParams | Record<string, unknown>
+    params?: PaginationParams | Record<string, unknown>,
+    context?: HttpContext
   ): Observable<PaginatedResult<T>> {
     let httpParams = new HttpParams();
     if (params) {
@@ -32,8 +33,9 @@ export class ApiService {
         }
       });
     }
-    return this.http.get<any>(this.url(resource), {
+    return this.http.get<PaginatedResult<T> & { totalCount?: number }>(this.url(resource), {
       params: httpParams,
+      context
     }).pipe(
       map(res => {
         if (res && typeof res === 'object') {
@@ -49,25 +51,27 @@ export class ApiService {
   }
 
   /** GET /resource/:id */
-  getById<T>(resource: string, id: string | number): Observable<T> {
-    return this.http.get<T>(`${this.url(resource)}/${id}`);
+  getById<T>(resource: string, id: string | number, context?: HttpContext): Observable<T> {
+    return this.http.get<T>(`${this.url(resource)}/${id}`, { context });
   }
 
   /** POST /resource */
   create<TBody, TResponse = TBody>(
     resource: string,
-    body: TBody
+    body: TBody,
+    context?: HttpContext
   ): Observable<TResponse> {
-    return this.http.post<TResponse>(this.url(resource), body);
+    return this.http.post<TResponse>(this.url(resource), body, { context });
   }
 
   /** PUT /resource/:id */
   update<TBody, TResponse = TBody>(
     resource: string,
     id: string | number,
-    body: TBody
+    body: TBody,
+    context?: HttpContext
   ): Observable<TResponse> {
-    return this.http.put<TResponse>(`${this.url(resource)}/${id}`, body);
+    return this.http.put<TResponse>(`${this.url(resource)}/${id}`, body, { context });
   }
 
   /** PATCH /resource/:id/action */
@@ -75,26 +79,30 @@ export class ApiService {
     resource: string,
     id: string | number,
     action: string,
-    body?: TBody
+    body?: TBody,
+    context?: HttpContext
   ): Observable<TResponse> {
     return this.http.patch<TResponse>(
       `${this.url(resource)}/${id}/${action}`,
-      body ?? {}
+      body ?? {},
+      { context }
     );
   }
 
   /** DELETE /resource/:id */
   delete<TResponse = void>(
     resource: string,
-    id: string | number
+    id: string | number,
+    context?: HttpContext
   ): Observable<TResponse> {
-    return this.http.delete<TResponse>(`${this.url(resource)}/${id}`);
+    return this.http.delete<TResponse>(`${this.url(resource)}/${id}`, { context });
   }
 
   /** GET /resource/... (for downloading blobs) */
-  downloadFile(resource: string, path: string): Observable<Blob> {
+  downloadFile(resource: string, path: string, context?: HttpContext): Observable<Blob> {
     return this.http.get(`${this.url(resource)}/${path}`, {
-      responseType: 'blob'
+      responseType: 'blob',
+      context
     });
   }
 }

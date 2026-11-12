@@ -16,9 +16,3 @@ export interface User {
   permissions: string[];
   isActive: boolean;
 }
-
-export interface AuthState {
-  user: User | null;
-  token: string | null;
-  isAuthenticated: boolean;
-}

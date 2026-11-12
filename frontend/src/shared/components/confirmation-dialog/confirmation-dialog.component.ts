@@ -2,21 +2,16 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
+import { TranslatePipe } from '@shared/pipes/translate.pipe';
 import { ConfirmDialogData } from '../../models/confirmation-dialog.model';
 
 /**
  * Reusable confirmation dialog for delete/destructive operations.
- *
- * Usage:
- *   const ref = this.dialog.open(ConfirmationDialogComponent, {
- *     data: { title: 'Delete User', message: 'Are you sure?', danger: true }
- *   });
- *   ref.afterClosed().subscribe(confirmed => { if (confirmed) { ... } });
  */
 @Component({
   selector: 'app-confirmation-dialog',
   standalone: true,
-  imports: [MatDialogModule, MatButtonModule, MatIconModule],
+  imports: [MatDialogModule, MatButtonModule, MatIconModule, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './confirmation-dialog.component.html',
   styleUrl: './confirmation-dialog.component.scss'

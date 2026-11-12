@@ -5,22 +5,36 @@
       mat-icon-button 
       class="mobile-menu-btn"
       (click)="toggleSidebar.emit()"
-      aria-label="Toggle Sidebar">
+      [attr.aria-label]="'header.toggleSidebar' | translate">
       <mat-icon>menu</mat-icon>
     </button>
     <div class="search-box">
       <mat-icon class="search-icon">search</mat-icon>
-      <input type="text" class="search-input" placeholder="Search..." readonly />
+      <input type="text" class="search-input" [placeholder]="'header.searchPlaceholder' | translate" readonly />
       <kbd class="search-kbd">Ctrl K</kbd>
     </div>
   </div>
 
   <div class="header-right">
+    <button
+      type="button"
+      mat-stroked-button
+      class="lang-switcher-btn"
+      (click)="toggleLanguage()"
+      [matTooltip]="(i18n.currentLang() === 'en' ? 'header.switchToArabic' : 'header.switchToEnglish') | translate"
+      [attr.aria-label]="(i18n.currentLang() === 'en' ? 'header.switchToArabic' : 'header.switchToEnglish') | translate">
+      <mat-icon class="lang-icon">language</mat-icon>
+      <span class="lang-label">
+        {{ i18n.currentLang() === 'en' ? ('header.arabic' | translate) : ('header.english' | translate) }}
+      </span>
+    </button>
+
     <button 
       type="button"
       mat-icon-button 
       class="header-icon-btn"
-      matTooltip="Notifications">
+      [matTooltip]="'header.notifications' | translate"
+      [attr.aria-label]="'header.notifications' | translate">
       <mat-icon>notifications_none</mat-icon>
     </button>
 
@@ -31,16 +45,16 @@
         </div>
         <div class="user-info">
           <span class="user-name">{{ user.firstName }} {{ user.lastName }}</span>
-          <span class="user-role-badge">{{ user.role || 'User' }}</span>
+          <span class="user-role-badge">{{ i18n.translateRole(user.role || 'User') }}</span>
         </div>
         <button 
           type="button"
           mat-icon-button 
           class="logout-icon-btn" 
           (click)="authService.logout()" 
-          matTooltip="Logout"
-          aria-label="Logout">
-          <mat-icon>logout</mat-icon>
+          [matTooltip]="'header.logout' | translate"
+          [attr.aria-label]="'header.logout' | translate">
+          <mat-icon class="rtl-flip">logout</mat-icon>
         </button>
       </div>
     }

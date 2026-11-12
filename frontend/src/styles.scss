@@ -12,6 +12,7 @@
 :root {
   /* Surfaces */
   --bg-app: #F8FAFC;
+  --bg-main: var(--bg-app);
   --bg-page: #F8FAFC;
   --surface-card: #FFFFFF;
   --surface-elevated: #FFFFFF;
@@ -45,6 +46,7 @@
 
   /* Borders */
   --border-default: #E2E8F0;
+  --border-color: var(--border-default);
   --border-strong: #CBD5E1;
   --border-divider: #E2E8F0;
   --border-input: #CBD5E1;
@@ -52,10 +54,13 @@
 
   /* Brand / Primary Accent (Terracotta) */
   --primary-base: #C66A45;
+  --primary-color: var(--primary-base);
   --primary-hover: #B65A35;
   --primary-active: #9E4A2B;
   --primary-light: #F5E6DE;
   --primary-disabled: #E2E8F0;
+  --error-color: #B91C1C;
+  --surface-ground: var(--bg-page);
 
   /* Status (Soft Tints) */
   --status-success-bg: #F0FDF4;
@@ -126,7 +131,7 @@ html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  font-family: 'Inter', 'Cairo', 'Noto Sans Arabic', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   background-color: var(--bg-app);
   color: var(--text-primary);
   font-size: 15px; /* Base Body Size */
@@ -200,10 +205,10 @@ html, body {
   background-color: var(--primary-base);
   color: #fff;
 }
-.mat-mdc-unelevated-button.mat-primary:hover {
+.mat-mdc-unelevated-button.mat-primary:hover:not(:disabled) {
   background-color: var(--primary-hover);
 }
-.mat-mdc-unelevated-button.mat-primary:active {
+.mat-mdc-unelevated-button.mat-primary:active:not(:disabled) {
   background-color: var(--primary-active);
 }
 .mat-mdc-unelevated-button.mat-primary:disabled {
@@ -215,6 +220,7 @@ html, body {
 .mat-mdc-form-field {
   --mdc-outlined-text-field-container-shape: var(--radius-input);
   --mdc-filled-text-field-container-shape: var(--radius-input);
+  text-align: start;
 }
 
 /* Input overrides for cohesive enterprise feel */
@@ -277,8 +283,14 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Flip directional icons in RTL when marked with .rtl-flip */
+[dir="rtl"] .rtl-flip {
+  transform: scaleX(-1);
+}
+
 .actions-column {
   white-space: nowrap;
+  text-align: end;
 }
 
 /* Standardized Material Table Header & Cell Styling */
@@ -289,12 +301,14 @@ html, body {
   background-color: var(--bg-page);
   border-bottom: 1px solid var(--border-table);
   padding: 12px 16px !important;
+  text-align: start;
 }
 
 .mat-mdc-cell {
   border-bottom: 1px solid var(--border-table);
   color: var(--text-primary);
   padding: 12px 16px !important;
+  text-align: start;
 }
 
 .mat-mdc-row {
@@ -308,7 +322,7 @@ html, body {
 .mat-mdc-cell:first-child::before {
   content: '';
   position: absolute;
-  left: 0;
+  inset-inline-start: 0;
   top: 0;
   bottom: 0;
   width: 3px;
@@ -350,7 +364,7 @@ app-sidebar {
   .sidebar-inner {
     background-color: var(--sidebar-bg);
     color: var(--text-primary);
-    border-right: 1px solid var(--border-default);
+    border-inline-end: 1px solid var(--border-default);
   }
 
   .brand {
@@ -403,7 +417,7 @@ app-sidebar {
   }
 
   .nav-items-container.sub-level {
-    border-left: 1px solid var(--border-divider);
+    border-inline-start: 1px solid var(--border-divider);
   }
 
   .nav-item-link {
@@ -505,8 +519,13 @@ app-footer {
   flex: 1;
 }
 
-.text-right {
-  text-align: right;
+.text-right,
+.text-end {
+  text-align: end !important;
+}
+
+.text-start {
+  text-align: start !important;
 }
 
 .text-secondary {
