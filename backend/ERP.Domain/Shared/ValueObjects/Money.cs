@@ -4,11 +4,15 @@ using System;
 using System.Collections.Generic;
 
 using ERP.Domain.Shared.Base;
+using ERP.Domain.Shared.Constants;
 using ERP.Domain.Shared.Exceptions;
 
 public class Money : ValueObject
 {
+    public const string DefaultCurrency = CurrencyConstants.DefaultCurrency;
+
     public decimal Amount { get; }
+    public string Currency => DefaultCurrency;
 
     public Money(decimal amount)
     {

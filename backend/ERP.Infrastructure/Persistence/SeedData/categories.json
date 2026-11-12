@@ -1,7 +1,12 @@
 [
-  { "Id": 1, "Name": "Electronics" },
-  { "Id": 2, "Name": "Office Supplies" },
-  { "Id": 3, "Name": "Industrial Equipment" },
-  { "Id": 4, "Name": "Packaging" },
-  { "Id": 5, "Name": "IT Hardware" }
+  { "Id": 1, "Name": "Mobile Phones" },
+  { "Id": 2, "Name": "Mobile Accessories" },
+  { "Id": 3, "Name": "Computers & Laptops" },
+  { "Id": 4, "Name": "Computer Accessories" },
+  { "Id": 5, "Name": "Networking Equipment" },
+  { "Id": 6, "Name": "Home Appliances" },
+  { "Id": 7, "Name": "Electrical Supplies" },
+  { "Id": 8, "Name": "Office Supplies" },
+  { "Id": 9, "Name": "Printers & Printing Supplies" },
+  { "Id": 10, "Name": "Tools & Hardware" }
 ]

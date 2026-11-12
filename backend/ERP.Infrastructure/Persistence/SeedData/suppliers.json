@@ -1,7 +1,72 @@
 [
-  { "Id": 1, "CompanyName": "Global Tech Distributors", "ContactName": "Maya Peterson", "Email": "sales@globaltechdist.com", "Phone": "+1-646-555-0133", "PaymentTerms": "Net 30" },
-  { "Id": 2, "CompanyName": "Metro Office Supply", "ContactName": "Daniel Cooper", "Email": "orders@metroofficesupply.com", "Phone": "+44-20-5550-3344", "PaymentTerms": "Net 15" },
-  { "Id": 3, "CompanyName": "Prime Industrial Parts", "ContactName": "Nadia Rahman", "Email": "procurement@primeindustrialparts.com", "Phone": "+971-4-555-0220", "PaymentTerms": "Due on receipt" },
-  { "Id": 4, "CompanyName": "Apex Logistics Systems", "ContactName": "James Wu", "Email": "sales@apexlogistics.com", "Phone": "+1-415-555-0844", "PaymentTerms": "Net 60" },
-  { "Id": 5, "CompanyName": "Vanguard Security Solutions", "ContactName": "Sarah Jenkins", "Email": "orders@vanguardsec.com", "Phone": "+44-20-5550-9988", "PaymentTerms": "Net 30" }
+  {
+    "CompanyName": "Al-Arabi Group Distribution",
+    "ContactName": "Eng. Mahmoud El-Arabi",
+    "Email": "procurement@elarabygroup-dist.com",
+    "Phone": "+20-2-2290-4100",
+    "PaymentTerms": "Net 30"
+  },
+  {
+    "CompanyName": "El-Sewedy Electrical Supply Co.",
+    "ContactName": "Tarek El-Sewedy",
+    "Email": "b2b@elsewedy-supplies.com",
+    "Phone": "+20-2-2759-9700",
+    "PaymentTerms": "Net 45"
+  },
+  {
+    "CompanyName": "Raya Trade & Distribution",
+    "ContactName": "Hazem Barakat",
+    "Email": "corporate@rayatrade-eg.com",
+    "Phone": "+20-2-3827-8000",
+    "PaymentTerms": "Net 30"
+  },
+  {
+    "CompanyName": "B.TECH Wholesale Division",
+    "ContactName": "Amr El-Gazzar",
+    "Email": "wholesale@btech-partner.com",
+    "Phone": "+20-2-2405-1500",
+    "PaymentTerms": "Net 30"
+  },
+  {
+    "CompanyName": "Mantrac Hardware & Computing",
+    "ContactName": "Karim Mansour",
+    "Email": "it-supplies@mantrac-hardware.com",
+    "Phone": "+20-3-4200-880",
+    "PaymentTerms": "Net 60"
+  },
+  {
+    "CompanyName": "Delta Tech Electronics",
+    "ContactName": "Mohamed Abdelrahman",
+    "Email": "sales@deltatech-eg.com",
+    "Phone": "+20-40-3341-200",
+    "PaymentTerms": "Net 15"
+  },
+  {
+    "CompanyName": "Al-Bustan IT Import & Wholesale",
+    "ContactName": "Sameh Shenouda",
+    "Email": "orders@albustan-it.com",
+    "Phone": "+20-2-2393-5500",
+    "PaymentTerms": "Due on receipt"
+  },
+  {
+    "CompanyName": "Al-Ahram Stationery & Printing",
+    "ContactName": "Nader Farid",
+    "Email": "commercial@ahram-stationery.com",
+    "Phone": "+20-2-3761-4200",
+    "PaymentTerms": "Net 30"
+  },
+  {
+    "CompanyName": "Metra Computer Egypt SAE",
+    "ContactName": "Sherif Bahaa",
+    "Email": "orders@metra-eg.com",
+    "Phone": "+20-2-3536-1200",
+    "PaymentTerms": "Net 45"
+  },
+  {
+    "CompanyName": "Cairo Tools & Industrial Hardware",
+    "ContactName": "Ibrahim El-Gohary",
+    "Email": "sales@cairotools-hardware.com",
+    "Phone": "+20-2-2578-3300",
+    "PaymentTerms": "Net 30"
+  }
 ]

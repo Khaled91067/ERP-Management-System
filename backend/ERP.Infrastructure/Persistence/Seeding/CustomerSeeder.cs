@@ -1,5 +1,8 @@
 namespace ERP.Infrastructure.Persistence.Seeding;
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -29,15 +32,39 @@ public class CustomerSeeder : ISeeder
 
     public async Task SeedAsync(CancellationToken cancellationToken = default)
     {
-        if (await _context.Customers.AnyAsync(cancellationToken)) return;
-
         var dtos = await SeedHelper.ReadSeedDataAsync<CustomerSeedDto>("customers.json");
+        if (dtos.Count == 0) return;
+
+        var existingEmails = await _context.Customers
+            .Select(c => c.Email.Value)
+            .ToListAsync(cancellationToken);
+
+        var existingSet = new HashSet<string>(existingEmails, StringComparer.OrdinalIgnoreCase);
+        var addedAny = false;
+
         foreach (var dto in dtos)
         {
-            var customer = new Customer(dto.Name, dto.Email, dto.Phone, dto.Address, dto.City, dto.Country, dto.TaxId);
-            await _context.Customers.AddAsync(customer, cancellationToken);
+            var trimmedEmail = dto.Email?.Trim() ?? string.Empty;
+            if (!string.IsNullOrWhiteSpace(trimmedEmail) && !existingSet.Contains(trimmedEmail))
+            {
+                var customer = new Customer(
+                    dto.Name,
+                    trimmedEmail,
+                    dto.Phone ?? string.Empty,
+                    dto.Address ?? string.Empty,
+                    dto.City ?? string.Empty,
+                    dto.Country ?? string.Empty,
+                    dto.TaxId ?? string.Empty);
+
+                await _context.Customers.AddAsync(customer, cancellationToken);
+                existingSet.Add(trimmedEmail);
+                addedAny = true;
+            }
         }
 
-        await _context.SaveChangesAsync(cancellationToken);
+        if (addedAny)
+        {
+            await _context.SaveChangesAsync(cancellationToken);
+        }
     }
 }

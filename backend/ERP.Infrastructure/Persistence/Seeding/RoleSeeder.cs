@@ -17,14 +17,24 @@ public class RoleSeeder : ISeeder
         _context = context;
     }
 
+    private sealed class RoleSeedDto
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Permissions { get; set; } = string.Empty;
+    }
+
     public async Task SeedAsync(CancellationToken cancellationToken = default)
     {
         if (!await _context.Roles.AnyAsync(cancellationToken))
         {
-            var roles = await SeedHelper.ReadSeedDataAsync<Role>("roles.json");
-            if (roles.Count > 0)
+            var dtos = await SeedHelper.ReadSeedDataAsync<RoleSeedDto>("roles.json");
+            if (dtos.Count > 0)
             {
-                await _context.Roles.AddRangeAsync(roles, cancellationToken);
+                foreach (var dto in dtos)
+                {
+                    await _context.Roles.AddAsync(new Role(dto.Name, dto.Permissions), cancellationToken);
+                }
+
                 await _context.SaveChangesAsync(cancellationToken);
             }
             return;

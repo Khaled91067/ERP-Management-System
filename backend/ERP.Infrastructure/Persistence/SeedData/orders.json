@@ -1,5 +1,123 @@
 [
-  { "Id": 1, "CustomerId": 1, "OrderDate": "2025-06-10T00:00:00Z", "Status": "Shipped", "PaymentMethod": "CreditCard", "ShippingAddress": "1200 Market Street, Suite 800, New York, NY", "TotalAmount": 2004 },
-  { "Id": 2, "CustomerId": 2, "OrderDate": "2025-06-12T00:00:00Z", "Status": "Delivered", "PaymentMethod": "Cash", "ShippingAddress": "44 King William Street, London", "TotalAmount": 1100 },
-  { "Id": 3, "CustomerId": 3, "OrderDate": "2025-06-14T00:00:00Z", "Status": "Processing", "PaymentMethod": "MobilePayment", "ShippingAddress": "Business Bay Tower 18, Dubai", "TotalAmount": 470 }
+  {
+    "CustomerEmail": "purchasing@nilevalley-trading.com",
+    "PaymentMethod": "CreditCard",
+    "ShippingAddress": "Building 14, El-Nasr St., Nasr City, Cairo",
+    "Status": "Delivered",
+    "Lines": [
+      { "ProductSku": "LAP-LEN-E14", "Quantity": 2, "UnitPrice": 32500, "DiscountPercentage": 0 },
+      { "ProductSku": "MON-DEL-24HX", "Quantity": 2, "UnitPrice": 4900, "DiscountPercentage": 0 },
+      { "ProductSku": "COM-LOG-MK270", "Quantity": 2, "UnitPrice": 1350, "DiscountPercentage": 0 }
+    ]
+  },
+  {
+    "CustomerEmail": "accounts@alexdist-hub.com",
+    "PaymentMethod": "CreditCard",
+    "ShippingAddress": "74 Albert Al-Awal St., Smouha, Alexandria",
+    "Status": "Delivered",
+    "Lines": [
+      { "ProductSku": "MOB-SAM-A15-128", "Quantity": 5, "UnitPrice": 7400, "DiscountPercentage": 2 },
+      { "ProductSku": "MOB-SAM-A25-128", "Quantity": 3, "UnitPrice": 9800, "DiscountPercentage": 2 }
+    ]
+  },
+  {
+    "CustomerEmail": "orders@sphinxtech-eg.com",
+    "PaymentMethod": "CreditCard",
+    "ShippingAddress": "22 Mossadak St., Dokki, Giza",
+    "Status": "Shipped",
+    "Lines": [
+      { "ProductSku": "ACC-ANK-33W", "Quantity": 10, "UnitPrice": 750, "DiscountPercentage": 0 },
+      { "ProductSku": "ACC-ORA-FP4", "Quantity": 5, "UnitPrice": 1150, "DiscountPercentage": 0 }
+    ]
+  },
+  {
+    "CustomerEmail": "finance@cairologistics-eg.com",
+    "PaymentMethod": "CreditCard",
+    "ShippingAddress": "Industrial Zone 3, Block 12, 6th of October",
+    "Status": "Shipped",
+    "Lines": [
+      { "ProductSku": "NET-TPL-C6", "Quantity": 4, "UnitPrice": 1650, "DiscountPercentage": 0 },
+      { "ProductSku": "NET-CAT6-305M", "Quantity": 1, "UnitPrice": 3900, "DiscountPercentage": 0 }
+    ]
+  },
+  {
+    "CustomerEmail": "purchases@deltaretail-eg.com",
+    "PaymentMethod": "Cash",
+    "ShippingAddress": "45 El-Geish Street, Tanta",
+    "Status": "Pending",
+    "Lines": [
+      { "ProductSku": "APP-TOR-KT17", "Quantity": 5, "UnitPrice": 850, "DiscountPercentage": 0 },
+      { "ProductSku": "APP-FRS-BL15", "Quantity": 3, "UnitPrice": 990, "DiscountPercentage": 0 }
+    ]
+  },
+  {
+    "CustomerEmail": "info@mansoura-itcenter.com",
+    "PaymentMethod": "MobilePayment",
+    "ShippingAddress": "El-Galaa St., Mashaya, Mansoura",
+    "Status": "Pending",
+    "Lines": [
+      { "ProductSku": "COM-KNG-1TSSD", "Quantity": 4, "UnitPrice": 2850, "DiscountPercentage": 0 },
+      { "ProductSku": "COM-CRU-16D4", "Quantity": 6, "UnitPrice": 1450, "DiscountPercentage": 0 }
+    ]
+  },
+  {
+    "CustomerEmail": "procurement@alamal-facilities.com",
+    "PaymentMethod": "CreditCard",
+    "ShippingAddress": "Road 9, Degla, Maadi, Cairo",
+    "Status": "Delivered",
+    "Lines": [
+      { "ProductSku": "OFF-DBL-A4BOX", "Quantity": 10, "UnitPrice": 1250, "DiscountPercentage": 0 },
+      { "ProductSku": "PRN-HP-M111A", "Quantity": 1, "UnitPrice": 6900, "DiscountPercentage": 0 },
+      { "ProductSku": "PRN-HP-TON150A", "Quantity": 2, "UnitPrice": 2250, "DiscountPercentage": 0 }
+    ]
+  },
+  {
+    "CustomerEmail": "supply@suezcanal-eng.com",
+    "PaymentMethod": "CreditCard",
+    "ShippingAddress": "18 Gomhoria St., Port Said",
+    "Status": "Pending",
+    "Lines": [
+      { "ProductSku": "TLS-BSH-GSB550", "Quantity": 2, "UnitPrice": 2450, "DiscountPercentage": 0 },
+      { "ProductSku": "TLS-STA-TM8M", "Quantity": 5, "UnitPrice": 280, "DiscountPercentage": 0 }
+    ]
+  },
+  {
+    "CustomerEmail": "billing@gizaofficehub.com",
+    "PaymentMethod": "CreditCard",
+    "ShippingAddress": "15 Batal Ahmed Abdelaziz St., Mohandessin, Giza",
+    "Status": "Delivered",
+    "Lines": [
+      { "ProductSku": "COM-LOG-MK270", "Quantity": 4, "UnitPrice": 1350, "DiscountPercentage": 0 },
+      { "ProductSku": "OFF-ROC-LAF10", "Quantity": 3, "UnitPrice": 550, "DiscountPercentage": 0 }
+    ]
+  },
+  {
+    "CustomerEmail": "tamer.hosny@gmail.com",
+    "PaymentMethod": "Cash",
+    "ShippingAddress": "28 Baghdad St., Korba, Heliopolis, Cairo",
+    "Status": "Delivered",
+    "Lines": [
+      { "ProductSku": "MOB-SAM-A55-256", "Quantity": 1, "UnitPrice": 19500, "DiscountPercentage": 0 },
+      { "ProductSku": "ACC-SAM-25W", "Quantity": 1, "UnitPrice": 580, "DiscountPercentage": 0 }
+    ]
+  },
+  {
+    "CustomerEmail": "sherif.mostafa@consultant.com",
+    "PaymentMethod": "CreditCard",
+    "ShippingAddress": "34 Victor Emmanuel St., Smouha, Alexandria",
+    "Status": "Pending",
+    "Lines": [
+      { "ProductSku": "LAP-DEL-3540", "Quantity": 1, "UnitPrice": 31000, "DiscountPercentage": 0 },
+      { "ProductSku": "COM-LOG-B100", "Quantity": 1, "UnitPrice": 220, "DiscountPercentage": 0 }
+    ]
+  },
+  {
+    "CustomerEmail": "technozone.shobra@gmail.com",
+    "PaymentMethod": "Cash",
+    "ShippingAddress": "104 Shobra St., Cairo",
+    "Status": "Cancelled",
+    "Lines": [
+      { "ProductSku": "COM-RED-K552", "Quantity": 2, "UnitPrice": 1750, "DiscountPercentage": 0 }
+    ]
+  }
 ]

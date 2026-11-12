@@ -1,7 +1,227 @@
 [
-  { "Id": 1, "Name": "Al Noor Trading Co.", "Email": "purchasing@alnoortrading.com", "Phone": "+1-212-555-0148", "Address": "1200 Market Street, Suite 800", "City": "New York", "Country": "USA", "TaxId": "US-TAX-100245" },
-  { "Id": 2, "Name": "BlueWave Retail Ltd.", "Email": "accounts@bluewaveretail.com", "Phone": "+44-20-5550-2211", "Address": "44 King William Street", "City": "London", "Country": "UK", "TaxId": "GB-TAX-778845" },
-  { "Id": 3, "Name": "Horizon Construction LLC", "Email": "billing@horizonconstruction.com", "Phone": "+971-4-555-0198", "Address": "Business Bay Tower 18", "City": "Dubai", "Country": "UAE", "TaxId": "AE-TAX-442110" },
-  { "Id": 4, "Name": "Nexus Enterprises", "Email": "info@nexusenterprises.com", "Phone": "+1-310-555-0199", "Address": "100 Wilshire Blvd", "City": "Los Angeles", "Country": "USA", "TaxId": "US-TAX-334211" },
-  { "Id": 5, "Name": "Crestview Holdings", "Email": "finance@crestviewholdings.com", "Phone": "+44-161-555-0345", "Address": "22 Piccadilly", "City": "Manchester", "Country": "UK", "TaxId": "GB-TAX-889922" }
+  {
+    "Name": "Nile Valley Trading SAE",
+    "Email": "purchasing@nilevalley-trading.com",
+    "Phone": "+20-2-2401-8890",
+    "Address": "Building 14, El-Nasr St., Nasr City",
+    "City": "Cairo",
+    "Country": "Egypt",
+    "TaxId": "EG-TAX-100-245-891"
+  },
+  {
+    "Name": "Alexandria Commercial Distribution",
+    "Email": "accounts@alexdist-hub.com",
+    "Phone": "+20-3-4211-550",
+    "Address": "74 Albert Al-Awal St., Smouha",
+    "City": "Alexandria",
+    "Country": "Egypt",
+    "TaxId": "EG-TAX-200-456-789"
+  },
+  {
+    "Name": "Sphinx Technology & Electronics",
+    "Email": "orders@sphinxtech-eg.com",
+    "Phone": "+20-2-3335-9010",
+    "Address": "22 Mossadak St., Dokki",
+    "City": "Giza",
+    "Country": "Egypt",
+    "TaxId": "EG-TAX-310-789-012"
+  },
+  {
+    "Name": "Cairo Logistics & Operations SAE",
+    "Email": "finance@cairologistics-eg.com",
+    "Phone": "+20-2-3833-4400",
+    "Address": "Industrial Zone 3, Block 12",
+    "City": "6th of October",
+    "Country": "Egypt",
+    "TaxId": "EG-TAX-450-890-123"
+  },
+  {
+    "Name": "El-Delta Modern Retailers",
+    "Email": "purchases@deltaretail-eg.com",
+    "Phone": "+20-40-3320-110",
+    "Address": "45 El-Geish Street",
+    "City": "Tanta",
+    "Country": "Egypt",
+    "TaxId": "EG-TAX-520-123-456"
+  },
+  {
+    "Name": "Suez Canal Engineering & Supplies",
+    "Email": "supply@suezcanal-eng.com",
+    "Phone": "+20-66-3221-800",
+    "Address": "18 Gomhoria St., Port Fouad",
+    "City": "Port Said",
+    "Country": "Egypt",
+    "TaxId": "EG-TAX-630-234-567"
+  },
+  {
+    "Name": "Mansoura IT Center",
+    "Email": "info@mansoura-itcenter.com",
+    "Phone": "+20-50-2234-560",
+    "Address": "El-Galaa St., Mashaya",
+    "City": "Mansoura",
+    "Country": "Egypt",
+    "TaxId": "EG-TAX-740-345-678"
+  },
+  {
+    "Name": "Al-Amal Medical Facilities Supply",
+    "Email": "procurement@alamal-facilities.com",
+    "Phone": "+20-2-2516-7780",
+    "Address": "Road 9, Degla",
+    "City": "Maadi, Cairo",
+    "Country": "Egypt",
+    "TaxId": "EG-TAX-850-456-789"
+  },
+  {
+    "Name": "Giza Office Hub Coworking",
+    "Email": "billing@gizaofficehub.com",
+    "Phone": "+20-2-3749-6200",
+    "Address": "15 Batal Ahmed Abdelaziz St.",
+    "City": "Mohandessin, Giza",
+    "Country": "Egypt",
+    "TaxId": "EG-TAX-960-567-890"
+  },
+  {
+    "Name": "Red Sea Resorts Procurement Office",
+    "Email": "purchasing@redsearesorts-eg.com",
+    "Phone": "+20-65-3448-900",
+    "Address": "Sheraton Road, Dahar",
+    "City": "Hurghada",
+    "Country": "Egypt",
+    "TaxId": "EG-TAX-101-678-901"
+  },
+  {
+    "Name": "Tamer Mohamed Hosny",
+    "Email": "tamer.hosny@gmail.com",
+    "Phone": "+20-10-0123-4567",
+    "Address": "28 Baghdad St., Korba",
+    "City": "Heliopolis, Cairo",
+    "Country": "Egypt",
+    "TaxId": "EG-NAT-285010112345"
+  },
+  {
+    "Name": "Mahmoud Abdelrahman El-Sayed",
+    "Email": "m.elsayed.eng@outlook.com",
+    "Phone": "+20-11-2345-6789",
+    "Address": "12 Abbas El-Akkad St.",
+    "City": "Nasr City, Cairo",
+    "Country": "Egypt",
+    "TaxId": "EG-NAT-290031512346"
+  },
+  {
+    "Name": "Sarah Ahmed Hassan",
+    "Email": "sarah.hassan.design@gmail.com",
+    "Phone": "+20-12-3456-7890",
+    "Address": "8 Brazil St.",
+    "City": "Zamalek, Cairo",
+    "Country": "Egypt",
+    "TaxId": "EG-NAT-295072012347"
+  },
+  {
+    "Name": "Sherif Mostafa Kamal",
+    "Email": "sherif.mostafa@consultant.com",
+    "Phone": "+20-10-9876-5432",
+    "Address": "34 Victor Emmanuel St.",
+    "City": "Smouha, Alexandria",
+    "Country": "Egypt",
+    "TaxId": "EG-NAT-288091212348"
+  },
+  {
+    "Name": "Yasmine Khaled Nour",
+    "Email": "yasmine.nour@live.com",
+    "Phone": "+20-11-8765-4321",
+    "Address": "Villa 14, South Academy",
+    "City": "New Cairo, Cairo",
+    "Country": "Egypt",
+    "TaxId": "EG-NAT-292110512349"
+  },
+  {
+    "Name": "El-Basha Electronics & Mobile Store",
+    "Email": "basha.mobile.eg@gmail.com",
+    "Phone": "+20-2-2591-3400",
+    "Address": "12 Abdel Aziz St., Ataba",
+    "City": "Cairo",
+    "Country": "Egypt",
+    "TaxId": "EG-TAX-212-345-678"
+  },
+  {
+    "Name": "Upper Egypt Contracting & Supplies",
+    "Email": "contracting@upperegypt-eg.com",
+    "Phone": "+20-88-2315-700",
+    "Address": "El-Gomhouria St., University District",
+    "City": "Asyut",
+    "Country": "Egypt",
+    "TaxId": "EG-TAX-323-456-789"
+  },
+  {
+    "Name": "Aswan Solar & Electrical Services",
+    "Email": "operations@aswansolar-eg.com",
+    "Phone": "+20-97-2408-900",
+    "Address": "Corniche El-Nile",
+    "City": "Aswan",
+    "Country": "Egypt",
+    "TaxId": "EG-TAX-434-567-890"
+  },
+  {
+    "Name": "Al-Rowad Educational Academy",
+    "Email": "it@alrowad-academy.edu.eg",
+    "Phone": "+20-2-4479-1200",
+    "Address": "District 7, Youth City",
+    "City": "Obour",
+    "Country": "Egypt",
+    "TaxId": "EG-TAX-545-678-901"
+  },
+  {
+    "Name": "Ismailia Digital Solutions",
+    "Email": "contact@ismailia-digital.com",
+    "Phone": "+20-64-3912-400",
+    "Address": "22 Sultan Hussein St.",
+    "City": "Ismailia",
+    "Country": "Egypt",
+    "TaxId": "EG-TAX-656-789-012"
+  },
+  {
+    "Name": "Smart Print Advertising & Media",
+    "Email": "production@smartprint-eg.com",
+    "Phone": "+20-2-2395-6670",
+    "Address": "4 Talaat Harb St., Downtown",
+    "City": "Cairo",
+    "Country": "Egypt",
+    "TaxId": "EG-TAX-767-890-123"
+  },
+  {
+    "Name": "Heliopolis Modern Clinic Network",
+    "Email": "finance@heliopolis-clinics.com",
+    "Phone": "+20-2-2418-5000",
+    "Address": "55 Merghany St.",
+    "City": "Heliopolis, Cairo",
+    "Country": "Egypt",
+    "TaxId": "EG-TAX-878-901-234"
+  },
+  {
+    "Name": "El-Salam Hypermarket Group",
+    "Email": "purchasing@elsalam-hyper.com",
+    "Phone": "+20-2-3585-1100",
+    "Address": "King Faisal St., Hassan Mohamed",
+    "City": "Giza",
+    "Country": "Egypt",
+    "TaxId": "EG-TAX-989-012-345"
+  },
+  {
+    "Name": "Zayed Engineering Consultancies",
+    "Email": "procurement@zayed-consulting.com",
+    "Phone": "+20-2-3850-9900",
+    "Address": "Arkan Plaza, 4th Floor",
+    "City": "Sheikh Zayed, Giza",
+    "Country": "Egypt",
+    "TaxId": "EG-TAX-191-123-456"
+  },
+  {
+    "Name": "TechnoZone Gaming & PC Lounge",
+    "Email": "technozone.shobra@gmail.com",
+    "Phone": "+20-2-2204-7700",
+    "Address": "104 Shobra St.",
+    "City": "Cairo",
+    "Country": "Egypt",
+    "TaxId": "EG-TAX-292-234-567"
+  }
 ]

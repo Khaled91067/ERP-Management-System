@@ -1,5 +1,74 @@
 [
-  { "Id": 1, "SupplierId": 1, "OrderDate": "2025-05-20T00:00:00Z", "ExpectedDelivery": "2025-05-28T00:00:00Z", "Status": "Received", "TotalAmount": 5200 },
-  { "Id": 2, "SupplierId": 2, "OrderDate": "2025-06-01T00:00:00Z", "ExpectedDelivery": "2025-06-10T00:00:00Z", "Status": "Approved", "TotalAmount": 1880 },
-  { "Id": 3, "SupplierId": 3, "OrderDate": "2025-06-05T00:00:00Z", "ExpectedDelivery": "2025-06-20T00:00:00Z", "Status": "Draft", "TotalAmount": 1700 }
+  {
+    "SupplierEmail": "corporate@rayatrade-eg.com",
+    "ExpectedDeliveryDays": 7,
+    "Status": "Received",
+    "Lines": [
+      { "ProductSku": "MOB-SAM-A15-128", "Quantity": 10, "UnitCost": 6400 },
+      { "ProductSku": "MOB-SAM-A25-128", "Quantity": 5, "UnitCost": 8600 }
+    ]
+  },
+  {
+    "SupplierEmail": "orders@metra-eg.com",
+    "ExpectedDeliveryDays": 10,
+    "Status": "Received",
+    "Lines": [
+      { "ProductSku": "PRN-HP-M111A", "Quantity": 5, "UnitCost": 5600 },
+      { "ProductSku": "PRN-HP-TON150A", "Quantity": 15, "UnitCost": 1750 }
+    ]
+  },
+  {
+    "SupplierEmail": "b2b@elsewedy-supplies.com",
+    "ExpectedDeliveryDays": 14,
+    "Status": "Approved",
+    "Lines": [
+      { "ProductSku": "ELE-SEW-CW25", "Quantity": 10, "UnitCost": 1980 },
+      { "ProductSku": "ELE-SEW-CW40", "Quantity": 5, "UnitCost": 3120 }
+    ]
+  },
+  {
+    "SupplierEmail": "orders@albustan-it.com",
+    "ExpectedDeliveryDays": 5,
+    "Status": "Approved",
+    "Lines": [
+      { "ProductSku": "COM-KNG-1TSSD", "Quantity": 20, "UnitCost": 2250 },
+      { "ProductSku": "COM-CRU-16D4", "Quantity": 15, "UnitCost": 1100 }
+    ]
+  },
+  {
+    "SupplierEmail": "procurement@elarabygroup-dist.com",
+    "ExpectedDeliveryDays": 12,
+    "Status": "Submitted",
+    "Lines": [
+      { "ProductSku": "APP-TOR-KT17", "Quantity": 25, "UnitCost": 640 },
+      { "ProductSku": "APP-TOR-FN16", "Quantity": 15, "UnitCost": 1450 }
+    ]
+  },
+  {
+    "SupplierEmail": "wholesale@btech-partner.com",
+    "ExpectedDeliveryDays": 15,
+    "Status": "Submitted",
+    "Lines": [
+      { "ProductSku": "APP-FRS-BL15", "Quantity": 20, "UnitCost": 760 },
+      { "ProductSku": "APP-SHP-MW25", "Quantity": 5, "UnitCost": 5400 }
+    ]
+  },
+  {
+    "SupplierEmail": "sales@cairotools-hardware.com",
+    "ExpectedDeliveryDays": 20,
+    "Status": "Draft",
+    "Lines": [
+      { "ProductSku": "TLS-BSH-GSB550", "Quantity": 10, "UnitCost": 1920 },
+      { "ProductSku": "TLS-STA-SDSET6", "Quantity": 25, "UnitCost": 250 }
+    ]
+  },
+  {
+    "SupplierEmail": "commercial@ahram-stationery.com",
+    "ExpectedDeliveryDays": 8,
+    "Status": "Draft",
+    "Lines": [
+      { "ProductSku": "OFF-DBL-A4BOX", "Quantity": 40, "UnitCost": 980 },
+      { "ProductSku": "OFF-UNI-UB150", "Quantity": 30, "UnitCost": 330 }
+    ]
+  }
 ]

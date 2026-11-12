@@ -1,5 +1,94 @@
 [
-  { "Id": 1, "OrderId": 1, "CustomerId": 1, "InvoiceDate": "2025-06-11T00:00:00Z", "DueDate": "2025-06-26T00:00:00Z", "Status": "Sent", "TotalAmount": 2004, "PaidAt": null },
-  { "Id": 2, "OrderId": 2, "CustomerId": 2, "InvoiceDate": "2025-06-13T00:00:00Z", "DueDate": "2025-06-28T00:00:00Z", "Status": "Paid", "TotalAmount": 1100, "PaidAt": "2025-06-15T00:00:00Z" },
-  { "Id": 3, "OrderId": 3, "CustomerId": 3, "InvoiceDate": "2025-06-15T00:00:00Z", "DueDate": "2025-06-30T00:00:00Z", "Status": "Draft", "TotalAmount": 470, "PaidAt": null }
+  {
+    "CustomerEmail": "purchasing@nilevalley-trading.com",
+    "DueDateDays": 15,
+    "Status": "Paid",
+    "Lines": [
+      { "Description": "Lenovo ThinkPad E14 Gen 5 Laptop", "Quantity": 2, "UnitPrice": 32500, "TaxRate": 14 },
+      { "Description": "Dell 24-inch SE2422HX FHD Monitor", "Quantity": 2, "UnitPrice": 4900, "TaxRate": 14 },
+      { "Description": "Logitech MK270 Wireless Combo", "Quantity": 2, "UnitPrice": 1350, "TaxRate": 14 }
+    ]
+  },
+  {
+    "CustomerEmail": "accounts@alexdist-hub.com",
+    "DueDateDays": 30,
+    "Status": "Paid",
+    "Lines": [
+      { "Description": "Samsung Galaxy A15 128GB (Bulk)", "Quantity": 5, "UnitPrice": 7252, "TaxRate": 14 },
+      { "Description": "Samsung Galaxy A25 5G 128GB (Bulk)", "Quantity": 3, "UnitPrice": 9604, "TaxRate": 14 }
+    ]
+  },
+  {
+    "CustomerEmail": "orders@sphinxtech-eg.com",
+    "DueDateDays": 30,
+    "Status": "Sent",
+    "Lines": [
+      { "Description": "Anker 323 Dual Port Charger 33W USB-C", "Quantity": 10, "UnitPrice": 750, "TaxRate": 14 },
+      { "Description": "Oraimo FreePods 4 True Wireless Earbuds", "Quantity": 5, "UnitPrice": 1150, "TaxRate": 14 }
+    ]
+  },
+  {
+    "CustomerEmail": "finance@cairologistics-eg.com",
+    "DueDateDays": 30,
+    "Status": "Sent",
+    "Lines": [
+      { "Description": "TP-Link Archer C6 AC1200 Router", "Quantity": 4, "UnitPrice": 1650, "TaxRate": 14 },
+      { "Description": "Cat6 UTP Network Cable 305m Roll", "Quantity": 1, "UnitPrice": 3900, "TaxRate": 14 }
+    ]
+  },
+  {
+    "CustomerEmail": "purchases@deltaretail-eg.com",
+    "DueDateDays": 15,
+    "Status": "Draft",
+    "Lines": [
+      { "Description": "Tornado Electric Kettle 1.7L", "Quantity": 5, "UnitPrice": 850, "TaxRate": 14 },
+      { "Description": "Fresh Glass Tabletop Blender 1.5L", "Quantity": 3, "UnitPrice": 990, "TaxRate": 14 }
+    ]
+  },
+  {
+    "CustomerEmail": "info@mansoura-itcenter.com",
+    "DueDateDays": 15,
+    "Status": "Draft",
+    "Lines": [
+      { "Description": "Kingston NV2 1TB PCIe 4.0 NVMe SSD", "Quantity": 4, "UnitPrice": 2850, "TaxRate": 14 },
+      { "Description": "Crucial 16GB DDR4 3200MHz Laptop RAM", "Quantity": 6, "UnitPrice": 1450, "TaxRate": 14 }
+    ]
+  },
+  {
+    "CustomerEmail": "procurement@alamal-facilities.com",
+    "DueDateDays": 20,
+    "Status": "Paid",
+    "Lines": [
+      { "Description": "Double A Copy Paper A4 80gsm Box", "Quantity": 10, "UnitPrice": 1250, "TaxRate": 14 },
+      { "Description": "HP LaserJet M111a Laser Printer", "Quantity": 1, "UnitPrice": 6900, "TaxRate": 14 },
+      { "Description": "HP 150A Original LaserJet Toner", "Quantity": 2, "UnitPrice": 2250, "TaxRate": 14 }
+    ]
+  },
+  {
+    "CustomerEmail": "billing@gizaofficehub.com",
+    "DueDateDays": 15,
+    "Status": "Paid",
+    "Lines": [
+      { "Description": "Logitech MK270 Wireless Combo", "Quantity": 4, "UnitPrice": 1350, "TaxRate": 14 },
+      { "Description": "Roco A4 Lever Arch File 10-Pack", "Quantity": 3, "UnitPrice": 550, "TaxRate": 14 }
+    ]
+  },
+  {
+    "CustomerEmail": "tamer.hosny@gmail.com",
+    "DueDateDays": 7,
+    "Status": "Paid",
+    "Lines": [
+      { "Description": "Samsung Galaxy A55 5G 256GB", "Quantity": 1, "UnitPrice": 19500, "TaxRate": 14 },
+      { "Description": "Samsung 25W PD Fast Travel Adapter", "Quantity": 1, "UnitPrice": 580, "TaxRate": 14 }
+    ]
+  },
+  {
+    "CustomerEmail": "purchasing@redsearesorts-eg.com",
+    "DueDateDays": 30,
+    "Status": "Sent",
+    "Lines": [
+      { "Description": "Philips LED Bulb 13W E27 Pack of 6", "Quantity": 20, "UnitPrice": 480, "TaxRate": 14 },
+      { "Description": "Schneider Electric 4-Outlet Strip 3m", "Quantity": 15, "UnitPrice": 650, "TaxRate": 14 }
+    ]
+  }
 ]

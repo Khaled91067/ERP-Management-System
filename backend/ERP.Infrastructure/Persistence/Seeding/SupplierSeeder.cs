@@ -1,5 +1,8 @@
 namespace ERP.Infrastructure.Persistence.Seeding;
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -27,15 +30,37 @@ public class SupplierSeeder : ISeeder
 
     public async Task SeedAsync(CancellationToken cancellationToken = default)
     {
-        if (await _context.Suppliers.AnyAsync(cancellationToken)) return;
-
         var dtos = await SeedHelper.ReadSeedDataAsync<SupplierSeedDto>("suppliers.json");
+        if (dtos.Count == 0) return;
+
+        var existingEmails = await _context.Suppliers
+            .Select(s => s.Email.Value)
+            .ToListAsync(cancellationToken);
+
+        var existingSet = new HashSet<string>(existingEmails, StringComparer.OrdinalIgnoreCase);
+        var addedAny = false;
+
         foreach (var dto in dtos)
         {
-            var sup = new Supplier(dto.CompanyName, dto.ContactName, dto.Email, dto.Phone, dto.PaymentTerms);
-            await _context.Suppliers.AddAsync(sup, cancellationToken);
+            var trimmedEmail = dto.Email?.Trim() ?? string.Empty;
+            if (!string.IsNullOrWhiteSpace(trimmedEmail) && !existingSet.Contains(trimmedEmail))
+            {
+                var sup = new Supplier(
+                    dto.CompanyName,
+                    trimmedEmail,
+                    dto.ContactName ?? string.Empty,
+                    dto.Phone ?? string.Empty,
+                    dto.PaymentTerms ?? string.Empty);
+
+                await _context.Suppliers.AddAsync(sup, cancellationToken);
+                existingSet.Add(trimmedEmail);
+                addedAny = true;
+            }
         }
 
-        await _context.SaveChangesAsync(cancellationToken);
+        if (addedAny)
+        {
+            await _context.SaveChangesAsync(cancellationToken);
+        }
     }
 }
