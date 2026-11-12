@@ -1,15 +1,17 @@
 namespace ERP.Application.Features.Suppliers.Handlers;
 
-using ERP.Application.Common.Caching;
-using Microsoft.Extensions.Options;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using ERP.Application.Abstractions.Caching;
 using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Common.Caching;
 using ERP.Application.Common.Models;
 using ERP.Application.Features.Suppliers.DTOs;
 using ERP.Application.Features.Suppliers.Queries;
 using ERP.Domain.Purchasing.Suppliers;
-
 using MediatR;
+using Microsoft.Extensions.Options;
 
 public sealed class GetSuppliersQueryHandler : IRequestHandler<GetSuppliersQuery, PagedResult<SupplierDto>>
 {
@@ -29,16 +31,18 @@ public sealed class GetSuppliersQueryHandler : IRequestHandler<GetSuppliersQuery
 
     public async Task<PagedResult<SupplierDto>> Handle(GetSuppliersQuery request, CancellationToken cancellationToken)
     {
+        var page = Math.Max(1, request.Page);
+        var pageSize = Math.Clamp(request.PageSize, 1, 100);
         var searchPart = !string.IsNullOrWhiteSpace(request.Search) ? request.Search.Trim() : "none";
-        var cacheKey = CacheKeys.Purchasing.SuppliersList(searchPart, request.Page, request.PageSize);
+        var cacheKey = CacheKeys.Purchasing.SuppliersList(searchPart, page, pageSize);
         var expiration = TimeSpan.FromMinutes(_cacheSettings.Value.PaginatedListExpirationMinutes);
 
         return await _cacheService.GetOrCreateAsync(
             cacheKey,
             async (ct) =>
             {
-                var options = new QueryOptions<Supplier> 
-                { 
+                var options = new QueryOptions<Supplier>
+                {
                     AsNoTracking = true,
                     OrderBy = q => System.Linq.Queryable.OrderBy(q, s => s.CompanyName)
                 };
@@ -52,7 +56,7 @@ public sealed class GetSuppliersQueryHandler : IRequestHandler<GetSuppliersQuery
                         s.Email.Value.Contains(term));
                 }
 
-                var pagedSuppliers = await _supplierRepository.GetPagedAsync(options, request.Page, request.PageSize, ct);
+                var pagedSuppliers = await _supplierRepository.GetPagedAsync(options, page, pageSize, ct);
 
                 return pagedSuppliers.Map(s => new SupplierDto(
                     s.Id,
@@ -67,5 +71,3 @@ public sealed class GetSuppliersQueryHandler : IRequestHandler<GetSuppliersQuery
             cancellationToken);
     }
 }
-
-

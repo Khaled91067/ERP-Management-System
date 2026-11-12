@@ -1,17 +1,17 @@
 namespace ERP.Application.Features.PurchaseOrders.Handlers;
 
-using ERP.Application.Common.Caching;
-using Microsoft.Extensions.Options;
-using ERP.Application.Abstractions.Caching;
 using System;
-
+using System.Threading;
+using System.Threading.Tasks;
+using ERP.Application.Abstractions.Caching;
 using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Common.Caching;
 using ERP.Application.Common.Models;
 using ERP.Application.Features.PurchaseOrders.Dtos;
 using ERP.Application.Features.PurchaseOrders.Queries;
 using ERP.Domain.Purchasing.PurchaseOrders;
-
 using MediatR;
+using Microsoft.Extensions.Options;
 
 public sealed class GetPurchaseOrdersQueryHandler : IRequestHandler<GetPurchaseOrdersQuery, PagedResult<PurchaseOrderDto>>
 {
@@ -31,19 +31,21 @@ public sealed class GetPurchaseOrdersQueryHandler : IRequestHandler<GetPurchaseO
 
     public async Task<PagedResult<PurchaseOrderDto>> Handle(GetPurchaseOrdersQuery request, CancellationToken cancellationToken)
     {
+        var page = Math.Max(1, request.Page);
+        var pageSize = Math.Clamp(request.PageSize, 1, 100);
         var supPart = request.SupplierId.HasValue ? request.SupplierId.Value.ToString() : "all";
         var statPart = !string.IsNullOrWhiteSpace(request.Status) ? request.Status : "all";
         var searchPart = !string.IsNullOrWhiteSpace(request.Search) ? request.Search.Trim() : "none";
-        
-        var cacheKey = $"PO:PurchaseOrders:Sup={supPart}:Stat={statPart}:Search={searchPart}:Page={request.Page}:Size={request.PageSize}";
+
+        var cacheKey = CacheKeys.Purchasing.PurchaseOrdersList(supPart, statPart, searchPart, page, pageSize);
         var expiration = TimeSpan.FromMinutes(_cacheSettings.Value.PaginatedListExpirationMinutes);
 
         return await _cacheService.GetOrCreateAsync(
             cacheKey,
             async (ct) =>
             {
-                var options = new QueryOptions<PurchaseOrder> 
-                { 
+                var options = new QueryOptions<PurchaseOrder>
+                {
                     AsNoTracking = true,
                     OrderBy = q => System.Linq.Queryable.OrderByDescending(q, po => po.OrderDate)
                 };
@@ -65,11 +67,12 @@ public sealed class GetPurchaseOrdersQueryHandler : IRequestHandler<GetPurchaseO
                     options.Filters.Add(po => po.Supplier != null && (po.Supplier.CompanyName.Contains(search) || po.Supplier.ContactName.Contains(search)));
                 }
 
-                var pagedOrders = await _repository.GetPagedAsync(options, request.Page, request.PageSize, ct);
+                var pagedOrders = await _repository.GetPagedAsync(options, page, pageSize, ct);
 
                 return pagedOrders.Map(po => new PurchaseOrderDto(
                     po.Id,
                     po.SupplierId,
+                    po.Supplier?.CompanyName ?? string.Empty,
                     po.OrderDate,
                     po.ExpectedDelivery,
                     po.Status.ToString(),
@@ -80,5 +83,3 @@ public sealed class GetPurchaseOrdersQueryHandler : IRequestHandler<GetPurchaseO
             cancellationToken);
     }
 }
-
-

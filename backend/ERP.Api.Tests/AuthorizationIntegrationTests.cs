@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using ERP.Api;
 using ERP.Domain.Identity.Permissions;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
@@ -52,28 +53,33 @@ namespace ERP.Api.Tests
         }
     }
 
-    public class AuthorizationIntegrationTests : IClassFixture<WebApplicationFactory<Program>>
+    public class CustomWebApplicationFactory : WebApplicationFactory<Program>
     {
-        private readonly WebApplicationFactory<Program> _factory;
-
-        public AuthorizationIntegrationTests(WebApplicationFactory<Program> factory)
+        protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
-            _factory = factory.WithWebHostBuilder(builder =>
+            builder.ConfigureAppConfiguration((context, config) =>
             {
-                builder.ConfigureAppConfiguration((context, config) =>
+                config.AddInMemoryCollection(new Dictionary<string, string?>
                 {
-                    config.AddInMemoryCollection(new Dictionary<string, string?>
-                    {
-                        ["ConnectionStrings:RedisConnection"] = ""
-                    });
-                });
-
-                builder.ConfigureTestServices(services =>
-                {
-                    services.AddAuthentication("Test")
-                        .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>("Test", options => { });
+                    ["ConnectionStrings:RedisConnection"] = ""
                 });
             });
+
+            builder.ConfigureTestServices(services =>
+            {
+                services.AddAuthentication("Test")
+                    .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>("Test", options => { });
+            });
+        }
+    }
+
+    public class AuthorizationIntegrationTests : IClassFixture<CustomWebApplicationFactory>
+    {
+        private readonly CustomWebApplicationFactory _factory;
+
+        public AuthorizationIntegrationTests(CustomWebApplicationFactory factory)
+        {
+            _factory = factory;
         }
 
         [Fact]

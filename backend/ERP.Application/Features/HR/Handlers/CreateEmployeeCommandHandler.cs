@@ -52,6 +52,7 @@ public sealed class CreateEmployeeCommandHandler : IRequestHandler<CreateEmploye
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         await _cacheService.RemoveByPrefixAsync("HR:Employees", cancellationToken);
+        await _cacheService.RemoveByPrefixAsync("HR:Departments", cancellationToken);
 
         return employee.Id;
     }

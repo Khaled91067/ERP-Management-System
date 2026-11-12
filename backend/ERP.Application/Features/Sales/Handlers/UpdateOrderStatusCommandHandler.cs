@@ -1,13 +1,14 @@
 namespace ERP.Application.Features.Sales.Handlers;
 
-using ERP.Application.Common.Caching;
-using ERP.Application.Abstractions.Caching;
 using System.Threading;
 using System.Threading.Tasks;
 
 using ERP.Application.Abstractions;
+using ERP.Application.Abstractions.Caching;
 using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Common.Caching;
 using ERP.Application.Features.Sales.Commands;
+using ERP.Domain.Catalog.Products;
 using ERP.Domain.Sales.Orders;
 using ERP.Domain.Shared.Exceptions;
 
@@ -16,15 +17,18 @@ using MediatR;
 public sealed class UpdateOrderStatusCommandHandler : IRequestHandler<UpdateOrderStatusCommand, bool>
 {
     private readonly IOrderRepository _orderRepository;
+    private readonly IGenericRepository<Product> _productRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICacheService _cacheService;
 
     public UpdateOrderStatusCommandHandler(
         IOrderRepository orderRepository,
+        IGenericRepository<Product> productRepository,
         IUnitOfWork unitOfWork,
         ICacheService cacheService)
     {
         _orderRepository = orderRepository;
+        _productRepository = productRepository;
         _unitOfWork = unitOfWork;
         _cacheService = cacheService;
     }
@@ -45,6 +49,15 @@ public sealed class UpdateOrderStatusCommandHandler : IRequestHandler<UpdateOrde
                 break;
             case OrderStatus.Cancelled:
                 order.Cancel();
+                foreach (var line in order.OrderLines)
+                {
+                    var product = await _productRepository.GetByIdAsync(line.ProductId, cancellationToken);
+                    if (product is not null)
+                    {
+                        product.IncreaseStock(line.Quantity);
+                        _productRepository.Update(product);
+                    }
+                }
                 break;
             default:
                 throw new BusinessRuleValidationException($"Unsupported status transition to {request.Status}");
@@ -56,8 +69,15 @@ public sealed class UpdateOrderStatusCommandHandler : IRequestHandler<UpdateOrde
         await _cacheService.RemoveAsync(CacheKeys.Sales.OrderById(order.Id), cancellationToken);
         await _cacheService.RemoveByPrefixAsync(CacheKeys.Sales.OrdersPrefix(), cancellationToken);
 
+        if (request.Status == OrderStatus.Cancelled)
+        {
+            await _cacheService.RemoveByPrefixAsync(CacheKeys.Catalog.ProductsPrefix(), cancellationToken);
+            foreach (var line in order.OrderLines)
+            {
+                await _cacheService.RemoveAsync(CacheKeys.Catalog.ProductById(line.ProductId), cancellationToken);
+            }
+        }
+
         return true;
     }
 }
-
-

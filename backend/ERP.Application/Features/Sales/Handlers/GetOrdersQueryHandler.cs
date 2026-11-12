@@ -1,18 +1,18 @@
 namespace ERP.Application.Features.Sales.Handlers;
 
-using ERP.Application.Common.Caching;
-using Microsoft.Extensions.Options;
-using ERP.Application.Abstractions.Caching;
 using System;
 using System.Collections.Generic;
-
+using System.Threading;
+using System.Threading.Tasks;
+using ERP.Application.Abstractions.Caching;
 using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Common.Caching;
 using ERP.Application.Common.Models;
 using ERP.Application.Features.Sales.Dtos;
 using ERP.Application.Features.Sales.Queries;
 using ERP.Domain.Sales.Orders;
-
 using MediatR;
+using Microsoft.Extensions.Options;
 
 public sealed class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, PagedResult<OrderDto>>
 {
@@ -32,19 +32,21 @@ public sealed class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, Page
 
     public async Task<PagedResult<OrderDto>> Handle(GetOrdersQuery request, CancellationToken cancellationToken)
     {
+        var page = Math.Max(1, request.Page);
+        var pageSize = Math.Clamp(request.PageSize, 1, 100);
         var custPart = request.CustomerId.HasValue ? request.CustomerId.Value.ToString() : "all";
         var statPart = !string.IsNullOrWhiteSpace(request.Status) ? request.Status : "all";
         var searchPart = !string.IsNullOrWhiteSpace(request.Search) ? request.Search.Trim() : "none";
-        
-        var cacheKey = CacheKeys.Sales.OrdersList(custPart, statPart, searchPart, request.Page, request.PageSize);
+
+        var cacheKey = CacheKeys.Sales.OrdersList(custPart, statPart, searchPart, page, pageSize);
         var expiration = TimeSpan.FromMinutes(_cacheSettings.Value.PaginatedListExpirationMinutes);
 
         return await _cacheService.GetOrCreateAsync(
             cacheKey,
             async (ct) =>
             {
-                var options = new QueryOptions<Order> 
-                { 
+                var options = new QueryOptions<Order>
+                {
                     AsNoTracking = true,
                     OrderBy = q => System.Linq.Queryable.OrderByDescending(q, o => o.OrderDate)
                 };
@@ -67,7 +69,7 @@ public sealed class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, Page
                                              o.ShippingAddress.Contains(search));
                 }
 
-                var pagedOrders = await _orderRepository.GetPagedAsync(options, request.Page, request.PageSize, ct);
+                var pagedOrders = await _orderRepository.GetPagedAsync(options, page, pageSize, ct);
 
                 return pagedOrders.Map(order => new OrderDto(
                     order.Id,
@@ -86,5 +88,3 @@ public sealed class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, Page
             cancellationToken);
     }
 }
-
-

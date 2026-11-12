@@ -1,10 +1,12 @@
 namespace ERP.Application.Features.Catalog.Handlers;
 
+using System.Threading;
+using System.Threading.Tasks;
 using ERP.Application.Abstractions;
 using ERP.Application.Abstractions.Caching;
 using ERP.Application.Abstractions.Repositories;
 using ERP.Application.Features.Catalog.Commands;
-
+using ERP.Domain.Shared.Exceptions;
 using MediatR;
 
 public sealed class UpdateCategoryCommandHandler(
@@ -21,15 +23,15 @@ public sealed class UpdateCategoryCommandHandler(
         var name = request.Name.Trim();
         var existing = await categoryRepository.GetByNameAsync(name, cancellationToken);
         if (existing is not null && existing.Id != category.Id)
-            throw new InvalidOperationException("A category with this name already exists.");
+            throw new ConflictException("A category with this name already exists.");
 
         category.UpdateName(request.Name);
         categoryRepository.Update(category);
         await unitOfWork.SaveChangesAsync(cancellationToken);
-        
+
         await cacheService.RemoveAsync($"Catalog:Category:{category.Id}", cancellationToken);
         await cacheService.RemoveByPrefixAsync("Catalog:Categories", cancellationToken);
-        
+
         return true;
     }
 }

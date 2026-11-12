@@ -1,11 +1,13 @@
 namespace ERP.Application.Features.Catalog.Handlers;
 
+using System.Threading;
+using System.Threading.Tasks;
 using ERP.Application.Abstractions;
 using ERP.Application.Abstractions.Caching;
 using ERP.Application.Abstractions.Repositories;
 using ERP.Application.Features.Catalog.Commands;
 using ERP.Domain.Catalog.Products;
-
+using ERP.Domain.Shared.Exceptions;
 using MediatR;
 
 public sealed class CreateProductCommandHandler(
@@ -32,9 +34,9 @@ public sealed class CreateProductCommandHandler(
 
         productRepository.Add(product);
         await unitOfWork.SaveChangesAsync(cancellationToken);
-        
+
         await cacheService.RemoveByPrefixAsync("Catalog:Products", cancellationToken);
-        
+
         return product.Id;
     }
 
@@ -42,10 +44,10 @@ public sealed class CreateProductCommandHandler(
         int initialStockQuantity, int reorderLevel, CancellationToken cancellationToken)
     {
         if (await productRepository.GetBySkuAsync(sku.Trim(), cancellationToken) is not null)
-            throw new InvalidOperationException("A product with this SKU already exists.");
-        if (await categoryRepository.GetByIdAsync(categoryId) is null)
-            throw new InvalidOperationException("Category does not exist.");
+            throw new ConflictException("A product with this SKU already exists.");
+        if (await categoryRepository.GetByIdAsync(categoryId, cancellationToken) is null)
+            throw new NotFoundException("Category", categoryId);
         if (unitPrice < 0 || costPrice < 0 || initialStockQuantity < 0 || reorderLevel < 0)
-            throw new InvalidOperationException("Prices, stock quantity, and reorder level cannot be negative.");
+            throw new BusinessRuleValidationException("Prices, stock quantity, and reorder level cannot be negative.");
     }
 }

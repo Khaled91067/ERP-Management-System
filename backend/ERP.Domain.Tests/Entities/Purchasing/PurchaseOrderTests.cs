@@ -297,7 +297,7 @@ public class PurchaseOrderTests
     }
 
     [Fact]
-    public void Approve_WhenNotDraft_ThrowsDomainException()
+    public void Approve_WhenSubmittedWithLines_TransitionsToApproved()
     {
         // Arrange
         var po = new PurchaseOrder(1, FutureDelivery);
@@ -305,10 +305,24 @@ public class PurchaseOrderTests
         po.Submit();
 
         // Act
+        po.Approve();
+
+        // Assert
+        po.Status.Should().Be(PurchaseOrderStatus.Approved);
+    }
+
+    [Fact]
+    public void Approve_WhenNotDraftOrSubmitted_ThrowsDomainException()
+    {
+        // Arrange
+        var po = new PurchaseOrder(1, FutureDelivery);
+        po.Cancel();
+
+        // Act
         var act = () => po.Approve();
 
         // Assert
-        act.Should().Throw<DomainException>().WithMessage("*Only draft purchase orders can be approved*");
+        act.Should().Throw<DomainException>().WithMessage("*Only draft or submitted purchase orders can be approved*");
     }
 
     // -----------------------------------------------------------------------

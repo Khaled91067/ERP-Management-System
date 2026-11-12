@@ -1,10 +1,12 @@
 namespace ERP.Application.Features.Catalog.Handlers;
 
+using System.Threading;
+using System.Threading.Tasks;
 using ERP.Application.Abstractions;
 using ERP.Application.Abstractions.Caching;
 using ERP.Application.Abstractions.Repositories;
 using ERP.Application.Features.Catalog.Commands;
-
+using ERP.Domain.Shared.Exceptions;
 using MediatR;
 
 public sealed class UpdateProductCommandHandler(
@@ -18,13 +20,13 @@ public sealed class UpdateProductCommandHandler(
         var product = await productRepository.GetByIdAsync(request.Id, cancellationToken);
         if (product is null) return false;
         if (request.UnitPrice < 0 || request.CostPrice < 0 || request.ReorderLevel < 0)
-            throw new InvalidOperationException("Prices and reorder level cannot be negative.");
+            throw new BusinessRuleValidationException("Prices and reorder level cannot be negative.");
         if (await categoryRepository.GetByIdAsync(request.CategoryId, cancellationToken) is null)
-            throw new InvalidOperationException("Category does not exist.");
+            throw new NotFoundException("Category", request.CategoryId);
 
         var existing = await productRepository.GetBySkuAsync(request.Sku.Trim(), cancellationToken);
         if (existing is not null && existing.Id != product.Id)
-            throw new InvalidOperationException("A product with this SKU already exists.");
+            throw new ConflictException("A product with this SKU already exists.");
 
         product.UpdateDetails(
             request.Name,
@@ -36,10 +38,10 @@ public sealed class UpdateProductCommandHandler(
 
         productRepository.Update(product);
         await unitOfWork.SaveChangesAsync(cancellationToken);
-        
+
         await cacheService.RemoveAsync($"Catalog:Product:{product.Id}", cancellationToken);
         await cacheService.RemoveByPrefixAsync("Catalog:Products", cancellationToken);
-        
+
         return true;
     }
 }

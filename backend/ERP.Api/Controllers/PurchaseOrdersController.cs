@@ -68,6 +68,15 @@ public sealed class PurchaseOrdersController : ControllerBase
         var result = await _sender.Send(command, cancellationToken);
         return result ? NoContent() : NotFound();
     }
+
+    [HttpDelete("{id:int}")]
+    [HasPermission(Permissions.PurchaseOrders.Write)]
+    public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
+    {
+        var command = new DeletePurchaseOrderCommand(id);
+        var result = await _sender.Send(command, cancellationToken);
+        return result ? NoContent() : NotFound();
+    }
 }
 
 public sealed record UpdatePurchaseOrderStatusRequest(string Status);

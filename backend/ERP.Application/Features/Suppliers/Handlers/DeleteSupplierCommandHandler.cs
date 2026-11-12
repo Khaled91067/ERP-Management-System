@@ -1,18 +1,20 @@
-
 namespace ERP.Application.Features.Suppliers.Handlers;
 
-using ERP.Application.Common.Caching;
-using ERP.Application.Abstractions.Caching;
+using System.Threading;
+using System.Threading.Tasks;
 using ERP.Application.Abstractions;
+using ERP.Application.Abstractions.Caching;
 using ERP.Application.Abstractions.Repositories;
+using ERP.Application.Common.Caching;
 using ERP.Application.Features.Suppliers.Commands;
-
+using ERP.Domain.Shared.Exceptions;
 using MediatR;
 
 public sealed class DeleteSupplierCommandHandler : IRequestHandler<DeleteSupplierCommand, bool>
 {
     private readonly ISupplierRepository _supplierRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ICacheService _cacheService;
 
     public DeleteSupplierCommandHandler(
         ISupplierRepository supplierRepository,
@@ -24,14 +26,18 @@ public sealed class DeleteSupplierCommandHandler : IRequestHandler<DeleteSupplie
         _cacheService = cacheService;
     }
 
-    private readonly ICacheService _cacheService;
-
     public async Task<bool> Handle(DeleteSupplierCommand request, CancellationToken cancellationToken)
     {
         var supplier = await _supplierRepository.GetByIdAsync(request.Id, cancellationToken);
 
         if (supplier is null)
             return false;
+
+        if (await _supplierRepository.HasPurchaseOrdersAsync(supplier.Id, cancellationToken))
+        {
+            throw new BusinessRuleValidationException(
+                $"Cannot delete supplier '{supplier.CompanyName}' because it has associated purchase orders.");
+        }
 
         _supplierRepository.Delete(supplier);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
@@ -42,5 +48,3 @@ public sealed class DeleteSupplierCommandHandler : IRequestHandler<DeleteSupplie
         return true;
     }
 }
-
-

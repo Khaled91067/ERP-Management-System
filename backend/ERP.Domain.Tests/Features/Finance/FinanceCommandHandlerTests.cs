@@ -109,6 +109,31 @@ public class FinanceCommandHandlerTests
     }
 
     [Fact]
+    public async Task CreateInvoiceCommandHandler_WithNonExistentOrderId_ThrowsNotFoundException()
+    {
+        // Arrange
+        var customer = new Customer("ACME Corp", "billing@acme.com");
+        var invoiceRepo = new FakeInvoiceRepository();
+        var customerRepo = new FakeCustomerRepository(customer);
+        var orderRepo = new FakeOrderRepository();
+        var unitOfWork = new FakeUnitOfWork();
+        var cacheService = new FakeCacheService();
+
+        var handler = new CreateInvoiceCommandHandler(invoiceRepo, customerRepo, unitOfWork, cacheService, orderRepo);
+        var command = new CreateInvoiceCommand(
+            CustomerId: customer.Id,
+            DueDate: FutureDueDate,
+            Lines: new List<CreateInvoiceLineCommand> { new("Item", 1, 10m) },
+            OrderId: 999);
+
+        // Act
+        var act = () => handler.Handle(command, CancellationToken.None);
+
+        // Assert
+        await act.Should().ThrowAsync<NotFoundException>();
+    }
+
+    [Fact]
     public async Task GenerateInvoiceCommandHandler_WithValidOrder_GeneratesInvoiceAndInvalidatesCache()
     {
         // Arrange
@@ -341,11 +366,6 @@ public class FinanceCommandHandlerTests
         public Task<Invoice?> GetByIdWithLinesAsync(int id, CancellationToken cancellationToken = default)
             => Task.FromResult(Invoices.FirstOrDefault(x => x.Id == id));
 
-        public Task<IEnumerable<Invoice>> GetInvoicesByCustomerAsync(int? customerId = null, CancellationToken cancellationToken = default)
-            => Task.FromResult<IEnumerable<Invoice>>(customerId.HasValue
-                ? Invoices.Where(x => x.CustomerId == customerId.Value).ToList()
-                : Invoices.ToList());
-
         public Task<IEnumerable<Invoice>> GetAllAsync(QueryOptions<Invoice>? options = null, CancellationToken cancellationToken = default)
             => Task.FromResult<IEnumerable<Invoice>>(Invoices.ToList());
 
@@ -419,9 +439,6 @@ public class FinanceCommandHandlerTests
 
         public Task<Order?> GetByIdWithLinesAsync(int id, CancellationToken cancellationToken = default)
             => Task.FromResult(_orders.FirstOrDefault(x => x.Id == id));
-
-        public Task<IEnumerable<Order>> GetOrdersWithCustomerAsync(int? customerId = null, CancellationToken cancellationToken = default)
-            => Task.FromResult<IEnumerable<Order>>(_orders);
 
         public Task<IEnumerable<Order>> GetAllAsync(QueryOptions<Order>? options = null, CancellationToken cancellationToken = default)
             => Task.FromResult<IEnumerable<Order>>(_orders);

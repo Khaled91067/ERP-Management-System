@@ -56,13 +56,31 @@ namespace ERP.Api
             builder.Services.AddProblemDetails();
             builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
+            builder.Services.AddRateLimiter(rateLimiterOptions =>
+            {
+                rateLimiterOptions.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+                rateLimiterOptions.AddPolicy("auth", httpContext =>
+                    System.Threading.RateLimiting.RateLimitPartition.GetFixedWindowLimiter(
+                        partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                        factory: _ => new System.Threading.RateLimiting.FixedWindowRateLimiterOptions
+                        {
+                            PermitLimit = 10,
+                            Window = TimeSpan.FromMinutes(1),
+                            QueueLimit = 0
+                        }));
+            });
+
+            var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
+                ?? ["http://localhost:4200", "http://localhost:80", "http://localhost"];
+
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowFrontend", policy =>
                 {
-                    policy.AllowAnyOrigin()
+                    policy.WithOrigins(allowedOrigins)
                           .AllowAnyHeader()
-                          .AllowAnyMethod();
+                          .AllowAnyMethod()
+                          .AllowCredentials();
                 });
             });
 
@@ -82,6 +100,8 @@ namespace ERP.Api
             }
 
             app.UseCors("AllowFrontend");
+
+            app.UseRateLimiter();
 
             app.UseHttpsRedirection();
             

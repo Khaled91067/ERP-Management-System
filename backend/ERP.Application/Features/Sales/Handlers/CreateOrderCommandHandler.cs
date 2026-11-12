@@ -71,6 +71,11 @@ public sealed class CreateOrderCommandHandler : IRequestHandler<CreateOrderComma
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         await _cacheService.RemoveByPrefixAsync("Sales:Orders", cancellationToken);
+        await _cacheService.RemoveByPrefixAsync("Catalog:Products", cancellationToken);
+        foreach (var line in request.Lines)
+        {
+            await _cacheService.RemoveAsync($"Catalog:Product:{line.ProductId}", cancellationToken);
+        }
 
         return order.Id;
     }

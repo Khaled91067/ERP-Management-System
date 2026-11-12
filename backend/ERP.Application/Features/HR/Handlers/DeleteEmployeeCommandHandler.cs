@@ -39,6 +39,7 @@ public sealed class DeleteEmployeeCommandHandler : IRequestHandler<DeleteEmploye
 
         await _cacheService.RemoveAsync($"HR:Employee:{employee.Id}", cancellationToken);
         await _cacheService.RemoveByPrefixAsync("HR:Employees", cancellationToken);
+        await _cacheService.RemoveByPrefixAsync("HR:Departments", cancellationToken);
 
         return true;
     }

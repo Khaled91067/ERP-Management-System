@@ -97,6 +97,19 @@ public sealed class GlobalExceptionHandler(
                 cEx.Message,
                 null
             ),
+            Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException => (
+                StatusCodes.Status409Conflict,
+                "Concurrency Conflict",
+                "The record was modified by another user. Please refresh and try again.",
+                null
+            ),
+            Microsoft.EntityFrameworkCore.DbUpdateException dbEx when dbEx.InnerException?.Message.Contains("UNIQUE", StringComparison.OrdinalIgnoreCase) == true
+                || dbEx.InnerException?.Message.Contains("duplicate key", StringComparison.OrdinalIgnoreCase) == true => (
+                StatusCodes.Status409Conflict,
+                "Conflict",
+                "A record with the same unique identifier already exists.",
+                null
+            ),
             BusinessRuleValidationException brEx => (
                 StatusCodes.Status400BadRequest,
                 "Bad Request",
