@@ -1,4 +1,3 @@
-
 namespace ERP.Infrastructure.Persistence.Configurations
 {
     using ERP.Domain.Sales.Orders;
@@ -7,7 +6,7 @@ namespace ERP.Infrastructure.Persistence.Configurations
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-    public class OrderConfiguration: IEntityTypeConfiguration<Order>
+    public class OrderConfiguration : IEntityTypeConfiguration<Order>
     {
         public void Configure(EntityTypeBuilder<Order> builder)
         {
@@ -28,10 +27,14 @@ namespace ERP.Infrastructure.Persistence.Configurations
                 .HasForeignKey(o => o.CustomerId)
                 .OnDelete(DeleteBehavior.NoAction);
 
+            builder.Property(o => o.RowVersion)
+                .IsRowVersion();
 
+            builder.Navigation(o => o.OrderLines)
+                .UsePropertyAccessMode(PropertyAccessMode.Field);
+
+            builder.Navigation(o => o.Invoices)
+                .UsePropertyAccessMode(PropertyAccessMode.Field);
         }
     }
-
-
-
 }

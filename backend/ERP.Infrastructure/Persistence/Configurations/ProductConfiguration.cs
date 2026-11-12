@@ -37,7 +37,16 @@ namespace ERP.Infrastructure.Persistence.Configurations
                    .HasForeignKey(p => p.CategoryId)
                    .OnDelete(DeleteBehavior.NoAction);
 
+            builder.Property(p => p.RowVersion)
+                   .IsRowVersion();
 
+            builder.Navigation(p => p.OrderLines)
+                   .HasField("_orderLineList")
+                   .UsePropertyAccessMode(PropertyAccessMode.Field);
+
+            builder.Navigation(p => p.PurchaseOrderLines)
+                   .HasField("_purchaseOrderLineList")
+                   .UsePropertyAccessMode(PropertyAccessMode.Field);
         }
     }
 }

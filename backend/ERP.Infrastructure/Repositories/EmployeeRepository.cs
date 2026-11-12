@@ -1,16 +1,11 @@
-
 namespace ERP.Infrastructure.Persistence.Repositories;
 
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-
 using ERP.Application.Abstractions.Repositories;
 using ERP.Domain.HR.Employees;
 using ERP.Infrastructure.Persistence;
 using ERP.Infrastructure.Repositories;
-
 using Microsoft.EntityFrameworkCore;
 
 public sealed class EmployeeRepository
@@ -34,20 +29,5 @@ public sealed class EmployeeRepository
             .FirstOrDefaultAsync(
                 e => e.Id == id,
                 cancellationToken);
-    }
-
-    public async Task<IEnumerable<Employee>> GetEmployeesWithDepartmentAsync(
-        int? departmentId = null,
-        CancellationToken cancellationToken = default)
-    {
-        IQueryable<Employee> query = _context.Employees
-            .Include(e => e.Department);
-
-        if (departmentId.HasValue)
-        {
-            query = query.Where(e => e.DepartmentId == departmentId.Value);
-        }
-
-        return await query.ToListAsync(cancellationToken);
     }
 }

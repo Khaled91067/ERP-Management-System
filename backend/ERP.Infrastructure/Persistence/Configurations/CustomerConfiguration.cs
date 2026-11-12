@@ -1,4 +1,3 @@
-
 namespace ERP.Infrastructure.Persistence.Configurations
 {
     using ERP.Domain.Sales.Customers;
@@ -35,7 +34,15 @@ namespace ERP.Infrastructure.Persistence.Configurations
             builder.Property(c => c.TaxId)
                 .HasMaxLength(100);
 
+            builder.HasIndex(c => c.Email)
+                .IsUnique()
+                .HasFilter("[IsDeleted] = 0");
 
+            builder.Navigation(c => c.Orders)
+                .UsePropertyAccessMode(PropertyAccessMode.Field);
+
+            builder.Navigation(c => c.Invoices)
+                .UsePropertyAccessMode(PropertyAccessMode.Field);
         }
     }
 }

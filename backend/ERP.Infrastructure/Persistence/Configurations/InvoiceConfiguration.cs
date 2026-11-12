@@ -1,5 +1,3 @@
-
-
 namespace ERP.Infrastructure.Persistence.Configurations
 {
     using ERP.Domain.Sales.Invoices;
@@ -8,8 +6,7 @@ namespace ERP.Infrastructure.Persistence.Configurations
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-
-    public class InvoiceConfiguration: IEntityTypeConfiguration<Invoice>
+    public class InvoiceConfiguration : IEntityTypeConfiguration<Invoice>
     {
         public void Configure(EntityTypeBuilder<Invoice> builder)
         {
@@ -32,8 +29,11 @@ namespace ERP.Infrastructure.Persistence.Configurations
                    .IsRequired(false)
                    .OnDelete(DeleteBehavior.NoAction);
 
+            builder.Property(i => i.RowVersion)
+                   .IsRowVersion();
 
+            builder.Navigation(i => i.InvoiceLines)
+                   .UsePropertyAccessMode(PropertyAccessMode.Field);
         }
     }
-
 }

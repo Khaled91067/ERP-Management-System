@@ -19,7 +19,8 @@ namespace ERP.Infrastructure.Persistence.Configurations
                 .IsUnique()
                 .HasFilter("[IsDeleted] = 0");
 
-
+            builder.Navigation(d => d.Employees)
+                .UsePropertyAccessMode(PropertyAccessMode.Field);
         }
     }
 }

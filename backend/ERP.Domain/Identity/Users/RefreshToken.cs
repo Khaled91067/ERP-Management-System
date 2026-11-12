@@ -13,6 +13,7 @@ public class RefreshToken : BaseEntity
     public DateTime CreatedAt { get; private set; }
     public string? ReplacedByToken { get; private set; }
     public int UserId { get; private set; }
+    public byte[] RowVersion { get; private set; } = [];
     public User User { get; private set; } = null!;
 
     public bool IsExpired => ExpiresAt <= DateTime.UtcNow;

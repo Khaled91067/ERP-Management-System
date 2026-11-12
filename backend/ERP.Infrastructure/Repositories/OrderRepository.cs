@@ -1,16 +1,11 @@
-
 namespace ERP.Infrastructure.Persistence.Repositories;
 
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-
 using ERP.Application.Abstractions.Repositories;
 using ERP.Domain.Sales.Orders;
 using ERP.Infrastructure.Persistence;
 using ERP.Infrastructure.Repositories;
-
 using Microsoft.EntityFrameworkCore;
 
 public sealed class OrderRepository
@@ -36,21 +31,5 @@ public sealed class OrderRepository
             .FirstOrDefaultAsync(
                 o => o.Id == id,
                 cancellationToken);
-    }
-
-    public async Task<IEnumerable<Order>> GetOrdersWithCustomerAsync(
-        int? customerId = null,
-        CancellationToken cancellationToken = default)
-    {
-        IQueryable<Order> query = _context.Orders
-            .Include(o => o.Customer)
-            .Include(o => o.OrderLines);
-
-        if (customerId.HasValue)
-        {
-            query = query.Where(o => o.CustomerId == customerId.Value);
-        }
-
-        return await query.ToListAsync(cancellationToken);
     }
 }

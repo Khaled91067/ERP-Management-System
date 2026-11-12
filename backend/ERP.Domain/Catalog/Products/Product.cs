@@ -21,6 +21,7 @@ public class Product : SoftDeletableEntity
     public Money CostPrice { get; private set; } = null!;
     public int StockQuantity { get; private set; }
     public int ReorderLevel { get; private set; }
+    public byte[] RowVersion { get; private set; } = [];
     public Category? Category { get; private set; }
 
     public IReadOnlyCollection<OrderLine> OrderLines => _orderLineList.AsReadOnly();

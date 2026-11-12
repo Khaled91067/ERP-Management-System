@@ -1,10 +1,11 @@
-
 namespace ERP.Infrastructure.Repositories
 {
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
     using ERP.Application.Abstractions.Repositories;
     using ERP.Domain.Identity.Users;
     using ERP.Infrastructure.Persistence;
-
     using Microsoft.EntityFrameworkCore;
 
     public sealed class RefreshTokenRepository : IRefreshTokenRepository
@@ -16,7 +17,7 @@ namespace ERP.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<RefreshToken?> GetByTokenAsync(string token,CancellationToken cancellationToken)
+        public async Task<RefreshToken?> GetByTokenAsync(string token, CancellationToken cancellationToken)
         {
             return await _context.RefreshTokens
                 .Include(rt => rt.User)
@@ -26,7 +27,19 @@ namespace ERP.Infrastructure.Repositories
 
         public async Task AddAsync(RefreshToken refreshToken, CancellationToken cancellationToken)
         {
-            await _context.RefreshTokens.AddAsync(refreshToken,cancellationToken);
+            await _context.RefreshTokens.AddAsync(refreshToken, cancellationToken);
+        }
+
+        public async Task RevokeAllForUserAsync(int userId, CancellationToken cancellationToken)
+        {
+            var activeTokens = await _context.RefreshTokens
+                .Where(rt => rt.UserId == userId && !rt.IsRevoked)
+                .ToListAsync(cancellationToken);
+
+            foreach (var token in activeTokens)
+            {
+                token.Revoke();
+            }
         }
     }
 }

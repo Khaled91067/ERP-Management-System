@@ -109,6 +109,12 @@ namespace ERP.Infrastructure.Persistence.Migrations
                     b.Property<int>("ReorderLevel")
                         .HasColumnType("int");
 
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
                     b.Property<string>("Sku")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -295,6 +301,12 @@ namespace ERP.Infrastructure.Persistence.Migrations
                     b.Property<DateTime?>("RevokedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
                     b.Property<string>("Token")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -387,6 +399,12 @@ namespace ERP.Infrastructure.Persistence.Migrations
 
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -493,6 +511,10 @@ namespace ERP.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique()
+                        .HasFilter("[IsDeleted] = 0");
+
                     b.ToTable("Suppliers");
                 });
 
@@ -562,6 +584,10 @@ namespace ERP.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique()
+                        .HasFilter("[IsDeleted] = 0");
+
                     b.ToTable("Customers");
                 });
 
@@ -608,6 +634,12 @@ namespace ERP.Infrastructure.Persistence.Migrations
 
                     b.Property<DateTime?>("PaidAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -703,6 +735,12 @@ namespace ERP.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
 
                     b.Property<string>("ShippingAddress")
                         .IsRequired()

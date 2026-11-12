@@ -1,7 +1,10 @@
-
 namespace ERP.Infrastructure.Repositories
 {
+    using System;
+    using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     using ERP.Application.Abstractions.Repositories;
     using ERP.Infrastructure.Persistence;
@@ -38,41 +41,6 @@ namespace ERP.Infrastructure.Repositories
                 query = query.AsNoTracking();
             }
 
-            if(options != null)
-            {
-                if (options.IncludeDeleted)
-                {
-                    query = query.IgnoreQueryFilters();
-                }
-
-                foreach (var filter in options.Filters)
-                {
-                    query = query.Where(filter);
-                }
-               
-                foreach (var include in options.Includes)
-                {
-                    query = query.Include(include);
-                }
-
-                if (options.OrderBy != null)
-                {
-                    query = options.OrderBy(query);
-                }
-            }
-
-            return await query.ToListAsync(cancellationToken);
-        }
-
-        public async Task<ERP.Application.Common.Models.PagedResult<T>> GetPagedAsync(QueryOptions<T>? options = null, int page = 1, int pageSize = 20, CancellationToken cancellationToken = default)
-        {
-            IQueryable<T> query = _dbSet;
-
-            if (options?.AsNoTracking == true)
-            {
-                query = query.AsNoTracking();
-            }
-
             if (options != null)
             {
                 if (options.IncludeDeleted)
@@ -95,10 +63,41 @@ namespace ERP.Infrastructure.Repositories
                     query = options.OrderBy(query);
                 }
             }
+
+            return await query.ToListAsync(cancellationToken);
+        }
+
+        public async Task<ERP.Application.Common.Models.PagedResult<T>> GetPagedAsync(QueryOptions<T>? options = null, int page = 1, int pageSize = 20, CancellationToken cancellationToken = default)
+        {
+            page = Math.Max(1, page);
+            pageSize = Math.Clamp(pageSize, 1, 100);
+
             if (options?.OrderBy == null)
             {
                 throw new InvalidOperationException(
                     "Paged queries require an OrderBy clause.");
+            }
+
+            IQueryable<T> query = _dbSet;
+
+            if (options.AsNoTracking)
+            {
+                query = query.AsNoTracking();
+            }
+
+            if (options.IncludeDeleted)
+            {
+                query = query.IgnoreQueryFilters();
+            }
+
+            foreach (var filter in options.Filters)
+            {
+                query = query.Where(filter);
+            }
+
+            foreach (var include in options.Includes)
+            {
+                query = query.Include(include);
             }
 
             query = options.OrderBy(query);

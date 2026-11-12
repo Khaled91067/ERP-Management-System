@@ -1,16 +1,11 @@
-
 namespace ERP.Infrastructure.Persistence.Repositories;
 
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-
 using ERP.Application.Abstractions.Repositories;
 using ERP.Domain.Sales.Invoices;
 using ERP.Infrastructure.Persistence;
 using ERP.Infrastructure.Repositories;
-
 using Microsoft.EntityFrameworkCore;
 
 public sealed class InvoiceRepository
@@ -35,21 +30,5 @@ public sealed class InvoiceRepository
             .FirstOrDefaultAsync(
                 i => i.Id == id,
                 cancellationToken);
-    }
-
-    public async Task<IEnumerable<Invoice>> GetInvoicesByCustomerAsync(
-        int? customerId = null,
-        CancellationToken cancellationToken = default)
-    {
-        IQueryable<Invoice> query = _context.Invoices
-            .Include(i => i.Customer)
-            .Include(i => i.InvoiceLines);
-
-        if (customerId.HasValue)
-        {
-            query = query.Where(i => i.CustomerId == customerId.Value);
-        }
-
-        return await query.ToListAsync(cancellationToken);
     }
 }

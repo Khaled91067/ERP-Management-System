@@ -1,10 +1,10 @@
-
 namespace ERP.Infrastructure.Repositories;
 
+using System.Threading;
+using System.Threading.Tasks;
 using ERP.Application.Abstractions.Repositories;
 using ERP.Domain.Catalog.Products;
 using ERP.Infrastructure.Persistence;
-
 using Microsoft.EntityFrameworkCore;
 
 public sealed class ProductRepository : GenericRepository<Product>, IProductRepository
@@ -22,11 +22,6 @@ public sealed class ProductRepository : GenericRepository<Product>, IProductRepo
     public Task<Product?> GetByIdWithCategoryAsync(int id, CancellationToken cancellationToken = default) =>
         _context.Products.Include(product => product.Category)
             .FirstOrDefaultAsync(product => product.Id == id, cancellationToken);
-
-    public async Task<IReadOnlyList<Product>> GetAllWithCategoriesAsync(CancellationToken cancellationToken = default) =>
-        await _context.Products.Include(product => product.Category)
-            .OrderBy(product => product.Name)
-            .ToListAsync(cancellationToken);
 
     public async Task<bool> HasTransactionsAsync(int productId, CancellationToken cancellationToken = default)
     {

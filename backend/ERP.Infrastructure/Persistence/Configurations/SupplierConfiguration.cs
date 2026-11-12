@@ -1,4 +1,3 @@
-
 namespace ERP.Infrastructure.Persistence.Configurations
 {
     using ERP.Domain.Purchasing.Suppliers;
@@ -28,7 +27,12 @@ namespace ERP.Infrastructure.Persistence.Configurations
             builder.Property(s => s.PaymentTerms)
                 .HasMaxLength(500);
 
+            builder.HasIndex(s => s.Email)
+                .IsUnique()
+                .HasFilter("[IsDeleted] = 0");
 
+            builder.Navigation(s => s.PurchaseOrders)
+                .UsePropertyAccessMode(PropertyAccessMode.Field);
         }
     }
 }

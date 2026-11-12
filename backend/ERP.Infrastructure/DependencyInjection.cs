@@ -1,5 +1,3 @@
-
-
 namespace ERP.Infrastructure
 {
     using System.Text;
@@ -9,6 +7,7 @@ namespace ERP.Infrastructure
     using ERP.Application.Abstractions.Caching;
     using ERP.Application.Abstractions.Repositories;
     using ERP.Infrastructure.Authentication;
+    using ERP.Infrastructure.Authentication.Permissions;
     using ERP.Infrastructure.Caching;
     using ERP.Infrastructure.Persistence;
     using ERP.Infrastructure.Persistence.Repositories;
@@ -20,9 +19,8 @@ namespace ERP.Infrastructure
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
     using Microsoft.IdentityModel.Tokens;
-
-    using ERP.Infrastructure.Authentication.Permissions;
 
     using StackExchange.Redis;
 
@@ -39,18 +37,23 @@ namespace ERP.Infrastructure
                             errorNumbersToAdd: null
                         )));
 
-            var redisConnectionString = configuration.GetConnectionString("RedisConnection");
-            if (!string.IsNullOrEmpty(redisConnectionString))
+            services.AddSingleton<ICacheService>(sp =>
             {
+                var config = sp.GetRequiredService<IConfiguration>();
+                var redisConnectionString = config.GetConnectionString("RedisConnection");
+                if (string.IsNullOrWhiteSpace(redisConnectionString))
+                {
+                    return new InMemoryCacheService();
+                }
+
                 var redisOptions = ConfigurationOptions.Parse(redisConnectionString);
                 redisOptions.AbortOnConnectFail = false;
                 var multiplexer = ConnectionMultiplexer.Connect(redisOptions);
-                services.AddSingleton<IConnectionMultiplexer>(multiplexer);
-            }
+                var logger = sp.GetRequiredService<ILogger<RedisCacheService>>();
+                return new RedisCacheService(multiplexer, logger);
+            });
 
-            services.AddSingleton<ICacheService, RedisCacheService>();
-
-            services.AddScoped(typeof(IGenericRepository<> ),typeof(GenericRepository<> ));
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
             services.AddScoped<IUnitOfWork, UnitOfWork.UnitOfWork>();
 
@@ -74,10 +77,7 @@ namespace ERP.Infrastructure
 
             services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
 
-
-
             services.AddScoped<ITokenService, TokenService>();
-
 
             var jwtSettings = configuration.GetSection("Jwt")
                 .Get<JwtSettings>() ?? throw new InvalidOperationException("JWT settings are missing.");
@@ -93,10 +93,10 @@ namespace ERP.Infrastructure
                             ValidateAudience = true,
                             ValidateLifetime = true,
                             ValidateIssuerSigningKey = true,
-            
+
                             ValidIssuer = jwtSettings.Issuer,
                             ValidAudience = jwtSettings.Audience,
-            
+
                             IssuerSigningKey =
                                 new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret))
                         };
@@ -106,21 +106,20 @@ namespace ERP.Infrastructure
             services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
             services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
 
-
-
-
             services.AddScoped<DbInitializer>();
             services.AddScoped<ISeeder, RoleSeeder>();
             services.AddScoped<ISeeder, UserSeeder>();
-            services.AddScoped<ISeeder, CategorySeeder>();
-            services.AddScoped<ISeeder, ProductSeeder>();
             services.AddScoped<ISeeder, DepartmentSeeder>();
             services.AddScoped<ISeeder, EmployeeSeeder>();
-            services.AddScoped<ISeeder, CustomerSeeder>();
+            services.AddScoped<ISeeder, CategorySeeder>();
             services.AddScoped<ISeeder, SupplierSeeder>();
+            services.AddScoped<ISeeder, ProductSeeder>();
+            services.AddScoped<ISeeder, CustomerSeeder>();
+            services.AddScoped<ISeeder, PurchaseOrderSeeder>();
+            services.AddScoped<ISeeder, OrderSeeder>();
+            services.AddScoped<ISeeder, InvoiceSeeder>();
 
             return services;
-
         }
     }
 }

@@ -18,6 +18,7 @@ public class PurchaseOrder : AggregateRoot
     public DateTime ExpectedDelivery { get; private set; }
     public PurchaseOrderStatus Status { get; private set; }
     public Money TotalAmount { get; private set; } = null!;
+    public byte[] RowVersion { get; private set; } = [];
     public Supplier? Supplier { get; private set; }
 
     public IReadOnlyCollection<PurchaseOrderLine> PurchaseOrderLines =>
@@ -147,9 +148,9 @@ public class PurchaseOrder : AggregateRoot
 
     public void Approve()
     {
-        if (Status != PurchaseOrderStatus.Draft)
+        if (Status != PurchaseOrderStatus.Draft && Status != PurchaseOrderStatus.Submitted)
             throw new BusinessRuleValidationException(
-                "Only draft purchase orders can be approved.");
+                "Only draft or submitted purchase orders can be approved.");
 
         if (_purchaseOrderLines.Count == 0)
             throw new BusinessRuleValidationException(

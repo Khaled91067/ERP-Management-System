@@ -20,7 +20,8 @@ namespace ERP.Infrastructure.Persistence.Configurations
             builder.Property(r => r.Permissions)
                 .IsRequired();
 
-
+            builder.Navigation(r => r.Users)
+                .UsePropertyAccessMode(PropertyAccessMode.Field);
         }
     }
 }

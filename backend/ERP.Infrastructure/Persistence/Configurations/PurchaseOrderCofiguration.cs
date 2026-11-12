@@ -38,6 +38,9 @@ namespace ERP.Infrastructure.Persistence.Configurations
                 .UsePropertyAccessMode(
                     PropertyAccessMode.Field);
 
+            builder.Property(po => po.RowVersion)
+                .IsRowVersion();
+
 
         }
     }

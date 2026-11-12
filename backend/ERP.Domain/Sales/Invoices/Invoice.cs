@@ -21,6 +21,7 @@ public class Invoice : AggregateRoot
     public InvoiceStatus Status { get; private set; }
     public Money TotalAmount { get; private set; } = null!;
     public DateTime? PaidAt { get; private set; }
+    public byte[] RowVersion { get; private set; } = [];
     public Order? Order { get; private set; }
     public Customer? Customer { get; private set; }
 

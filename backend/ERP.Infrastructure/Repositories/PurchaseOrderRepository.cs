@@ -1,4 +1,3 @@
-
 namespace ERP.Infrastructure.Persistence.Repositories;
 
 using ERP.Application.Abstractions.Repositories;
@@ -24,7 +23,9 @@ public sealed class PurchaseOrderRepository
         CancellationToken cancellationToken = default)
     {
         return await _context.PurchaseOrders
+            .Include(po => po.Supplier)
             .Include(po => po.PurchaseOrderLines)
+                .ThenInclude(l => l.Product)
             .FirstOrDefaultAsync(
                 po => po.Id == id,
                 cancellationToken);

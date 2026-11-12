@@ -86,13 +86,17 @@ public class RedisCacheService : ICacheService
             if (endpoints.Length == 0) return;
 
             var server = _connectionMultiplexer.GetServer(endpoints.First());
-            
-            // Using KEYS command pattern as requested for simplicity without advanced Redis search features
-            var keys = server.Keys(pattern: $"{prefixKey}*").ToArray();
-            if (keys.Any())
+
+            var keys = new List<RedisKey>();
+            await foreach (var key in server.KeysAsync(pattern: $"{prefixKey}*", pageSize: 250).WithCancellation(cancellationToken))
             {
-                await Database.KeyDeleteAsync(keys);
-                _logger.LogInformation("Cache removed {Count} keys with prefix: {PrefixKey}", keys.Length, prefixKey);
+                keys.Add(key);
+            }
+
+            if (keys.Count > 0)
+            {
+                await Database.KeyDeleteAsync(keys.ToArray());
+                _logger.LogInformation("Cache removed {Count} keys with prefix: {PrefixKey}", keys.Count, prefixKey);
             }
         }
         catch (Exception ex)

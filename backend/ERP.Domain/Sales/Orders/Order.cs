@@ -21,6 +21,7 @@ public class Order : AggregateRoot
     public PaymentMethod PaymentMethod { get; private set; }
     public string ShippingAddress { get; private set; } = string.Empty;
     public Money TotalAmount { get; private set; } = null!;
+    public byte[] RowVersion { get; private set; } = [];
     public Customer? Customer { get; private set; }
 
     public IReadOnlyCollection<OrderLine> OrderLines => _orderLines.AsReadOnly();

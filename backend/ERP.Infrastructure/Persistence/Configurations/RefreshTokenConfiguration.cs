@@ -17,6 +17,9 @@ namespace ERP.Infrastructure.Persistence.Configurations
            .WithMany(x => x.RefreshTokens)
            .HasForeignKey(x => x.UserId);
 
+            builder.Property(x => x.RowVersion)
+                   .IsRowVersion();
+
         }
 
     }
