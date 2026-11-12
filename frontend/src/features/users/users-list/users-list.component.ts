@@ -13,9 +13,11 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 import { UsersService } from '../users.service';
 import { UserDto } from '../models/user-management.model';
+import { TranslationService } from '@core/i18n/translation.service';
 import { NotificationService } from '@core/services/notification.service';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header.component';
 import { ConfirmationDialogComponent } from '@shared/components/confirmation-dialog/confirmation-dialog.component';
+import { TranslatePipe } from '@shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-users-list',
@@ -31,7 +33,8 @@ import { ConfirmationDialogComponent } from '@shared/components/confirmation-dia
     MatFormFieldModule,
     MatDialogModule,
     MatTooltipModule,
-    PageHeaderComponent
+    PageHeaderComponent,
+    TranslatePipe
   ],
   templateUrl: './users-list.component.html',
   styleUrl: './users-list.component.scss'
@@ -40,6 +43,7 @@ export class UsersListComponent implements OnInit {
   private readonly usersService = inject(UsersService);
   private readonly notification = inject(NotificationService);
   private readonly dialog = inject(MatDialog);
+  readonly i18n = inject(TranslationService);
   readonly router = inject(Router);
 
   readonly columns = ['name', 'role', 'actions'];
@@ -64,7 +68,7 @@ export class UsersListComponent implements OnInit {
 
   loadUsers(): void {
     this.isLoading.set(true);
-    
+
     this.usersService.getUsers({
       page: this.pageIndex() + 1,
       pageSize: this.pageSize(),
@@ -76,7 +80,6 @@ export class UsersListComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: () => {
-        this.notification.error('Failed to load users');
         this.isLoading.set(false);
       }
     });
@@ -91,8 +94,8 @@ export class UsersListComponent implements OnInit {
   deleteUser(user: UserDto): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       data: {
-        title: 'Delete User',
-        message: `Are you sure you want to delete ${user.firstName} ${user.lastName}?`,
+        title: this.i18n.translate('users.deleteTitle'),
+        message: this.i18n.translate('users.deleteMessage', { name: `${user.firstName} ${user.lastName}` }),
         danger: true
       }
     });
@@ -101,10 +104,9 @@ export class UsersListComponent implements OnInit {
       if (confirmed) {
         this.usersService.deleteUser(user.id).subscribe({
           next: () => {
-            this.notification.success('User deleted successfully');
+            this.notification.success(this.i18n.translate('users.deletedSuccess'));
             this.loadUsers();
-          },
-          error: () => this.notification.error('Failed to delete user')
+          }
         });
       }
     });

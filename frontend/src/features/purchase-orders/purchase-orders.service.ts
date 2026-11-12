@@ -23,6 +23,14 @@ export class PurchaseOrdersService {
     return this.apiService.create<Partial<PurchaseOrder>, number>(this.endpoint, data);
   }
 
+  submitOrder(id: number): Observable<void> {
+    return this.apiService.patch<{ status: string }, void>(this.endpoint, id, 'status', { status: 'Submitted' });
+  }
+
+  approveOrder(id: number): Observable<void> {
+    return this.apiService.patch<{ status: string }, void>(this.endpoint, id, 'status', { status: 'Approved' });
+  }
+
   receiveOrder(id: number): Observable<void> {
     return this.apiService.patch<{ status: string }, void>(this.endpoint, id, 'status', { status: 'Received' });
   }

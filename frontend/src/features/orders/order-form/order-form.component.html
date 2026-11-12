@@ -1,6 +1,6 @@
 <div class="page-container">
   <app-page-header
-    title="Create Sales Order"
+    [title]="'orders.createTitle' | translate"
     [breadcrumbs]="[
       { label: 'Sales' },
       { label: 'Orders', link: '/admin/orders' },
@@ -11,24 +11,52 @@
   <mat-card class="form-card mat-elevation-z0">
     <mat-card-content>
       <form [formGroup]="orderForm" (ngSubmit)="onSubmit()" class="form-layout">
-        
-        <mat-form-field appearance="outline" class="half-width">
-          <mat-label>Customer</mat-label>
-          <mat-select formControlName="customerId">
-            @for (customer of availableCustomers(); track customer.id) {
-              <mat-option [value]="customer.id">{{ customer.name }}</mat-option>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>{{ 'orders.customer' | translate }}</mat-label>
+            <mat-select formControlName="customerId" (selectionChange)="onCustomerSelected($event.value)">
+              @for (customer of availableCustomers(); track customer.id) {
+                <mat-option [value]="customer.id">{{ customer.name }}</mat-option>
+              }
+            </mat-select>
+            @if (orderForm.controls.customerId.hasError('required')) {
+              <mat-error>{{ 'orders.customerRequired' | translate }}</mat-error>
+            } @else if (orderForm.controls.customerId.hasError('serverError')) {
+              <mat-error>{{ orderForm.controls.customerId.getError('serverError') }}</mat-error>
             }
-          </mat-select>
-          @if (orderForm.controls.customerId.hasError('required')) {
-            <mat-error>Customer is required</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>{{ 'orders.paymentMethod' | translate }}</mat-label>
+            <mat-select formControlName="paymentMethod">
+              <mat-option value="Cash">{{ 'orders.cash' | translate }}</mat-option>
+              <mat-option value="CreditCard">{{ 'orders.creditCard' | translate }}</mat-option>
+              <mat-option value="MobilePayment">{{ 'orders.mobilePayment' | translate }}</mat-option>
+            </mat-select>
+            @if (orderForm.controls.paymentMethod.hasError('required')) {
+              <mat-error>{{ 'orders.paymentMethodRequired' | translate }}</mat-error>
+            } @else if (orderForm.controls.paymentMethod.hasError('serverError')) {
+              <mat-error>{{ orderForm.controls.paymentMethod.getError('serverError') }}</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>{{ 'orders.shippingAddress' | translate }}</mat-label>
+          <textarea matInput formControlName="shippingAddress" rows="2" [placeholder]="'orders.shippingAddressPlaceholder' | translate"></textarea>
+          @if (orderForm.controls.shippingAddress.hasError('required')) {
+            <mat-error>{{ 'orders.shippingAddressRequired' | translate }}</mat-error>
+          } @else if (orderForm.controls.shippingAddress.hasError('serverError')) {
+            <mat-error>{{ orderForm.controls.shippingAddress.getError('serverError') }}</mat-error>
           }
         </mat-form-field>
 
         <div class="lines-section">
           <div class="lines-header">
-            <h3>Order Items</h3>
+            <h3>{{ 'orders.orderItems' | translate }}</h3>
             <button mat-stroked-button color="primary" type="button" (click)="addLine()">
-              <mat-icon>add</mat-icon> Add Item
+              <mat-icon>add</mat-icon> {{ 'orders.addItem' | translate }}
             </button>
           </div>
 
@@ -36,27 +64,36 @@
             @for (line of lines.controls; track i; let i = $index) {
               <div [formGroupName]="i" class="line-row">
                 <mat-form-field appearance="outline" class="product-field">
-                  <mat-label>Product</mat-label>
+                  <mat-label>{{ 'orders.product' | translate }}</mat-label>
                   <mat-select formControlName="productId" (selectionChange)="onProductSelected(i, $event.value)">
                     @for (product of availableProducts(); track product.id) {
-                      <mat-option [value]="product.id">{{ product.name }} (Stock: {{ product.stockQuantity }})</mat-option>
+                      <mat-option [value]="product.id">{{ product.name }} ({{ 'dashboard.stock' | translate }}: {{ product.stockQuantity }})</mat-option>
                     }
                   </mat-select>
+                  @if (line.get('productId')?.hasError('serverError')) {
+                    <mat-error>{{ line.get('productId')?.getError('serverError') }}</mat-error>
+                  }
                 </mat-form-field>
 
                 <mat-form-field appearance="outline" class="qty-field">
-                  <mat-label>Qty</mat-label>
+                  <mat-label>{{ 'orders.qty' | translate }}</mat-label>
                   <input matInput type="number" formControlName="quantity" min="1">
+                  @if (line.get('quantity')?.hasError('serverError')) {
+                    <mat-error>{{ line.get('quantity')?.getError('serverError') }}</mat-error>
+                  }
                 </mat-form-field>
 
                 <mat-form-field appearance="outline" class="price-field">
-                  <mat-label>Unit Price</mat-label>
-                  <span matTextPrefix>$&nbsp;</span>
+                  <mat-label>{{ 'orders.unitPrice' | translate }}</mat-label>
+                  <span matTextPrefix>{{ 'common.currency' | translate }}&nbsp;</span>
                   <input matInput type="number" formControlName="unitPrice" min="0" step="0.01">
+                  @if (line.get('unitPrice')?.hasError('serverError')) {
+                    <mat-error>{{ line.get('unitPrice')?.getError('serverError') }}</mat-error>
+                  }
                 </mat-form-field>
 
                 <div class="line-total">
-                  {{ calculateLineTotal(i) | currency }}
+                  {{ calculateLineTotal(i) | localCurrency }}
                 </div>
 
                 <button mat-icon-button color="warn" type="button" (click)="removeLine(i)" [disabled]="lines.length === 1">
@@ -65,20 +102,20 @@
               </div>
             }
           </div>
-          
+
           <div class="order-total">
-            <strong>Total Amount:</strong>
-            <span>{{ calculateOrderTotal() | currency }}</span>
+            <strong>{{ 'orders.totalAmountLabel' | translate }}</strong>
+            <span>{{ calculateOrderTotal() | localCurrency }}</span>
           </div>
         </div>
 
         <div class="form-actions">
-          <button mat-button type="button" (click)="router.navigate(['/admin/orders'])">Cancel</button>
+          <button mat-button type="button" (click)="router.navigate(['/admin/orders'])">{{ 'common.cancel' | translate }}</button>
           <button mat-flat-button color="primary" type="submit" [disabled]="orderForm.invalid || isSaving()">
-            {{ isSaving() ? 'Submitting...' : 'Create Order' }}
+            {{ (isSaving() ? 'common.submitting' : 'orders.createOrder') | translate }}
           </button>
         </div>
-        
+
       </form>
     </mat-card-content>
   </mat-card>

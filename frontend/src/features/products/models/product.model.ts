@@ -4,9 +4,11 @@ export interface Product {
   id: number;
   name: string;
   sku: string;
-  description: string;
+  description?: string;
   unitPrice: number;
+  costPrice: number;
   stockQuantity: number;
+  initialStockQuantity?: number;
   reorderLevel: number;
   categoryId: number;
   categoryName: string;

@@ -9,13 +9,16 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
-import { CurrencyPipe } from '@angular/common';
 
 import { InvoicesService } from '../invoices.service';
 import { CustomersService } from '@features/customers/customers.service';
 import { Customer } from '@features/customers/models/customer.model';
+import { FormValidationService } from '@core/errors/form-validation.service';
+import { TranslationService } from '@core/i18n/translation.service';
 import { NotificationService } from '@core/services/notification.service';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header.component';
+import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { LocaleCurrencyPipe, toDateOnlyIsoString } from '@shared/pipes/localized-formatting.pipes';
 
 @Component({
   selector: 'app-invoice-form',
@@ -31,7 +34,8 @@ import { PageHeaderComponent } from '@shared/components/page-header/page-header.
     MatNativeDateModule,
     MatIconModule,
     PageHeaderComponent,
-    CurrencyPipe
+    TranslatePipe,
+    LocaleCurrencyPipe
   ],
   templateUrl: './invoice-form.component.html',
   styleUrl: './invoice-form.component.scss'
@@ -41,14 +45,16 @@ export class InvoiceFormComponent implements OnInit {
   private readonly invoicesService = inject(InvoicesService);
   private readonly customersService = inject(CustomersService);
   private readonly notification = inject(NotificationService);
+  private readonly formValidation = inject(FormValidationService);
+  private readonly i18n = inject(TranslationService);
   readonly router = inject(Router);
 
   readonly isSaving = signal(false);
   readonly availableCustomers = signal<Customer[]>([]);
 
   readonly invoiceForm = this.fb.nonNullable.group({
-    customerId: [0 as number | null, Validators.required],
-    dueDate: [new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), Validators.required], // Default to +30 days
+    customerId: [null as number | null, Validators.required],
+    dueDate: [new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), Validators.required],
     lines: this.fb.array([this.createLineFormGroup()])
   });
 
@@ -59,11 +65,10 @@ export class InvoiceFormComponent implements OnInit {
   ngOnInit(): void {
     this.loadCustomers();
   }
-  
+
   private loadCustomers(): void {
     this.customersService.getCustomers({ page: 1, pageSize: 1000 }).subscribe({
-      next: (res) => this.availableCustomers.set(res.items),
-      error: () => this.notification.error('Failed to load customers')
+      next: (res) => this.availableCustomers.set(res.items)
     });
   }
 
@@ -91,7 +96,7 @@ export class InvoiceFormComponent implements OnInit {
     const qty = line.get('quantity')?.value || 0;
     const price = line.get('unitPrice')?.value || 0;
     const tax = line.get('taxRate')?.value || 0;
-    
+
     const subtotal = qty * price;
     return subtotal + (subtotal * (tax / 100));
   }
@@ -101,13 +106,13 @@ export class InvoiceFormComponent implements OnInit {
   }
 
   onSubmit(): void {
+    this.formValidation.prepareFormForSubmission(this.invoiceForm);
     if (this.invoiceForm.invalid) return;
 
     this.isSaving.set(true);
     const formValue = this.invoiceForm.getRawValue();
-    
-    // Format date as ISO string
-    const dueDate = new Date(formValue.dueDate).toISOString();
+
+    const dueDate = toDateOnlyIsoString(formValue.dueDate);
 
     const requestData = {
       customerId: formValue.customerId as number,
@@ -122,11 +127,10 @@ export class InvoiceFormComponent implements OnInit {
 
     this.invoicesService.createInvoice(requestData as any).subscribe({
       next: () => {
-        this.notification.success('Invoice created successfully');
+        this.notification.success(this.i18n.translate('invoices.createdSuccess'));
         this.router.navigate(['/admin/invoices']);
       },
       error: () => {
-        this.notification.error('Failed to create invoice');
         this.isSaving.set(false);
       }
     });

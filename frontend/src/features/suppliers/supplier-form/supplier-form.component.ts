@@ -8,8 +8,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 
 import { SuppliersService } from '../suppliers.service';
+import { FormValidationService } from '@core/errors/form-validation.service';
+import { TranslationService } from '@core/i18n/translation.service';
 import { NotificationService } from '@core/services/notification.service';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header.component';
+import { TranslatePipe } from '@shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-supplier-form',
@@ -20,7 +23,8 @@ import { PageHeaderComponent } from '@shared/components/page-header/page-header.
     MatInputModule,
     MatFormFieldModule,
     MatCardModule,
-    PageHeaderComponent
+    PageHeaderComponent,
+    TranslatePipe
   ],
   templateUrl: './supplier-form.component.html',
   styleUrl: './supplier-form.component.scss'
@@ -29,6 +33,8 @@ export class SupplierFormComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly suppliersService = inject(SuppliersService);
   private readonly notification = inject(NotificationService);
+  private readonly formValidation = inject(FormValidationService);
+  private readonly i18n = inject(TranslationService);
   private readonly route = inject(ActivatedRoute);
   readonly router = inject(Router);
 
@@ -37,14 +43,11 @@ export class SupplierFormComponent implements OnInit {
   supplierId: number | null = null;
 
   readonly supplierForm = this.fb.nonNullable.group({
-    name: ['', Validators.required],
-    contactPerson: ['', Validators.required],
+    companyName: ['', Validators.required],
+    contactName: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     phone: ['', Validators.required],
-    taxId: ['', Validators.required],
-    address: ['', Validators.required],
-    city: ['', Validators.required],
-    country: ['', Validators.required]
+    paymentTerms: ['Net 30', Validators.required]
   });
 
   ngOnInit(): void {
@@ -62,13 +65,13 @@ export class SupplierFormComponent implements OnInit {
         this.supplierForm.patchValue(supplier);
       },
       error: () => {
-        this.notification.error('Failed to load supplier details');
         this.router.navigate(['/admin/suppliers']);
       }
     });
   }
 
   onSubmit(): void {
+    this.formValidation.prepareFormForSubmission(this.supplierForm);
     if (this.supplierForm.invalid) return;
 
     this.isSaving.set(true);
@@ -80,13 +83,11 @@ export class SupplierFormComponent implements OnInit {
 
     request$.subscribe({
       next: () => {
-        const msg = 'Supplier successfully ' + (this.isEditMode() ? 'updated' : 'created');
-        this.notification.success(msg);
+        const msgKey = this.isEditMode() ? 'suppliers.updatedSuccess' : 'suppliers.createdSuccess';
+        this.notification.success(this.i18n.translate(msgKey));
         this.router.navigate(['/admin/suppliers']);
       },
       error: () => {
-        const msg = 'Failed to ' + (this.isEditMode() ? 'update' : 'create') + ' supplier';
-        this.notification.error(msg);
         this.isSaving.set(false);
       }
     });

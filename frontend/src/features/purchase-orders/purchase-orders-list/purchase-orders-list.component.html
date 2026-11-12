@@ -1,8 +1,8 @@
 <div class="page-container">
   <app-page-header
-    title="Purchase Orders"
+    [title]="'purchaseOrders.title' | translate"
     [breadcrumbs]="[{ label: 'Purchasing' }, { label: 'Purchase Orders' }]"
-    actionLabel="New Purchase Order"
+    [actionLabel]="'purchaseOrders.newPurchaseOrder' | translate"
     actionIcon="add"
     (action)="router.navigate(['/admin/purchase-orders/new'])"
   />
@@ -10,84 +10,93 @@
   <div class="table-toolbar">
     <mat-form-field appearance="outline" class="search-field" subscriptSizing="dynamic">
       <mat-icon matPrefix>search</mat-icon>
-      <input matInput [formControl]="searchControl" placeholder="Search purchase orders...">
+      <input matInput [formControl]="searchControl" [placeholder]="'purchaseOrders.searchPlaceholder' | translate">
     </mat-form-field>
-    
+
     <mat-form-field appearance="outline" class="filter-field" subscriptSizing="dynamic">
-      <mat-label>Supplier</mat-label>
+      <mat-label>{{ 'purchaseOrders.supplier' | translate }}</mat-label>
       <mat-select [formControl]="supplierControl">
-        <mat-option [value]="null">All Suppliers</mat-option>
+        <mat-option [value]="null">{{ 'common.allSuppliers' | translate }}</mat-option>
         @for (supplier of suppliers(); track supplier.id) {
-          <mat-option [value]="supplier.id">{{ supplier.name }}</mat-option>
+          <mat-option [value]="supplier.id">{{ supplier.companyName }}</mat-option>
         }
       </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="filter-field" subscriptSizing="dynamic">
-      <mat-label>Status</mat-label>
+      <mat-label>{{ 'common.status' | translate }}</mat-label>
       <mat-select [formControl]="statusControl">
-        <mat-option [value]="null">All Statuses</mat-option>
-        <mat-option value="Pending">Pending</mat-option>
-        <mat-option value="Approved">Approved</mat-option>
-        <mat-option value="Received">Received</mat-option>
-        <mat-option value="Cancelled">Cancelled</mat-option>
+        <mat-option [value]="null">{{ 'common.allStatuses' | translate }}</mat-option>
+        <mat-option value="Draft">{{ 'status.draft' | translate }}</mat-option>
+        <mat-option value="Submitted">{{ 'status.submitted' | translate }}</mat-option>
+        <mat-option value="Approved">{{ 'status.approved' | translate }}</mat-option>
+        <mat-option value="Received">{{ 'status.received' | translate }}</mat-option>
+        <mat-option value="Cancelled">{{ 'status.cancelled' | translate }}</mat-option>
       </mat-select>
     </mat-form-field>
   </div>
 
   <div class="table-container mat-elevation-z0">
     <table mat-table [dataSource]="orders()" class="full-width">
-      
+
       <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef>PO #</th>
+        <th mat-header-cell *matHeaderCellDef>{{ 'purchaseOrders.poNumber' | translate }}</th>
         <td mat-cell *matCellDef="let order" class="order-id">PO-{{ order.id.toString().padStart(5, '0') }}</td>
       </ng-container>
 
       <ng-container matColumnDef="supplier">
-        <th mat-header-cell *matHeaderCellDef>Supplier</th>
+        <th mat-header-cell *matHeaderCellDef>{{ 'purchaseOrders.supplier' | translate }}</th>
         <td mat-cell *matCellDef="let order">{{ order.supplierName }}</td>
       </ng-container>
 
       <ng-container matColumnDef="orderDate">
-        <th mat-header-cell *matHeaderCellDef>Order Date</th>
-        <td mat-cell *matCellDef="let order">{{ order.orderDate | date:'mediumDate' }}</td>
+        <th mat-header-cell *matHeaderCellDef>{{ 'purchaseOrders.orderDate' | translate }}</th>
+        <td mat-cell *matCellDef="let order">{{ order.orderDate | localDate:'mediumDate' }}</td>
       </ng-container>
 
       <ng-container matColumnDef="deliveryDate">
-        <th mat-header-cell *matHeaderCellDef>Expected Delivery</th>
-        <td mat-cell *matCellDef="let order">{{ order.expectedDeliveryDate | date:'mediumDate' }}</td>
+        <th mat-header-cell *matHeaderCellDef>{{ 'purchaseOrders.expectedDelivery' | translate }}</th>
+        <td mat-cell *matCellDef="let order">{{ (order.expectedDelivery || order.expectedDeliveryDate) | localDate:'mediumDate' }}</td>
       </ng-container>
 
       <ng-container matColumnDef="total">
-        <th mat-header-cell *matHeaderCellDef class="text-right">Total Amount</th>
-        <td mat-cell *matCellDef="let order" class="text-right">{{ order.totalAmount | currency }}</td>
+        <th mat-header-cell *matHeaderCellDef class="text-right">{{ 'purchaseOrders.totalAmount' | translate }}</th>
+        <td mat-cell *matCellDef="let order" class="text-right">{{ order.totalAmount | localCurrency }}</td>
       </ng-container>
 
       <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <th mat-header-cell *matHeaderCellDef>{{ 'common.status' | translate }}</th>
         <td mat-cell *matCellDef="let order">
           <app-status-badge [status]="order.status"></app-status-badge>
         </td>
       </ng-container>
 
       <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef class="actions-column">Actions</th>
+        <th mat-header-cell *matHeaderCellDef class="actions-column">{{ 'common.actions' | translate }}</th>
         <td mat-cell *matCellDef="let order" class="actions-column">
-          <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="PO options">
+          <button mat-icon-button [matMenuTriggerFor]="menu" [attr.aria-label]="'purchaseOrders.poOptions' | translate">
             <mat-icon>more_vert</mat-icon>
           </button>
           <mat-menu #menu="matMenu">
-            <button mat-menu-item (click)="receiveOrder(order)" [disabled]="order.status !== 'Pending' && order.status !== 'Approved'">
+            <button mat-menu-item (click)="submitOrder(order)" [disabled]="order.status !== 'Draft'">
+              <mat-icon>send</mat-icon>
+              <span>{{ 'purchaseOrders.submitPo' | translate }}</span>
+            </button>
+            <button mat-menu-item (click)="approveOrder(order)" [disabled]="order.status !== 'Draft' && order.status !== 'Submitted'">
+              <mat-icon>check_circle</mat-icon>
+              <span>{{ 'purchaseOrders.approvePo' | translate }}</span>
+            </button>
+            <button mat-menu-item (click)="receiveOrder(order)" [disabled]="order.status !== 'Approved'">
               <mat-icon>inventory</mat-icon>
-              <span>Receive Inventory</span>
+              <span>{{ 'purchaseOrders.receiveInventory' | translate }}</span>
             </button>
             <button mat-menu-item (click)="cancelOrder(order)" [disabled]="order.status === 'Received' || order.status === 'Cancelled'">
               <mat-icon>cancel</mat-icon>
-              <span>Cancel PO</span>
+              <span>{{ 'purchaseOrders.cancelPo' | translate }}</span>
             </button>
-            <button mat-menu-item (click)="deleteOrder(order)">
+            <button mat-menu-item (click)="deleteOrder(order)" [disabled]="order.status !== 'Draft'">
               <mat-icon color="warn">delete</mat-icon>
-              <span>Delete</span>
+              <span>{{ 'common.delete' | translate }}</span>
             </button>
           </mat-menu>
         </td>
@@ -95,19 +104,19 @@
 
       <tr mat-header-row *matHeaderRowDef="columns"></tr>
       <tr mat-row *matRowDef="let row; columns: columns;"></tr>
-      
+
       <tr class="mat-row" *matNoDataRow>
         <td class="mat-cell empty-cell" [attr.colspan]="columns.length">
           @if (isLoading()) {
             <div class="table-empty-state">
               <mat-icon>sync</mat-icon>
-              <span class="empty-title">Loading purchase orders...</span>
+              <span class="empty-title">{{ 'purchaseOrders.loading' | translate }}</span>
             </div>
           } @else {
             <div class="table-empty-state">
               <mat-icon>inventory_2</mat-icon>
-              <span class="empty-title">No purchase orders found</span>
-              <span class="empty-subtitle">Try adjusting your filters or search query</span>
+              <span class="empty-title">{{ 'purchaseOrders.emptyTitle' | translate }}</span>
+              <span class="empty-subtitle">{{ 'common.tryAdjustingFilters' | translate }}</span>
             </div>
           }
         </td>

@@ -1,6 +1,6 @@
 <div class="page-container">
   <app-page-header
-    [title]="isEditMode() ? 'Edit Role' : 'Add Role'"
+    [title]="(isEditMode() ? 'roles.editTitle' : 'roles.createTitle') | translate"
     [breadcrumbs]="[
       { label: 'Settings' },
       { label: 'Roles', link: '/admin/roles' },
@@ -11,13 +11,15 @@
   <mat-card class="form-card mat-elevation-z0">
     <mat-card-content>
       <form [formGroup]="roleForm" (ngSubmit)="onSubmit()" class="form-layout">
-        
+
         <div class="role-basic-info">
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Role Name</mat-label>
-            <input matInput formControlName="name" placeholder="E.g. Inventory Supervisor">
+            <mat-label>{{ 'roles.roleName' | translate }}</mat-label>
+            <input matInput formControlName="name" [placeholder]="'roles.roleNamePlaceholder' | translate">
             @if (roleForm.controls.name.hasError('required')) {
-              <mat-error>Role name is required</mat-error>
+              <mat-error>{{ 'roles.nameRequired' | translate }}</mat-error>
+            } @else if (roleForm.controls.name.hasError('serverError')) {
+              <mat-error>{{ roleForm.controls.name.getError('serverError') }}</mat-error>
             }
           </mat-form-field>
         </div>
@@ -27,26 +29,26 @@
             <div class="section-title-group">
               <mat-icon class="section-icon">shield</mat-icon>
               <div>
-                <h3 class="section-title">Permissions</h3>
+                <h3 class="section-title">{{ 'roles.permissions' | translate }}</h3>
                 <span class="section-subtitle">
-                  {{ selectedCount() }} of {{ totalPermissionCount() }} permissions assigned
+                  {{ 'roles.permissionsAssigned' | translate:{ selected: selectedCount(), total: totalPermissionCount() } }}
                 </span>
               </div>
             </div>
             <div class="bulk-actions">
               <button mat-button type="button" (click)="selectAll()" class="action-btn">
                 <mat-icon>done_all</mat-icon>
-                Select All
+                {{ 'roles.selectAll' | translate }}
               </button>
               <button mat-button type="button" (click)="deselectAll()" class="action-btn">
                 <mat-icon>clear_all</mat-icon>
-                Clear All
+                {{ 'roles.clearAll' | translate }}
               </button>
             </div>
           </div>
 
           <div class="permission-grid">
-            @for (module of permissionModules; track module.name) {
+            @for (module of permissionModules; track module.nameKey) {
               <div class="module-card">
                 <div class="module-header">
                   <mat-checkbox
@@ -57,11 +59,11 @@
                     class="module-checkbox">
                     <span class="module-name">
                       <mat-icon class="module-icon">{{ module.icon }}</mat-icon>
-                      {{ module.name }}
+                      {{ module.nameKey | translate }}
                     </span>
                   </mat-checkbox>
                 </div>
-                
+
                 <div class="module-permissions">
                   @for (perm of module.permissions; track perm.key) {
                     <mat-checkbox
@@ -69,7 +71,7 @@
                       (change)="togglePermission(perm.key)"
                       color="primary"
                       class="permission-checkbox">
-                      <span class="permission-label">{{ perm.label }}</span>
+                      <span class="permission-label">{{ perm.labelKey | translate }}</span>
                       <span class="permission-key">{{ perm.key }}</span>
                     </mat-checkbox>
                   }
@@ -80,13 +82,13 @@
         </div>
 
         <div class="form-actions">
-          <button mat-button type="button" (click)="router.navigate(['/admin/roles'])">Cancel</button>
+          <button mat-button type="button" (click)="router.navigate(['/admin/roles'])">{{ 'common.cancel' | translate }}</button>
           <button mat-flat-button color="primary" type="submit" [disabled]="roleForm.invalid || isSaving()">
             <mat-icon>{{ isSaving() ? 'hourglass_top' : 'save' }}</mat-icon>
-            {{ isSaving() ? 'Saving...' : (isEditMode() ? 'Update Role' : 'Create Role') }}
+            {{ (isSaving() ? 'common.saving' : (isEditMode() ? 'roles.updateRole' : 'roles.createRole')) | translate }}
           </button>
         </div>
-        
+
       </form>
     </mat-card-content>
   </mat-card>

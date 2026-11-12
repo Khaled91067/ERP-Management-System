@@ -13,9 +13,11 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 import { RolesService } from '../roles.service';
 import { Role } from '../models/role.model';
+import { TranslationService } from '@core/i18n/translation.service';
 import { NotificationService } from '@core/services/notification.service';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header.component';
 import { ConfirmationDialogComponent } from '@shared/components/confirmation-dialog/confirmation-dialog.component';
+import { TranslatePipe } from '@shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-roles-list',
@@ -31,7 +33,8 @@ import { ConfirmationDialogComponent } from '@shared/components/confirmation-dia
     MatFormFieldModule,
     MatDialogModule,
     MatTooltipModule,
-    PageHeaderComponent
+    PageHeaderComponent,
+    TranslatePipe
   ],
   templateUrl: './roles-list.component.html',
   styleUrl: './roles-list.component.scss'
@@ -40,6 +43,7 @@ export class RolesListComponent implements OnInit {
   private readonly rolesService = inject(RolesService);
   private readonly notification = inject(NotificationService);
   private readonly dialog = inject(MatDialog);
+  readonly i18n = inject(TranslationService);
   readonly router = inject(Router);
 
   readonly columns = ['id', 'name', 'permissions', 'actions'];
@@ -51,34 +55,6 @@ export class RolesListComponent implements OnInit {
 
   readonly searchControl = new FormControl('');
   readonly maxVisiblePermissions = 3;
-
-  private static readonly PERMISSION_LABEL_MAP: Record<string, string> = {
-    'Customers.Read': 'Customers Read',
-    'Customers.Write': 'Customers Write',
-    'Orders.Read': 'Orders Read',
-    'Orders.Write': 'Orders Write',
-    'Products.Read': 'Products Read',
-    'Products.Write': 'Products Write',
-    'Products.AdjustStock': 'Products Adjust Stock',
-    'Categories.Read': 'Categories Read',
-    'Categories.Write': 'Categories Write',
-    'Suppliers.Read': 'Suppliers Read',
-    'Suppliers.Write': 'Suppliers Write',
-    'PurchaseOrders.Read': 'Purchase Orders Read',
-    'PurchaseOrders.Write': 'Purchase Orders Write',
-    'Invoices.Read': 'Invoices Read',
-    'Invoices.Write': 'Invoices Write',
-    'Invoices.Send': 'Invoices Send',
-    'Invoices.Pay': 'Invoices Pay',
-    'Employees.Read': 'Employees Read',
-    'Employees.Write': 'Employees Write',
-    'Departments.Read': 'Departments Read',
-    'Departments.Write': 'Departments Write',
-    'Users.Read': 'Users Read',
-    'Users.Write': 'Users Write',
-    'Roles.Read': 'Roles Read',
-    'Roles.Write': 'Roles Write'
-  };
 
   ngOnInit(): void {
     this.loadRoles();
@@ -93,7 +69,7 @@ export class RolesListComponent implements OnInit {
 
   loadRoles(): void {
     this.isLoading.set(true);
-    
+
     this.rolesService.getRoles({
       page: this.pageIndex() + 1,
       pageSize: this.pageSize(),
@@ -105,7 +81,6 @@ export class RolesListComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: () => {
-        this.notification.error('Failed to load roles');
         this.isLoading.set(false);
       }
     });
@@ -134,8 +109,10 @@ export class RolesListComponent implements OnInit {
 
   formatPermissionLabel(permission: string): string {
     if (!permission) return '';
-    if (RolesListComponent.PERMISSION_LABEL_MAP[permission]) {
-      return RolesListComponent.PERMISSION_LABEL_MAP[permission];
+    const translationKey = `roles.permissionLabels.${permission}`;
+    const translated = this.i18n.translate(translationKey);
+    if (translated !== translationKey) {
+      return translated;
     }
     return permission
       .split('.')
@@ -169,8 +146,8 @@ export class RolesListComponent implements OnInit {
   deleteRole(role: Role): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       data: {
-        title: 'Delete Role',
-        message: `Are you sure you want to delete the role "${role.name}"?`,
+        title: this.i18n.translate('roles.deleteTitle'),
+        message: this.i18n.translate('roles.deleteMessage', { name: role.name }),
         danger: true
       }
     });
@@ -179,10 +156,9 @@ export class RolesListComponent implements OnInit {
       if (confirmed) {
         this.rolesService.deleteRole(role.id).subscribe({
           next: () => {
-            this.notification.success('Role deleted successfully');
+            this.notification.success(this.i18n.translate('roles.deletedSuccess'));
             this.loadRoles();
-          },
-          error: () => this.notification.error('Failed to delete role')
+          }
         });
       }
     });

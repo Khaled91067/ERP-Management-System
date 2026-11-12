@@ -72,7 +72,7 @@
 
 .line-total {
   width: 100px;
-  text-align: right;
+  text-align: end;
   font-weight: 500;
 }
 
@@ -81,7 +81,8 @@
   justify-content: flex-end;
   align-items: center;
   gap: 16px;
-  padding: 16px 48px 0 0;
+  padding-block-start: 16px;
+  padding-inline-end: 48px;
   font-size: 1.2rem;
   border-top: 1px dashed var(--border-color);
   margin-top: 16px;
@@ -92,6 +93,5 @@
   justify-content: flex-end;
   gap: 12px;
   margin-top: 32px;
-
   flex-wrap: wrap;
 }

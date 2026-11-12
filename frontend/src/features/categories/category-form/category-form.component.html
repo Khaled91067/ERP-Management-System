@@ -1,6 +1,6 @@
 <div class="page-container">
   <app-page-header
-    [title]="isEditMode() ? 'Edit Category' : 'New Category'"
+    [title]="(isEditMode() ? 'categories.editTitle' : 'categories.createTitle') | translate"
     [breadcrumbs]="[
       { label: 'Inventory' },
       { label: 'Categories', link: '/admin/categories' },
@@ -11,22 +11,24 @@
   <mat-card class="form-card mat-elevation-z0">
     <mat-card-content>
       <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()" class="form-layout">
-        
+
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Category Name</mat-label>
-          <input matInput formControlName="name" placeholder="e.g., Electronics">
+          <mat-label>{{ 'categories.categoryName' | translate }}</mat-label>
+          <input matInput formControlName="name" [placeholder]="'categories.categoryNamePlaceholder' | translate">
           @if (categoryForm.controls.name.hasError('required')) {
-            <mat-error>Category name is required</mat-error>
+            <mat-error>{{ 'categories.nameRequired' | translate }}</mat-error>
+          } @else if (categoryForm.controls.name.hasError('serverError')) {
+            <mat-error>{{ categoryForm.controls.name.getError('serverError') }}</mat-error>
           }
         </mat-form-field>
 
         <div class="form-actions">
-          <button mat-button type="button" (click)="router.navigate(['/admin/categories'])">Cancel</button>
+          <button mat-button type="button" (click)="router.navigate(['/admin/categories'])">{{ 'common.cancel' | translate }}</button>
           <button mat-flat-button color="primary" type="submit" [disabled]="categoryForm.invalid || isSaving()">
-            {{ isSaving() ? 'Saving...' : 'Save Category' }}
+            {{ (isSaving() ? 'common.saving' : 'categories.saveCategory') | translate }}
           </button>
         </div>
-        
+
       </form>
     </mat-card-content>
   </mat-card>

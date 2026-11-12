@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { ApiService } from '@core/services/api.service';
-import { Observable, forkJoin, map } from 'rxjs';
+import { AuthService } from '@core/auth/auth.service';
+import { Observable, forkJoin, map, of, catchError } from 'rxjs';
 import { DashboardData, LowStockAlert, RecentOrder } from './models/dashboard.model';
 
 @Injectable({
@@ -8,11 +9,22 @@ import { DashboardData, LowStockAlert, RecentOrder } from './models/dashboard.mo
 })
 export class DashboardService {
   private readonly apiService = inject(ApiService);
+  private readonly authService = inject(AuthService);
 
   getDashboardData(): Observable<DashboardData> {
-    const orders$ = this.apiService.getAll<any>('orders', { page: 1, pageSize: 100 });
-    const products$ = this.apiService.getAll<any>('products', { page: 1, pageSize: 100 });
-    const customers$ = this.apiService.getAll<any>('customers', { page: 1, pageSize: 1 });
+    const emptyPage = { items: [], total: 0 };
+
+    const orders$ = this.authService.hasPermission('Orders.Read')
+      ? this.apiService.getAll<any>('orders', { page: 1, pageSize: 100 }).pipe(catchError(() => of(emptyPage)))
+      : of(emptyPage);
+
+    const products$ = this.authService.hasPermission('Products.Read')
+      ? this.apiService.getAll<any>('products', { page: 1, pageSize: 100 }).pipe(catchError(() => of(emptyPage)))
+      : of(emptyPage);
+
+    const customers$ = this.authService.hasPermission('Customers.Read')
+      ? this.apiService.getAll<any>('customers', { page: 1, pageSize: 1 }).pipe(catchError(() => of(emptyPage)))
+      : of(emptyPage);
 
     return forkJoin([orders$, products$, customers$]).pipe(
       map(([orders, products, customers]) => {

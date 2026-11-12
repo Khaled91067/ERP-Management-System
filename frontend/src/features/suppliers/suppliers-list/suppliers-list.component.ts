@@ -13,9 +13,11 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 import { SuppliersService } from '../suppliers.service';
 import { Supplier } from '../models/supplier.model';
+import { TranslationService } from '@core/i18n/translation.service';
 import { NotificationService } from '@core/services/notification.service';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header.component';
 import { ConfirmationDialogComponent } from '@shared/components/confirmation-dialog/confirmation-dialog.component';
+import { TranslatePipe } from '@shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-suppliers-list',
@@ -31,7 +33,8 @@ import { ConfirmationDialogComponent } from '@shared/components/confirmation-dia
     MatFormFieldModule,
     MatDialogModule,
     MatTooltipModule,
-    PageHeaderComponent
+    PageHeaderComponent,
+    TranslatePipe
   ],
   templateUrl: './suppliers-list.component.html',
   styleUrl: './suppliers-list.component.scss'
@@ -40,9 +43,10 @@ export class SuppliersListComponent implements OnInit {
   private readonly suppliersService = inject(SuppliersService);
   private readonly notification = inject(NotificationService);
   private readonly dialog = inject(MatDialog);
+  private readonly i18n = inject(TranslationService);
   readonly router = inject(Router);
 
-  readonly columns = ['name', 'contact', 'phone', 'city', 'actions'];
+  readonly columns = ['name', 'contact', 'phone', 'paymentTerms', 'actions'];
   readonly suppliers = signal<Supplier[]>([]);
   readonly totalItems = signal(0);
   readonly pageSize = signal(20);
@@ -64,7 +68,7 @@ export class SuppliersListComponent implements OnInit {
 
   loadSuppliers(): void {
     this.isLoading.set(true);
-    
+
     this.suppliersService.getSuppliers({
       page: this.pageIndex() + 1,
       pageSize: this.pageSize(),
@@ -76,7 +80,6 @@ export class SuppliersListComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: () => {
-        this.notification.error('Failed to load suppliers');
         this.isLoading.set(false);
       }
     });
@@ -91,8 +94,8 @@ export class SuppliersListComponent implements OnInit {
   deleteSupplier(supplier: Supplier): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       data: {
-        title: 'Delete Supplier',
-        message: `Are you sure you want to delete ${supplier.name}?`,
+        title: this.i18n.translate('suppliers.deleteTitle'),
+        message: this.i18n.translate('suppliers.deleteMessage', { name: supplier.companyName }),
         danger: true
       }
     });
@@ -101,10 +104,9 @@ export class SuppliersListComponent implements OnInit {
       if (confirmed) {
         this.suppliersService.deleteSupplier(supplier.id).subscribe({
           next: () => {
-            this.notification.success('Supplier deleted successfully');
+            this.notification.success(this.i18n.translate('suppliers.deletedSuccess'));
             this.loadSuppliers();
-          },
-          error: () => this.notification.error('Failed to delete supplier')
+          }
         });
       }
     });

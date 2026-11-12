@@ -11,8 +11,11 @@ import { MatSelectModule } from '@angular/material/select';
 import { ProductsService } from '../products.service';
 import { CategoriesService } from '@features/categories/categories.service';
 import { Category } from '@features/categories/models/category.model';
+import { FormValidationService } from '@core/errors/form-validation.service';
+import { TranslationService } from '@core/i18n/translation.service';
 import { NotificationService } from '@core/services/notification.service';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header.component';
+import { TranslatePipe } from '@shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-product-form',
@@ -24,7 +27,8 @@ import { PageHeaderComponent } from '@shared/components/page-header/page-header.
     MatFormFieldModule,
     MatCardModule,
     MatSelectModule,
-    PageHeaderComponent
+    PageHeaderComponent,
+    TranslatePipe
   ],
   templateUrl: './product-form.component.html',
   styleUrl: './product-form.component.scss'
@@ -34,6 +38,8 @@ export class ProductFormComponent implements OnInit {
   private readonly productsService = inject(ProductsService);
   private readonly categoriesService = inject(CategoriesService);
   private readonly notification = inject(NotificationService);
+  private readonly formValidation = inject(FormValidationService);
+  private readonly i18n = inject(TranslationService);
   private readonly route = inject(ActivatedRoute);
   readonly router = inject(Router);
 
@@ -46,8 +52,9 @@ export class ProductFormComponent implements OnInit {
     name: ['', Validators.required],
     sku: ['', Validators.required],
     description: [''],
-    categoryId: [0 as number | null, Validators.required],
+    categoryId: [null as number | null, Validators.required],
     unitPrice: [0, [Validators.required, Validators.min(0)]],
+    costPrice: [0, [Validators.required, Validators.min(0)]],
     stockQuantity: [0, [Validators.required, Validators.min(0)]],
     reorderLevel: [10, [Validators.required, Validators.min(0)]]
   });
@@ -64,8 +71,7 @@ export class ProductFormComponent implements OnInit {
 
   private loadCategories(): void {
     this.categoriesService.getCategories({ page: 1, pageSize: 100 }).subscribe({
-      next: (res) => this.availableCategories.set(res.items),
-      error: () => this.notification.error('Failed to load categories')
+      next: (res) => this.availableCategories.set(res.items)
     });
   }
 
@@ -75,35 +81,45 @@ export class ProductFormComponent implements OnInit {
         this.productForm.patchValue(product);
       },
       error: () => {
-        this.notification.error('Failed to load product details');
         this.router.navigate(['/admin/products']);
       }
     });
   }
 
   onSubmit(): void {
+    this.formValidation.prepareFormForSubmission(this.productForm);
     if (this.productForm.invalid) return;
 
     this.isSaving.set(true);
     const formVal = this.productForm.getRawValue();
-    const data = {
-      ...formVal,
-      categoryId: formVal.categoryId as number
-    };
 
     const request$: Observable<unknown> = this.isEditMode() && this.productId
-      ? this.productsService.updateProduct(this.productId, { id: this.productId, ...data })
-      : this.productsService.createProduct(data);
+      ? this.productsService.updateProduct(this.productId, {
+          id: this.productId,
+          name: formVal.name,
+          sku: formVal.sku,
+          categoryId: formVal.categoryId as number,
+          unitPrice: formVal.unitPrice,
+          costPrice: formVal.costPrice,
+          reorderLevel: formVal.reorderLevel
+        })
+      : this.productsService.createProduct({
+          name: formVal.name,
+          sku: formVal.sku,
+          categoryId: formVal.categoryId as number,
+          unitPrice: formVal.unitPrice,
+          costPrice: formVal.costPrice,
+          initialStockQuantity: formVal.stockQuantity,
+          reorderLevel: formVal.reorderLevel
+        });
 
     request$.subscribe({
       next: () => {
-        const msg = 'Product successfully ' + (this.isEditMode() ? 'updated' : 'created');
-        this.notification.success(msg);
+        const msgKey = this.isEditMode() ? 'products.updatedSuccess' : 'products.createdSuccess';
+        this.notification.success(this.i18n.translate(msgKey));
         this.router.navigate(['/admin/products']);
       },
       error: () => {
-        const msg = 'Failed to ' + (this.isEditMode() ? 'update' : 'create') + ' product';
-        this.notification.error(msg);
         this.isSaving.set(false);
       }
     });

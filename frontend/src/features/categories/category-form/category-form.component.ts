@@ -8,8 +8,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 
 import { CategoriesService } from '../categories.service';
+import { FormValidationService } from '@core/errors/form-validation.service';
+import { TranslationService } from '@core/i18n/translation.service';
 import { NotificationService } from '@core/services/notification.service';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header.component';
+import { TranslatePipe } from '@shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-category-form',
@@ -20,7 +23,8 @@ import { PageHeaderComponent } from '@shared/components/page-header/page-header.
     MatInputModule,
     MatFormFieldModule,
     MatCardModule,
-    PageHeaderComponent
+    PageHeaderComponent,
+    TranslatePipe
   ],
   templateUrl: './category-form.component.html',
   styleUrl: './category-form.component.scss'
@@ -29,6 +33,8 @@ export class CategoryFormComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly categoriesService = inject(CategoriesService);
   private readonly notification = inject(NotificationService);
+  private readonly formValidation = inject(FormValidationService);
+  private readonly i18n = inject(TranslationService);
   private readonly route = inject(ActivatedRoute);
   readonly router = inject(Router);
 
@@ -55,13 +61,13 @@ export class CategoryFormComponent implements OnInit {
         this.categoryForm.patchValue(category);
       },
       error: () => {
-        this.notification.error('Failed to load category details');
         this.router.navigate(['/admin/categories']);
       }
     });
   }
 
   onSubmit(): void {
+    this.formValidation.prepareFormForSubmission(this.categoryForm);
     if (this.categoryForm.invalid) return;
 
     this.isSaving.set(true);
@@ -73,13 +79,11 @@ export class CategoryFormComponent implements OnInit {
 
     request$.subscribe({
       next: () => {
-        const msg = 'Category successfully ' + (this.isEditMode() ? 'updated' : 'created');
-        this.notification.success(msg);
+        const msgKey = this.isEditMode() ? 'categories.updatedSuccess' : 'categories.createdSuccess';
+        this.notification.success(this.i18n.translate(msgKey));
         this.router.navigate(['/admin/categories']);
       },
       error: () => {
-        const msg = 'Failed to ' + (this.isEditMode() ? 'update' : 'create') + ' category';
-        this.notification.error(msg);
         this.isSaving.set(false);
       }
     });

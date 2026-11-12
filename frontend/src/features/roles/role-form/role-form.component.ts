@@ -11,110 +11,113 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { RolesService } from '../roles.service';
+import { FormValidationService } from '@core/errors/form-validation.service';
+import { TranslationService } from '@core/i18n/translation.service';
 import { NotificationService } from '@core/services/notification.service';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header.component';
+import { TranslatePipe } from '@shared/pipes/translate.pipe';
 
 export interface PermissionItem {
   key: string;
-  label: string;
+  labelKey: string;
 }
 
 export interface PermissionModule {
-  name: string;
+  nameKey: string;
   icon: string;
   permissions: PermissionItem[];
 }
 
 export const PERMISSION_MODULES: PermissionModule[] = [
   {
-    name: 'Customers',
+    nameKey: 'roles.modules.customers',
     icon: 'people',
     permissions: [
-      { key: 'Customers.Read', label: 'View Customers' },
-      { key: 'Customers.Write', label: 'Manage Customers' }
+      { key: 'Customers.Read', labelKey: 'roles.permissionsMap.Customers.Read' },
+      { key: 'Customers.Write', labelKey: 'roles.permissionsMap.Customers.Write' }
     ]
   },
   {
-    name: 'Orders',
+    nameKey: 'roles.modules.orders',
     icon: 'shopping_cart',
     permissions: [
-      { key: 'Orders.Read', label: 'View Orders' },
-      { key: 'Orders.Write', label: 'Manage Orders' }
+      { key: 'Orders.Read', labelKey: 'roles.permissionsMap.Orders.Read' },
+      { key: 'Orders.Write', labelKey: 'roles.permissionsMap.Orders.Write' }
     ]
   },
   {
-    name: 'Products & Inventory',
+    nameKey: 'roles.modules.productsInventory',
     icon: 'inventory_2',
     permissions: [
-      { key: 'Products.Read', label: 'View Products' },
-      { key: 'Products.Write', label: 'Manage Products' },
-      { key: 'Products.AdjustStock', label: 'Adjust Stock' }
+      { key: 'Products.Read', labelKey: 'roles.permissionsMap.Products.Read' },
+      { key: 'Products.Write', labelKey: 'roles.permissionsMap.Products.Write' },
+      { key: 'Products.AdjustStock', labelKey: 'roles.permissionsMap.Products.AdjustStock' }
     ]
   },
   {
-    name: 'Categories',
+    nameKey: 'roles.modules.categories',
     icon: 'category',
     permissions: [
-      { key: 'Categories.Read', label: 'View Categories' },
-      { key: 'Categories.Write', label: 'Manage Categories' }
+      { key: 'Categories.Read', labelKey: 'roles.permissionsMap.Categories.Read' },
+      { key: 'Categories.Write', labelKey: 'roles.permissionsMap.Categories.Write' }
     ]
   },
   {
-    name: 'Suppliers',
+    nameKey: 'roles.modules.suppliers',
     icon: 'store',
     permissions: [
-      { key: 'Suppliers.Read', label: 'View Suppliers' },
-      { key: 'Suppliers.Write', label: 'Manage Suppliers' }
+      { key: 'Suppliers.Read', labelKey: 'roles.permissionsMap.Suppliers.Read' },
+      { key: 'Suppliers.Write', labelKey: 'roles.permissionsMap.Suppliers.Write' }
     ]
   },
   {
-    name: 'Purchase Orders',
+    nameKey: 'roles.modules.purchaseOrders',
     icon: 'receipt',
     permissions: [
-      { key: 'PurchaseOrders.Read', label: 'View Purchase Orders' },
-      { key: 'PurchaseOrders.Write', label: 'Manage Purchase Orders' }
+      { key: 'PurchaseOrders.Read', labelKey: 'roles.permissionsMap.PurchaseOrders.Read' },
+      { key: 'PurchaseOrders.Write', labelKey: 'roles.permissionsMap.PurchaseOrders.Write' }
     ]
   },
   {
-    name: 'Invoices & Billing',
+    nameKey: 'roles.modules.invoicesBilling',
     icon: 'request_quote',
     permissions: [
-      { key: 'Invoices.Read', label: 'View Invoices' },
-      { key: 'Invoices.Write', label: 'Manage Invoices' },
-      { key: 'Invoices.Send', label: 'Send Invoices' },
-      { key: 'Invoices.Pay', label: 'Pay Invoices' }
+      { key: 'Invoices.Read', labelKey: 'roles.permissionsMap.Invoices.Read' },
+      { key: 'Invoices.Write', labelKey: 'roles.permissionsMap.Invoices.Write' },
+      { key: 'Invoices.Send', labelKey: 'roles.permissionsMap.Invoices.Send' },
+      { key: 'Invoices.Pay', labelKey: 'roles.permissionsMap.Invoices.Pay' }
     ]
   },
   {
-    name: 'Employees',
+    nameKey: 'roles.modules.employees',
     icon: 'badge',
     permissions: [
-      { key: 'Employees.Read', label: 'View Employees' },
-      { key: 'Employees.Write', label: 'Manage Employees' }
+      { key: 'Employees.Read', labelKey: 'roles.permissionsMap.Employees.Read' },
+      { key: 'Employees.Write', labelKey: 'roles.permissionsMap.Employees.Write' }
     ]
   },
   {
-    name: 'Departments',
+    nameKey: 'roles.modules.departments',
     icon: 'domain',
     permissions: [
-      { key: 'Departments.Read', label: 'View Departments' },
-      { key: 'Departments.Write', label: 'Manage Departments' }
+      { key: 'Departments.Read', labelKey: 'roles.permissionsMap.Departments.Read' },
+      { key: 'Departments.Write', labelKey: 'roles.permissionsMap.Departments.Write' }
     ]
   },
   {
-    name: 'Users',
+    nameKey: 'roles.modules.users',
     icon: 'manage_accounts',
     permissions: [
-      { key: 'Users.Read', label: 'View Users' },
-      { key: 'Users.Write', label: 'Manage Users' }
+      { key: 'Users.Read', labelKey: 'roles.permissionsMap.Users.Read' },
+      { key: 'Users.Write', labelKey: 'roles.permissionsMap.Users.Write' }
     ]
   },
   {
-    name: 'Roles',
+    nameKey: 'roles.modules.roles',
     icon: 'security',
     permissions: [
-      { key: 'Roles.Read', label: 'View Roles' },
-      { key: 'Roles.Write', label: 'Manage Roles' }
+      { key: 'Roles.Read', labelKey: 'roles.permissionsMap.Roles.Read' },
+      { key: 'Roles.Write', labelKey: 'roles.permissionsMap.Roles.Write' }
     ]
   }
 ];
@@ -132,7 +135,8 @@ export const PERMISSION_MODULES: PermissionModule[] = [
     MatIconModule,
     MatDividerModule,
     MatTooltipModule,
-    PageHeaderComponent
+    PageHeaderComponent,
+    TranslatePipe
   ],
   templateUrl: './role-form.component.html',
   styleUrl: './role-form.component.scss'
@@ -141,6 +145,8 @@ export class RoleFormComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly rolesService = inject(RolesService);
   private readonly notification = inject(NotificationService);
+  private readonly formValidation = inject(FormValidationService);
+  private readonly i18n = inject(TranslationService);
   private readonly route = inject(ActivatedRoute);
   readonly router = inject(Router);
 
@@ -189,7 +195,6 @@ export class RoleFormComponent implements OnInit {
         }
       },
       error: () => {
-        this.notification.error('Failed to load role details');
         this.router.navigate(['/admin/roles']);
       }
     });
@@ -250,6 +255,7 @@ export class RoleFormComponent implements OnInit {
   }
 
   onSubmit(): void {
+    this.formValidation.prepareFormForSubmission(this.roleForm);
     if (this.roleForm.invalid) return;
 
     this.isSaving.set(true);
@@ -263,22 +269,20 @@ export class RoleFormComponent implements OnInit {
     if (this.isEditMode() && this.roleId()) {
       this.rolesService.updateRole(this.roleId()!, payload).subscribe({
         next: () => {
-          this.notification.success('Role updated successfully');
+          this.notification.success(this.i18n.translate('roles.updatedSuccess'));
           this.router.navigate(['/admin/roles']);
         },
         error: () => {
-          this.notification.error('Failed to update role');
           this.isSaving.set(false);
         }
       });
     } else {
       this.rolesService.createRole(payload).subscribe({
         next: () => {
-          this.notification.success('Role created successfully');
+          this.notification.success(this.i18n.translate('roles.createdSuccess'));
           this.router.navigate(['/admin/roles']);
         },
         error: () => {
-          this.notification.error('Failed to create role');
           this.isSaving.set(false);
         }
       });

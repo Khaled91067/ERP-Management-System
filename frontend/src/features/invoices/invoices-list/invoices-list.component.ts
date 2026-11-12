@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { RouterLink, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
@@ -12,16 +12,18 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
-import { CurrencyPipe, DatePipe } from '@angular/common';
 
 import { InvoicesService } from '../invoices.service';
 import { Invoice } from '../models/invoice.model';
 import { CustomersService } from '@features/customers/customers.service';
 import { Customer } from '@features/customers/models/customer.model';
+import { TranslationService } from '@core/i18n/translation.service';
 import { NotificationService } from '@core/services/notification.service';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header.component';
 import { StatusBadgeComponent } from '@shared/components/status-badge/status-badge.component';
 import { ConfirmationDialogComponent } from '@shared/components/confirmation-dialog/confirmation-dialog.component';
+import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { LocaleCurrencyPipe, LocaleDatePipe, parseDateSafe } from '@shared/pipes/localized-formatting.pipes';
 
 @Component({
   selector: 'app-invoices-list',
@@ -40,8 +42,9 @@ import { ConfirmationDialogComponent } from '@shared/components/confirmation-dia
     MatTooltipModule,
     PageHeaderComponent,
     StatusBadgeComponent,
-    CurrencyPipe,
-    DatePipe
+    TranslatePipe,
+    LocaleCurrencyPipe,
+    LocaleDatePipe
   ],
   templateUrl: './invoices-list.component.html',
   styleUrl: './invoices-list.component.scss'
@@ -51,6 +54,7 @@ export class InvoicesListComponent implements OnInit {
   private readonly customersService = inject(CustomersService);
   private readonly notification = inject(NotificationService);
   private readonly dialog = inject(MatDialog);
+  private readonly i18n = inject(TranslationService);
   readonly router = inject(Router);
 
   readonly columns = ['id', 'customer', 'dates', 'total', 'status', 'actions'];
@@ -75,18 +79,18 @@ export class InvoicesListComponent implements OnInit {
         this.pageIndex.set(0);
         this.loadInvoices();
       });
-      
+
     this.customerControl.valueChanges.subscribe(() => {
       this.pageIndex.set(0);
       this.loadInvoices();
     });
-    
+
     this.statusControl.valueChanges.subscribe(() => {
       this.pageIndex.set(0);
       this.loadInvoices();
     });
   }
-  
+
   loadCustomers(): void {
     this.customersService.getCustomers({ page: 1, pageSize: 100 }).subscribe({
       next: (res) => this.customers.set(res.items)
@@ -95,10 +99,10 @@ export class InvoicesListComponent implements OnInit {
 
   loadInvoices(): void {
     this.isLoading.set(true);
-    
+
     const customerId = this.customerControl.value;
     const status = this.statusControl.value;
-    
+
     this.invoicesService.getInvoices({
       page: this.pageIndex() + 1,
       pageSize: this.pageSize(),
@@ -112,7 +116,6 @@ export class InvoicesListComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: () => {
-        this.notification.error('Failed to load invoices');
         this.isLoading.set(false);
       }
     });
@@ -126,34 +129,33 @@ export class InvoicesListComponent implements OnInit {
 
   isOverdue(invoice: Invoice): boolean {
     if (invoice.status === 'Paid' || invoice.status === 'Cancelled') return false;
-    return new Date(invoice.dueDate) < new Date();
+    const due = parseDateSafe(invoice.dueDate);
+    return due ? due < new Date() : false;
   }
 
   sendInvoice(invoice: Invoice): void {
     this.invoicesService.sendInvoice(invoice.id).subscribe({
       next: () => {
-        this.notification.success('Invoice sent successfully');
+        this.notification.success(this.i18n.translate('invoices.sentSuccess'));
         this.loadInvoices();
-      },
-      error: () => this.notification.error('Failed to send invoice')
+      }
     });
   }
 
   payInvoice(invoice: Invoice): void {
     this.invoicesService.payInvoice(invoice.id).subscribe({
       next: () => {
-        this.notification.success('Invoice marked as paid');
+        this.notification.success(this.i18n.translate('invoices.paidSuccess'));
         this.loadInvoices();
-      },
-      error: () => this.notification.error('Failed to update invoice status')
+      }
     });
   }
 
   deleteInvoice(invoice: Invoice): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       data: {
-        title: 'Delete Invoice',
-        message: 'Are you sure you want to delete this invoice?',
+        title: this.i18n.translate('invoices.deleteTitle'),
+        message: this.i18n.translate('invoices.deleteMessage'),
         danger: true
       }
     });
@@ -162,10 +164,9 @@ export class InvoicesListComponent implements OnInit {
       if (confirmed) {
         this.invoicesService.deleteInvoice(invoice.id).subscribe({
           next: () => {
-            this.notification.success('Invoice deleted successfully');
+            this.notification.success(this.i18n.translate('invoices.deletedSuccess'));
             this.loadInvoices();
-          },
-          error: () => this.notification.error('Failed to delete invoice')
+          }
         });
       }
     });
@@ -182,9 +183,8 @@ export class InvoicesListComponent implements OnInit {
         a.click();
         window.URL.revokeObjectURL(url);
         a.remove();
-        this.notification.success('PDF downloaded successfully');
-      },
-      error: () => this.notification.error('Failed to download PDF')
+        this.notification.success(this.i18n.translate('invoices.pdfDownloadedSuccess'));
+      }
     });
   }
 }

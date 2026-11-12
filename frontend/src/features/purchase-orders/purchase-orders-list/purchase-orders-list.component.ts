@@ -11,16 +11,18 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
-import { CurrencyPipe, DatePipe } from '@angular/common';
 
 import { PurchaseOrdersService } from '../purchase-orders.service';
 import { PurchaseOrder } from '../models/purchase-order.model';
 import { SuppliersService } from '@features/suppliers/suppliers.service';
 import { Supplier } from '@features/suppliers/models/supplier.model';
+import { TranslationService } from '@core/i18n/translation.service';
 import { NotificationService } from '@core/services/notification.service';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header.component';
 import { StatusBadgeComponent } from '@shared/components/status-badge/status-badge.component';
 import { ConfirmationDialogComponent } from '@shared/components/confirmation-dialog/confirmation-dialog.component';
+import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { LocaleCurrencyPipe, LocaleDatePipe } from '@shared/pipes/localized-formatting.pipes';
 
 @Component({
   selector: 'app-purchase-orders-list',
@@ -38,8 +40,9 @@ import { ConfirmationDialogComponent } from '@shared/components/confirmation-dia
     MatDialogModule,
     PageHeaderComponent,
     StatusBadgeComponent,
-    CurrencyPipe,
-    DatePipe
+    TranslatePipe,
+    LocaleCurrencyPipe,
+    LocaleDatePipe
   ],
   templateUrl: './purchase-orders-list.component.html',
   styleUrl: './purchase-orders-list.component.scss'
@@ -49,6 +52,7 @@ export class PurchaseOrdersListComponent implements OnInit {
   private readonly suppliersService = inject(SuppliersService);
   private readonly notification = inject(NotificationService);
   private readonly dialog = inject(MatDialog);
+  private readonly i18n = inject(TranslationService);
   readonly router = inject(Router);
 
   readonly columns = ['id', 'supplier', 'orderDate', 'deliveryDate', 'total', 'status', 'actions'];
@@ -73,18 +77,18 @@ export class PurchaseOrdersListComponent implements OnInit {
         this.pageIndex.set(0);
         this.loadOrders();
       });
-      
+
     this.supplierControl.valueChanges.subscribe(() => {
       this.pageIndex.set(0);
       this.loadOrders();
     });
-    
+
     this.statusControl.valueChanges.subscribe(() => {
       this.pageIndex.set(0);
       this.loadOrders();
     });
   }
-  
+
   loadSuppliers(): void {
     this.suppliersService.getSuppliers({ page: 1, pageSize: 100 }).subscribe({
       next: (res) => this.suppliers.set(res.items)
@@ -93,10 +97,10 @@ export class PurchaseOrdersListComponent implements OnInit {
 
   loadOrders(): void {
     this.isLoading.set(true);
-    
+
     const supplierId = this.supplierControl.value;
     const status = this.statusControl.value;
-    
+
     this.posService.getPurchaseOrders({
       page: this.pageIndex() + 1,
       pageSize: this.pageSize(),
@@ -110,7 +114,6 @@ export class PurchaseOrdersListComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: () => {
-        this.notification.error('Failed to load purchase orders');
         this.isLoading.set(false);
       }
     });
@@ -122,31 +125,47 @@ export class PurchaseOrdersListComponent implements OnInit {
     this.loadOrders();
   }
 
+  submitOrder(order: PurchaseOrder): void {
+    this.posService.submitOrder(order.id).subscribe({
+      next: () => {
+        this.notification.success(this.i18n.translate('purchaseOrders.submittedSuccess'));
+        this.loadOrders();
+      }
+    });
+  }
+
+  approveOrder(order: PurchaseOrder): void {
+    this.posService.approveOrder(order.id).subscribe({
+      next: () => {
+        this.notification.success(this.i18n.translate('purchaseOrders.approvedSuccess'));
+        this.loadOrders();
+      }
+    });
+  }
+
   receiveOrder(order: PurchaseOrder): void {
     this.posService.receiveOrder(order.id).subscribe({
       next: () => {
-        this.notification.success('Purchase order items received into inventory');
+        this.notification.success(this.i18n.translate('purchaseOrders.receivedSuccess'));
         this.loadOrders();
-      },
-      error: () => this.notification.error('Failed to mark PO as received')
+      }
     });
   }
 
   cancelOrder(order: PurchaseOrder): void {
     this.posService.cancelOrder(order.id).subscribe({
       next: () => {
-        this.notification.success('Purchase order cancelled');
+        this.notification.success(this.i18n.translate('purchaseOrders.cancelledSuccess'));
         this.loadOrders();
-      },
-      error: () => this.notification.error('Failed to cancel PO')
+      }
     });
   }
 
   deleteOrder(order: PurchaseOrder): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       data: {
-        title: 'Delete Purchase Order',
-        message: 'Are you sure you want to delete this purchase order?',
+        title: this.i18n.translate('purchaseOrders.deleteTitle'),
+        message: this.i18n.translate('purchaseOrders.deleteMessage'),
         danger: true
       }
     });
@@ -155,10 +174,9 @@ export class PurchaseOrdersListComponent implements OnInit {
       if (confirmed) {
         this.posService.deletePurchaseOrder(order.id).subscribe({
           next: () => {
-            this.notification.success('Purchase order deleted successfully');
+            this.notification.success(this.i18n.translate('purchaseOrders.deletedSuccess'));
             this.loadOrders();
-          },
-          error: () => this.notification.error('Failed to delete purchase order')
+          }
         });
       }
     });

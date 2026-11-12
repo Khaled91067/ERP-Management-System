@@ -13,9 +13,11 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 import { CustomersService } from '../customers.service';
 import { Customer } from '../models/customer.model';
+import { TranslationService } from '@core/i18n/translation.service';
 import { NotificationService } from '@core/services/notification.service';
 import { ConfirmationDialogComponent } from '@shared/components/confirmation-dialog/confirmation-dialog.component';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header.component';
+import { TranslatePipe } from '@shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-customers-list',
@@ -30,7 +32,8 @@ import { PageHeaderComponent } from '@shared/components/page-header/page-header.
     MatInputModule,
     MatFormFieldModule,
     MatTooltipModule,
-    PageHeaderComponent
+    PageHeaderComponent,
+    TranslatePipe
   ],
   templateUrl: './customers-list.component.html',
   styleUrl: './customers-list.component.scss'
@@ -39,6 +42,7 @@ export class CustomersListComponent implements OnInit {
   private readonly customersService = inject(CustomersService);
   private readonly notification = inject(NotificationService);
   private readonly dialog = inject(MatDialog);
+  private readonly i18n = inject(TranslationService);
   readonly router = inject(Router);
 
   readonly columns = ['name', 'phone', 'city', 'actions'];
@@ -74,7 +78,6 @@ export class CustomersListComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: () => {
-        this.notification.error('Failed to load customers');
         this.isLoading.set(false);
       }
     });
@@ -89,8 +92,8 @@ export class CustomersListComponent implements OnInit {
   deleteCustomer(customer: Customer): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       data: {
-        title: 'Delete Customer',
-        message: 'Are you sure you want to delete this customer?',
+        title: this.i18n.translate('customers.deleteTitle'),
+        message: this.i18n.translate('customers.deleteMessage'),
         danger: true
       }
     });
@@ -99,10 +102,9 @@ export class CustomersListComponent implements OnInit {
       if (confirmed) {
         this.customersService.deleteCustomer(customer.id).subscribe({
           next: () => {
-            this.notification.success('Customer deleted successfully');
+            this.notification.success(this.i18n.translate('customers.deletedSuccess'));
             this.loadCustomers();
-          },
-          error: () => this.notification.error('Failed to delete customer')
+          }
         });
       }
     });

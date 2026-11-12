@@ -7,15 +7,18 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
-import { CurrencyPipe } from '@angular/common';
 
 import { OrdersService } from '../orders.service';
 import { CustomersService } from '@features/customers/customers.service';
 import { Customer } from '@features/customers/models/customer.model';
 import { ProductsService } from '@features/products/products.service';
 import { Product } from '@features/products/models/product.model';
+import { FormValidationService } from '@core/errors/form-validation.service';
+import { TranslationService } from '@core/i18n/translation.service';
 import { NotificationService } from '@core/services/notification.service';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header.component';
+import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { LocaleCurrencyPipe } from '@shared/pipes/localized-formatting.pipes';
 
 @Component({
   selector: 'app-order-form',
@@ -29,7 +32,8 @@ import { PageHeaderComponent } from '@shared/components/page-header/page-header.
     MatSelectModule,
     MatIconModule,
     PageHeaderComponent,
-    CurrencyPipe
+    TranslatePipe,
+    LocaleCurrencyPipe
   ],
   templateUrl: './order-form.component.html',
   styleUrl: './order-form.component.scss'
@@ -40,6 +44,8 @@ export class OrderFormComponent implements OnInit {
   private readonly customersService = inject(CustomersService);
   private readonly productsService = inject(ProductsService);
   private readonly notification = inject(NotificationService);
+  private readonly formValidation = inject(FormValidationService);
+  private readonly i18n = inject(TranslationService);
   readonly router = inject(Router);
 
   readonly isSaving = signal(false);
@@ -47,7 +53,9 @@ export class OrderFormComponent implements OnInit {
   readonly availableProducts = signal<Product[]>([]);
 
   readonly orderForm = this.fb.nonNullable.group({
-    customerId: [0 as number | null, Validators.required],
+    customerId: [null as number | null, Validators.required],
+    paymentMethod: ['Cash', Validators.required],
+    shippingAddress: ['', [Validators.required, Validators.maxLength(500)]],
     lines: this.fb.array([this.createLineFormGroup()])
   });
 
@@ -59,18 +67,16 @@ export class OrderFormComponent implements OnInit {
     this.loadCustomers();
     this.loadProducts();
   }
-  
+
   private loadCustomers(): void {
     this.customersService.getCustomers({ page: 1, pageSize: 1000 }).subscribe({
-      next: (res) => this.availableCustomers.set(res.items),
-      error: () => this.notification.error('Failed to load customers')
+      next: (res) => this.availableCustomers.set(res.items)
     });
   }
 
   private loadProducts(): void {
     this.productsService.getProducts({ page: 1, pageSize: 1000 }).subscribe({
-      next: (res) => this.availableProducts.set(res.items),
-      error: () => this.notification.error('Failed to load products')
+      next: (res) => this.availableProducts.set(res.items)
     });
   }
 
@@ -89,6 +95,18 @@ export class OrderFormComponent implements OnInit {
   removeLine(index: number): void {
     if (this.lines.length > 1) {
       this.lines.removeAt(index);
+    }
+  }
+
+  onCustomerSelected(customerId: number): void {
+    const customer = this.availableCustomers().find(c => c.id === customerId);
+    if (customer && !this.orderForm.controls.shippingAddress.value) {
+      const addressParts = [customer.address, customer.city, customer.country].filter(Boolean);
+      if (addressParts.length > 0) {
+        this.orderForm.patchValue({
+          shippingAddress: addressParts.join(', ')
+        });
+      }
     }
   }
 
@@ -114,27 +132,30 @@ export class OrderFormComponent implements OnInit {
   }
 
   onSubmit(): void {
+    this.formValidation.prepareFormForSubmission(this.orderForm);
     if (this.orderForm.invalid) return;
 
     this.isSaving.set(true);
     const formValue = this.orderForm.getRawValue();
-    
+
     const requestData = {
       customerId: formValue.customerId as number,
+      paymentMethod: formValue.paymentMethod,
+      shippingAddress: formValue.shippingAddress,
       lines: formValue.lines.map((line: any) => ({
         productId: line.productId as number,
         quantity: line.quantity as number,
-        unitPrice: line.unitPrice as number
+        unitPrice: line.unitPrice as number,
+        discountPercentage: 0
       }))
     };
 
     this.ordersService.createOrder(requestData as any).subscribe({
       next: () => {
-        this.notification.success('Sales order created successfully');
+        this.notification.success(this.i18n.translate('orders.createdSuccess'));
         this.router.navigate(['/admin/orders']);
       },
       error: () => {
-        this.notification.error('Failed to create sales order');
         this.isSaving.set(false);
       }
     });

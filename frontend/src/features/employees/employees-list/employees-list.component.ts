@@ -11,15 +11,17 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
-import { CurrencyPipe, DatePipe } from '@angular/common';
 
 import { EmployeesService } from '../employees.service';
 import { Employee } from '../models/employee.model';
 import { DepartmentsService } from '@features/departments/departments.service';
 import { Department } from '@features/departments/models/department.model';
+import { TranslationService } from '@core/i18n/translation.service';
 import { NotificationService } from '@core/services/notification.service';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header.component';
 import { ConfirmationDialogComponent } from '@shared/components/confirmation-dialog/confirmation-dialog.component';
+import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { LocaleCurrencyPipe, LocaleDatePipe } from '@shared/pipes/localized-formatting.pipes';
 
 @Component({
   selector: 'app-employees-list',
@@ -37,8 +39,9 @@ import { ConfirmationDialogComponent } from '@shared/components/confirmation-dia
     MatDialogModule,
     MatTooltipModule,
     PageHeaderComponent,
-    CurrencyPipe,
-    DatePipe
+    TranslatePipe,
+    LocaleCurrencyPipe,
+    LocaleDatePipe
   ],
   templateUrl: './employees-list.component.html',
   styleUrl: './employees-list.component.scss'
@@ -48,6 +51,7 @@ export class EmployeesListComponent implements OnInit {
   private readonly departmentsService = inject(DepartmentsService);
   private readonly notification = inject(NotificationService);
   private readonly dialog = inject(MatDialog);
+  private readonly i18n = inject(TranslationService);
   readonly router = inject(Router);
 
   readonly columns = ['name', 'role', 'hireDate', 'salary', 'actions'];
@@ -71,13 +75,13 @@ export class EmployeesListComponent implements OnInit {
         this.pageIndex.set(0);
         this.loadEmployees();
       });
-      
+
     this.departmentControl.valueChanges.subscribe(() => {
       this.pageIndex.set(0);
       this.loadEmployees();
     });
   }
-  
+
   loadDepartments(): void {
     this.departmentsService.getDepartments({ page: 1, pageSize: 100 }).subscribe({
       next: (res) => this.departments.set(res.items)
@@ -86,9 +90,9 @@ export class EmployeesListComponent implements OnInit {
 
   loadEmployees(): void {
     this.isLoading.set(true);
-    
+
     const departmentId = this.departmentControl.value;
-    
+
     this.employeesService.getEmployees({
       page: this.pageIndex() + 1,
       pageSize: this.pageSize(),
@@ -101,7 +105,6 @@ export class EmployeesListComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: () => {
-        this.notification.error('Failed to load employees');
         this.isLoading.set(false);
       }
     });
@@ -116,8 +119,8 @@ export class EmployeesListComponent implements OnInit {
   deleteEmployee(emp: Employee): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       data: {
-        title: 'Delete Employee',
-        message: `Are you sure you want to delete ${emp.firstName} ${emp.lastName}?`,
+        title: this.i18n.translate('employees.deleteTitle'),
+        message: this.i18n.translate('employees.deleteMessage', { name: `${emp.firstName} ${emp.lastName}` }),
         danger: true
       }
     });
@@ -126,10 +129,9 @@ export class EmployeesListComponent implements OnInit {
       if (confirmed) {
         this.employeesService.deleteEmployee(emp.id).subscribe({
           next: () => {
-            this.notification.success('Employee deleted successfully');
+            this.notification.success(this.i18n.translate('employees.deletedSuccess'));
             this.loadEmployees();
-          },
-          error: () => this.notification.error('Failed to delete employee')
+          }
         });
       }
     });

@@ -11,15 +11,17 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
-import { CurrencyPipe } from '@angular/common';
 
 import { ProductsService } from '../products.service';
 import { Product } from '../models/product.model';
 import { CategoriesService } from '@features/categories/categories.service';
 import { Category } from '@features/categories/models/category.model';
+import { TranslationService } from '@core/i18n/translation.service';
 import { NotificationService } from '@core/services/notification.service';
 import { ConfirmationDialogComponent } from '@shared/components/confirmation-dialog/confirmation-dialog.component';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header.component';
+import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { LocaleCurrencyPipe, LocaleNumberPipe } from '@shared/pipes/localized-formatting.pipes';
 
 @Component({
   selector: 'app-products-list',
@@ -37,7 +39,9 @@ import { PageHeaderComponent } from '@shared/components/page-header/page-header.
     MatDialogModule,
     MatTooltipModule,
     PageHeaderComponent,
-    CurrencyPipe
+    TranslatePipe,
+    LocaleCurrencyPipe,
+    LocaleNumberPipe
   ],
   templateUrl: './products-list.component.html',
   styleUrl: './products-list.component.scss'
@@ -47,6 +51,7 @@ export class ProductsListComponent implements OnInit {
   private readonly categoriesService = inject(CategoriesService);
   private readonly notification = inject(NotificationService);
   private readonly dialog = inject(MatDialog);
+  private readonly i18n = inject(TranslationService);
   readonly router = inject(Router);
 
   readonly columns = ['name', 'category', 'price', 'stock', 'actions'];
@@ -99,7 +104,6 @@ export class ProductsListComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: () => {
-        this.notification.error('Failed to load products');
         this.isLoading.set(false);
       }
     });
@@ -118,8 +122,8 @@ export class ProductsListComponent implements OnInit {
   deleteProduct(product: Product): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       data: {
-        title: 'Delete Product',
-        message: `Are you sure you want to delete ${product.name}?`,
+        title: this.i18n.translate('products.deleteTitle'),
+        message: this.i18n.translate('products.deleteMessage', { name: product.name }),
         danger: true
       }
     });
@@ -128,10 +132,9 @@ export class ProductsListComponent implements OnInit {
       if (confirmed) {
         this.productsService.deleteProduct(product.id).subscribe({
           next: () => {
-            this.notification.success('Product deleted successfully');
+            this.notification.success(this.i18n.translate('products.deletedSuccess'));
             this.loadProducts();
-          },
-          error: () => this.notification.error('Failed to delete product')
+          }
         });
       }
     });

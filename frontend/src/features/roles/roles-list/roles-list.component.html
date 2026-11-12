@@ -1,8 +1,8 @@
 <div class="page-container">
   <app-page-header
-    title="Roles & Permissions"
+    [title]="'roles.title' | translate"
     [breadcrumbs]="[{ label: 'Settings' }, { label: 'Roles' }]"
-    actionLabel="New Role"
+    [actionLabel]="'roles.newRole' | translate"
     actionIcon="add"
     (action)="router.navigate(['/admin/roles/new'])"
   />
@@ -10,37 +10,37 @@
   <div class="table-toolbar">
     <mat-form-field appearance="outline" class="search-field" subscriptSizing="dynamic">
       <mat-icon matPrefix>search</mat-icon>
-      <input matInput [formControl]="searchControl" placeholder="Search roles...">
+      <input matInput [formControl]="searchControl" [placeholder]="'roles.searchPlaceholder' | translate">
     </mat-form-field>
   </div>
 
   <div class="table-container mat-elevation-z0">
     <table mat-table [dataSource]="roles()" class="full-width">
-      
+
       <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef class="id-column">ID</th>
+        <th mat-header-cell *matHeaderCellDef class="id-column">{{ 'common.id' | translate }}</th>
         <td mat-cell *matCellDef="let role" class="id-column">{{ role.id }}</td>
       </ng-container>
 
       <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef class="name-column">Role Name</th>
+        <th mat-header-cell *matHeaderCellDef class="name-column">{{ 'roles.roleName' | translate }}</th>
         <td mat-cell *matCellDef="let role" class="name-column role-name">
-          <span class="role-badge">{{ role.name }}</span>
+          <span class="role-badge">{{ i18n.translateRole(role.name) }}</span>
         </td>
       </ng-container>
 
       <ng-container matColumnDef="permissions">
-        <th mat-header-cell *matHeaderCellDef class="permissions-header">Permissions</th>
+        <th mat-header-cell *matHeaderCellDef class="permissions-header">{{ 'roles.permissions' | translate }}</th>
         <td mat-cell *matCellDef="let role" class="permissions-cell">
           @if (isFullAccess(role)) {
             <span class="full-access-badge">
               <mat-icon class="badge-icon">star</mat-icon>
-              Full Access
+              {{ 'roles.fullAccess' | translate }}
             </span>
           } @else if (getParsedPermissions(role).length === 0) {
             <span class="no-permissions-badge">
               <mat-icon class="badge-icon">block</mat-icon>
-              No Permissions
+              {{ 'roles.noPermissions' | translate }}
             </span>
           } @else {
             <div class="permissions-list">
@@ -52,8 +52,8 @@
                   class="more-chip"
                   [matTooltip]="getHiddenPermissionsTooltip(role)"
                   matTooltipPosition="above"
-                  aria-label="Remaining permissions">
-                  +{{ getHiddenPermissionsCount(role) }} more
+                  [attr.aria-label]="'roles.remainingPermissions' | translate">
+                  {{ 'roles.morePermissions' | translate:{ count: getHiddenPermissionsCount(role) } }}
                 </span>
               }
             </div>
@@ -62,13 +62,15 @@
       </ng-container>
 
       <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef class="actions-column">Actions</th>
+        <th mat-header-cell *matHeaderCellDef class="actions-column">{{ 'common.actions' | translate }}</th>
         <td mat-cell *matCellDef="let role" class="actions-column">
-          <button mat-icon-button color="primary" [routerLink]="['/admin/roles', role.id, 'edit']" matTooltip="Edit Role" aria-label="Edit role">
+          <button mat-icon-button color="primary" [routerLink]="['/admin/roles', role.id, 'edit']"
+                  [matTooltip]="'roles.editRole' | translate" [attr.aria-label]="'roles.editRole' | translate">
             <mat-icon>edit</mat-icon>
           </button>
           @if (role.name !== 'Administrator') {
-            <button mat-icon-button color="warn" (click)="deleteRole(role)" matTooltip="Delete Role" aria-label="Delete role">
+            <button mat-icon-button color="warn" (click)="deleteRole(role)"
+                    [matTooltip]="'roles.deleteRole' | translate" [attr.aria-label]="'roles.deleteRole' | translate">
               <mat-icon>delete</mat-icon>
             </button>
           }
@@ -77,19 +79,19 @@
 
       <tr mat-header-row *matHeaderRowDef="columns"></tr>
       <tr mat-row *matRowDef="let row; columns: columns;"></tr>
-      
+
       <tr class="mat-row" *matNoDataRow>
         <td class="mat-cell empty-cell" [attr.colspan]="columns.length">
           @if (isLoading()) {
             <div class="table-empty-state">
               <mat-icon>sync</mat-icon>
-              <span class="empty-title">Loading roles...</span>
+              <span class="empty-title">{{ 'roles.loading' | translate }}</span>
             </div>
           } @else {
             <div class="table-empty-state">
               <mat-icon>security</mat-icon>
-              <span class="empty-title">No roles found</span>
-              <span class="empty-subtitle">Try adjusting your search criteria</span>
+              <span class="empty-title">{{ 'roles.emptyTitle' | translate }}</span>
+              <span class="empty-subtitle">{{ 'common.tryAdjustingCriteria' | translate }}</span>
             </div>
           }
         </td>

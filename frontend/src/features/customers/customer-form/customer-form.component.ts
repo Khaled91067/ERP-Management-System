@@ -8,8 +8,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCardModule } from '@angular/material/card';
 
 import { CustomersService } from '../customers.service';
+import { FormValidationService } from '@core/errors/form-validation.service';
+import { TranslationService } from '@core/i18n/translation.service';
 import { NotificationService } from '@core/services/notification.service';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header.component';
+import { TranslatePipe } from '@shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-customer-form',
@@ -20,7 +23,8 @@ import { PageHeaderComponent } from '@shared/components/page-header/page-header.
     MatInputModule,
     MatFormFieldModule,
     MatCardModule,
-    PageHeaderComponent
+    PageHeaderComponent,
+    TranslatePipe
   ],
   templateUrl: './customer-form.component.html',
   styleUrl: './customer-form.component.scss'
@@ -29,6 +33,8 @@ export class CustomerFormComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly customersService = inject(CustomersService);
   private readonly notification = inject(NotificationService);
+  private readonly formValidation = inject(FormValidationService);
+  private readonly i18n = inject(TranslationService);
   private readonly route = inject(ActivatedRoute);
   readonly router = inject(Router);
 
@@ -61,13 +67,13 @@ export class CustomerFormComponent implements OnInit {
         this.customerForm.patchValue(customer);
       },
       error: () => {
-        this.notification.error('Failed to load customer details');
         this.router.navigate(['/admin/customers']);
       }
     });
   }
 
   onSubmit(): void {
+    this.formValidation.prepareFormForSubmission(this.customerForm);
     if (this.customerForm.invalid) return;
 
     this.isSaving.set(true);
@@ -79,13 +85,11 @@ export class CustomerFormComponent implements OnInit {
 
     request$.subscribe({
       next: () => {
-        const msg = 'Customer successfully ' + (this.isEditMode() ? 'updated' : 'created');
-        this.notification.success(msg);
+        const msgKey = this.isEditMode() ? 'customers.updatedSuccess' : 'customers.createdSuccess';
+        this.notification.success(this.i18n.translate(msgKey));
         this.router.navigate(['/admin/customers']);
       },
       error: () => {
-        const msg = 'Failed to ' + (this.isEditMode() ? 'update' : 'create') + ' customer';
-        this.notification.error(msg);
         this.isSaving.set(false);
       }
     });

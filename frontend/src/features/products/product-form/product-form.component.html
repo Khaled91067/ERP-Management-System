@@ -1,6 +1,6 @@
 <div class="page-container">
   <app-page-header
-    [title]="isEditMode() ? 'Edit Product' : 'New Product'"
+    [title]="(isEditMode() ? 'products.editTitle' : 'products.createTitle') | translate"
     [breadcrumbs]="[
       { label: 'Inventory' },
       { label: 'Products', link: '/admin/products' },
@@ -11,78 +11,100 @@
   <mat-card class="form-card mat-elevation-z0">
     <mat-card-content>
       <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="form-layout">
-        
+
         <div class="form-row">
           <mat-form-field appearance="outline" class="half-width">
-            <mat-label>Product Name</mat-label>
-            <input matInput formControlName="name" placeholder="E.g., Wireless Mouse">
+            <mat-label>{{ 'products.productName' | translate }}</mat-label>
+            <input matInput formControlName="name" [placeholder]="'products.productNamePlaceholder' | translate">
             @if (productForm.controls.name.hasError('required')) {
-              <mat-error>Name is required</mat-error>
+              <mat-error>{{ 'products.nameRequired' | translate }}</mat-error>
+            } @else if (productForm.controls.name.hasError('serverError')) {
+              <mat-error>{{ productForm.controls.name.getError('serverError') }}</mat-error>
             }
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="half-width">
-            <mat-label>SKU</mat-label>
-            <input matInput formControlName="sku" placeholder="E.g., WM-001">
+            <mat-label>{{ 'products.skuLabel' | translate }}</mat-label>
+            <input matInput formControlName="sku" [placeholder]="'products.skuPlaceholder' | translate">
             @if (productForm.controls.sku.hasError('required')) {
-              <mat-error>SKU is required</mat-error>
+              <mat-error>{{ 'products.skuRequired' | translate }}</mat-error>
+            } @else if (productForm.controls.sku.hasError('serverError')) {
+              <mat-error>{{ productForm.controls.sku.getError('serverError') }}</mat-error>
             }
           </mat-form-field>
         </div>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Description</mat-label>
-          <textarea matInput formControlName="description" rows="3" placeholder="Add detailed product description..."></textarea>
-        </mat-form-field>
-
         <div class="form-row">
           <mat-form-field appearance="outline" class="half-width">
-            <mat-label>Category</mat-label>
+            <mat-label>{{ 'products.category' | translate }}</mat-label>
             <mat-select formControlName="categoryId">
               @for (category of availableCategories(); track category.id) {
                 <mat-option [value]="category.id">{{ category.name }}</mat-option>
               }
             </mat-select>
             @if (productForm.controls.categoryId.hasError('required')) {
-              <mat-error>Category is required</mat-error>
+              <mat-error>{{ 'products.categoryRequired' | translate }}</mat-error>
+            } @else if (productForm.controls.categoryId.hasError('serverError')) {
+              <mat-error>{{ productForm.controls.categoryId.getError('serverError') }}</mat-error>
             }
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="half-width">
-            <mat-label>Unit Price</mat-label>
-            <span matTextPrefix>$&nbsp;</span>
-            <input matInput type="number" formControlName="unitPrice" min="0" step="0.01">
-            @if (productForm.controls.unitPrice.hasError('required')) {
-              <mat-error>Unit price is required</mat-error>
+            <mat-label>{{ 'products.reorderLevel' | translate }}</mat-label>
+            <input matInput type="number" formControlName="reorderLevel" min="0">
+            @if (productForm.controls.reorderLevel.hasError('required')) {
+              <mat-error>{{ 'products.reorderLevelRequired' | translate }}</mat-error>
+            } @else if (productForm.controls.reorderLevel.hasError('serverError')) {
+              <mat-error>{{ productForm.controls.reorderLevel.getError('serverError') }}</mat-error>
             }
           </mat-form-field>
         </div>
 
         <div class="form-row">
           <mat-form-field appearance="outline" class="half-width">
-            <mat-label>Stock Quantity</mat-label>
-            <input matInput type="number" formControlName="stockQuantity" min="0">
-            @if (productForm.controls.stockQuantity.hasError('required')) {
-              <mat-error>Stock quantity is required</mat-error>
+            <mat-label>{{ 'products.unitPrice' | translate }}</mat-label>
+            <span matTextPrefix>{{ 'common.currency' | translate }}&nbsp;</span>
+            <input matInput type="number" formControlName="unitPrice" min="0" step="0.01">
+            @if (productForm.controls.unitPrice.hasError('required')) {
+              <mat-error>{{ 'products.unitPriceRequired' | translate }}</mat-error>
+            } @else if (productForm.controls.unitPrice.hasError('serverError')) {
+              <mat-error>{{ productForm.controls.unitPrice.getError('serverError') }}</mat-error>
             }
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="half-width">
-            <mat-label>Reorder Level</mat-label>
-            <input matInput type="number" formControlName="reorderLevel" min="0">
-            @if (productForm.controls.reorderLevel.hasError('required')) {
-              <mat-error>Reorder level is required</mat-error>
+            <mat-label>{{ 'products.costPrice' | translate }}</mat-label>
+            <span matTextPrefix>{{ 'common.currency' | translate }}&nbsp;</span>
+            <input matInput type="number" formControlName="costPrice" min="0" step="0.01">
+            @if (productForm.controls.costPrice.hasError('required')) {
+              <mat-error>{{ 'products.costPriceRequired' | translate }}</mat-error>
+            } @else if (productForm.controls.costPrice.hasError('serverError')) {
+              <mat-error>{{ productForm.controls.costPrice.getError('serverError') }}</mat-error>
             }
           </mat-form-field>
         </div>
 
+        @if (!isEditMode()) {
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>{{ 'products.initialStockQuantity' | translate }}</mat-label>
+              <input matInput type="number" formControlName="stockQuantity" min="0">
+              @if (productForm.controls.stockQuantity.hasError('required')) {
+                <mat-error>{{ 'products.initialStockRequired' | translate }}</mat-error>
+              } @else if (productForm.controls.stockQuantity.hasError('serverError')) {
+                <mat-error>{{ productForm.controls.stockQuantity.getError('serverError') }}</mat-error>
+              }
+            </mat-form-field>
+          </div>
+        }
+
         <div class="form-actions">
-          <button mat-button type="button" (click)="router.navigate(['/admin/products'])">Cancel</button>
+          <button mat-button type="button" (click)="router.navigate(['/admin/products'])">{{ 'common.cancel' | translate }}</button>
           <button mat-flat-button color="primary" type="submit" [disabled]="productForm.invalid || isSaving()">
-            {{ isSaving() ? 'Saving...' : 'Save Product' }}
+            {{ (isSaving() ? 'common.saving' : 'products.saveProduct') | translate }}
           </button>
         </div>
-        
+
       </form>
     </mat-card-content>
   </mat-card>

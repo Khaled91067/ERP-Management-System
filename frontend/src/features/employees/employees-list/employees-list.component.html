@@ -1,8 +1,8 @@
 <div class="page-container">
   <app-page-header
-    title="Employees"
+    [title]="'employees.title' | translate"
     [breadcrumbs]="[{ label: 'HR' }, { label: 'Employees' }]"
-    actionLabel="New Employee"
+    [actionLabel]="'employees.newEmployee' | translate"
     actionIcon="person_add"
     (action)="router.navigate(['/admin/employees/new'])"
   />
@@ -10,13 +10,13 @@
   <div class="table-toolbar">
     <mat-form-field appearance="outline" class="search-field" subscriptSizing="dynamic">
       <mat-icon matPrefix>search</mat-icon>
-      <input matInput [formControl]="searchControl" placeholder="Search employees...">
+      <input matInput [formControl]="searchControl" [placeholder]="'employees.searchPlaceholder' | translate">
     </mat-form-field>
-    
+
     <mat-form-field appearance="outline" class="filter-field" subscriptSizing="dynamic">
-      <mat-label>Department</mat-label>
+      <mat-label>{{ 'employees.department' | translate }}</mat-label>
       <mat-select [formControl]="departmentControl">
-        <mat-option [value]="null">All Departments</mat-option>
+        <mat-option [value]="null">{{ 'common.allDepartments' | translate }}</mat-option>
         @for (dept of departments(); track dept.id) {
           <mat-option [value]="dept.id">{{ dept.name }}</mat-option>
         }
@@ -26,9 +26,9 @@
 
   <div class="table-container mat-elevation-z0">
     <table mat-table [dataSource]="employees()" class="full-width">
-      
+
       <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <th mat-header-cell *matHeaderCellDef>{{ 'common.name' | translate }}</th>
         <td mat-cell *matCellDef="let emp">
           <div class="emp-name">{{ emp.firstName }} {{ emp.lastName }}</div>
           <div class="emp-email">{{ emp.email }}</div>
@@ -36,7 +36,7 @@
       </ng-container>
 
       <ng-container matColumnDef="role">
-        <th mat-header-cell *matHeaderCellDef>Role</th>
+        <th mat-header-cell *matHeaderCellDef>{{ 'employees.role' | translate }}</th>
         <td mat-cell *matCellDef="let emp">
           <div class="emp-position">{{ emp.position }}</div>
           <div class="emp-dept">{{ emp.departmentName }}</div>
@@ -44,22 +44,24 @@
       </ng-container>
 
       <ng-container matColumnDef="hireDate">
-        <th mat-header-cell *matHeaderCellDef>Hire Date</th>
-        <td mat-cell *matCellDef="let emp">{{ emp.hireDate | date:'mediumDate' }}</td>
+        <th mat-header-cell *matHeaderCellDef>{{ 'employees.hireDate' | translate }}</th>
+        <td mat-cell *matCellDef="let emp">{{ emp.hireDate | localDate:'mediumDate' }}</td>
       </ng-container>
 
       <ng-container matColumnDef="salary">
-        <th mat-header-cell *matHeaderCellDef class="text-right">Salary</th>
-        <td mat-cell *matCellDef="let emp" class="text-right">{{ emp.salary | currency }}</td>
+        <th mat-header-cell *matHeaderCellDef class="text-right">{{ 'employees.salary' | translate }}</th>
+        <td mat-cell *matCellDef="let emp" class="text-right">{{ emp.salary | localCurrency }}</td>
       </ng-container>
 
       <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef class="actions-column">Actions</th>
+        <th mat-header-cell *matHeaderCellDef class="actions-column">{{ 'common.actions' | translate }}</th>
         <td mat-cell *matCellDef="let emp" class="actions-column">
-          <a mat-icon-button color="primary" [routerLink]="['/admin/employees', emp.id, 'edit']" matTooltip="Edit Employee" aria-label="Edit employee">
+          <a mat-icon-button color="primary" [routerLink]="['/admin/employees', emp.id, 'edit']"
+             [matTooltip]="'employees.editEmployee' | translate" [attr.aria-label]="'employees.editEmployee' | translate">
             <mat-icon>edit</mat-icon>
           </a>
-          <button mat-icon-button color="warn" (click)="deleteEmployee(emp)" matTooltip="Delete Employee" aria-label="Delete employee">
+          <button mat-icon-button color="warn" (click)="deleteEmployee(emp)"
+                  [matTooltip]="'employees.deleteEmployee' | translate" [attr.aria-label]="'employees.deleteEmployee' | translate">
             <mat-icon>delete</mat-icon>
           </button>
         </td>
@@ -67,19 +69,19 @@
 
       <tr mat-header-row *matHeaderRowDef="columns"></tr>
       <tr mat-row *matRowDef="let row; columns: columns;"></tr>
-      
+
       <tr class="mat-row" *matNoDataRow>
         <td class="mat-cell empty-cell" [attr.colspan]="columns.length">
           @if (isLoading()) {
             <div class="table-empty-state">
               <mat-icon>sync</mat-icon>
-              <span class="empty-title">Loading employees...</span>
+              <span class="empty-title">{{ 'employees.loading' | translate }}</span>
             </div>
           } @else {
             <div class="table-empty-state">
               <mat-icon>badge</mat-icon>
-              <span class="empty-title">No employees found</span>
-              <span class="empty-subtitle">Try adjusting your filters or search</span>
+              <span class="empty-title">{{ 'employees.emptyTitle' | translate }}</span>
+              <span class="empty-subtitle">{{ 'common.tryAdjustingFilters' | translate }}</span>
             </div>
           }
         </td>

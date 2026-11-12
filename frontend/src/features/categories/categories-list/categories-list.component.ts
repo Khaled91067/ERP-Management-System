@@ -6,15 +6,18 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 import { CategoriesService } from '../categories.service';
 import { Category } from '../models/category.model';
+import { TranslationService } from '@core/i18n/translation.service';
 import { NotificationService } from '@core/services/notification.service';
 import { ConfirmationDialogComponent } from '@shared/components/confirmation-dialog/confirmation-dialog.component';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header.component';
+import { TranslatePipe } from '@shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-categories-list',
@@ -28,7 +31,9 @@ import { PageHeaderComponent } from '@shared/components/page-header/page-header.
     MatIconModule,
     MatInputModule,
     MatFormFieldModule,
-    PageHeaderComponent
+    MatTooltipModule,
+    PageHeaderComponent,
+    TranslatePipe
   ],
   templateUrl: './categories-list.component.html',
   styleUrl: './categories-list.component.scss'
@@ -37,6 +42,7 @@ export class CategoriesListComponent implements OnInit {
   private readonly categoriesService = inject(CategoriesService);
   private readonly notification = inject(NotificationService);
   private readonly dialog = inject(MatDialog);
+  private readonly i18n = inject(TranslationService);
   readonly router = inject(Router);
 
   readonly columns = ['id', 'name', 'actions'];
@@ -72,7 +78,6 @@ export class CategoriesListComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: () => {
-        this.notification.error('Failed to load categories');
         this.isLoading.set(false);
       }
     });
@@ -87,8 +92,8 @@ export class CategoriesListComponent implements OnInit {
   deleteCategory(category: Category): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       data: {
-        title: 'Delete Category',
-        message: 'Are you sure you want to delete this category? Products in this category may be affected.',
+        title: this.i18n.translate('categories.deleteTitle'),
+        message: this.i18n.translate('categories.deleteMessage'),
         danger: true
       }
     });
@@ -97,10 +102,9 @@ export class CategoriesListComponent implements OnInit {
       if (confirmed) {
         this.categoriesService.deleteCategory(category.id).subscribe({
           next: () => {
-            this.notification.success('Category deleted successfully');
+            this.notification.success(this.i18n.translate('categories.deletedSuccess'));
             this.loadCategories();
-          },
-          error: () => this.notification.error('Failed to delete category')
+          }
         });
       }
     });

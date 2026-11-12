@@ -1,6 +1,6 @@
 <div class="page-container">
   <app-page-header
-    title="Add Department"
+    [title]="'departments.createTitle' | translate"
     [breadcrumbs]="[
       { label: 'HR' },
       { label: 'Departments', link: '/admin/departments' },
@@ -11,22 +11,24 @@
   <mat-card class="form-card mat-elevation-z0">
     <mat-card-content>
       <form [formGroup]="deptForm" (ngSubmit)="onSubmit()" class="form-layout">
-        
+
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Department Name</mat-label>
-          <input matInput formControlName="name" placeholder="E.g. Engineering">
+          <mat-label>{{ 'departments.departmentName' | translate }}</mat-label>
+          <input matInput formControlName="name" [placeholder]="'departments.departmentNamePlaceholder' | translate">
           @if (deptForm.controls.name.hasError('required')) {
-            <mat-error>Name is required</mat-error>
+            <mat-error>{{ 'departments.nameRequired' | translate }}</mat-error>
+          } @else if (deptForm.controls.name.hasError('serverError')) {
+            <mat-error>{{ deptForm.controls.name.getError('serverError') }}</mat-error>
           }
         </mat-form-field>
 
         <div class="form-actions">
-          <button mat-button type="button" (click)="router.navigate(['/admin/departments'])">Cancel</button>
+          <button mat-button type="button" (click)="router.navigate(['/admin/departments'])">{{ 'common.cancel' | translate }}</button>
           <button mat-flat-button color="primary" type="submit" [disabled]="deptForm.invalid || isSaving()">
-            {{ isSaving() ? 'Saving...' : 'Save Department' }}
+            {{ (isSaving() ? 'common.saving' : 'departments.saveDepartment') | translate }}
           </button>
         </div>
-        
+
       </form>
     </mat-card-content>
   </mat-card>

@@ -9,9 +9,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '@core/auth/auth.service';
+import { FormValidationService } from '@core/errors/form-validation.service';
+import { TranslationService } from '@core/i18n/translation.service';
 import { NotificationService } from '@core/services/notification.service';
-import { catchError, finalize } from 'rxjs/operators';
-import { EMPTY } from 'rxjs';
+import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +26,8 @@ import { EMPTY } from 'rxjs';
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    TranslatePipe
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
@@ -34,6 +37,8 @@ export class LoginComponent {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly notification = inject(NotificationService);
+  private readonly formValidation = inject(FormValidationService);
+  private readonly i18n = inject(TranslationService);
 
   readonly hidePassword = signal(true);
   readonly isLoading = signal(false);
@@ -45,6 +50,7 @@ export class LoginComponent {
   });
 
   onSubmit(): void {
+    this.formValidation.prepareFormForSubmission(this.loginForm);
     if (this.loginForm.invalid) {
       return;
     }
@@ -54,16 +60,16 @@ export class LoginComponent {
 
     this.authService.login({ email, password })
       .pipe(
-        catchError(error => {
-          const msg = error.error?.message || 'Invalid email or password';
-          this.notification.error(msg);
-          return EMPTY;
-        }),
         finalize(() => this.isLoading.set(false))
       )
-      .subscribe(() => {
-        this.notification.success('Successfully logged in');
-        this.router.navigate(['/admin/dashboard']);
+      .subscribe({
+        next: () => {
+          this.notification.success(this.i18n.translate('auth.loginSuccess'));
+          this.router.navigate(['/admin/dashboard']);
+        },
+        error: () => {
+          // Handled centrally by errorInterceptor & FormValidationService
+        }
       });
   }
 }

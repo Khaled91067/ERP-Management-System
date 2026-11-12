@@ -13,9 +13,11 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 import { DepartmentsService } from '../departments.service';
 import { Department } from '../models/department.model';
+import { TranslationService } from '@core/i18n/translation.service';
 import { NotificationService } from '@core/services/notification.service';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header.component';
 import { ConfirmationDialogComponent } from '@shared/components/confirmation-dialog/confirmation-dialog.component';
+import { TranslatePipe } from '@shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-departments-list',
@@ -30,7 +32,8 @@ import { ConfirmationDialogComponent } from '@shared/components/confirmation-dia
     MatFormFieldModule,
     MatDialogModule,
     MatTooltipModule,
-    PageHeaderComponent
+    PageHeaderComponent,
+    TranslatePipe
   ],
   templateUrl: './departments-list.component.html',
   styleUrl: './departments-list.component.scss'
@@ -39,6 +42,7 @@ export class DepartmentsListComponent implements OnInit {
   private readonly departmentsService = inject(DepartmentsService);
   private readonly notification = inject(NotificationService);
   private readonly dialog = inject(MatDialog);
+  private readonly i18n = inject(TranslationService);
   readonly router = inject(Router);
 
   readonly columns = ['id', 'name', 'actions'];
@@ -63,7 +67,7 @@ export class DepartmentsListComponent implements OnInit {
 
   loadDepartments(): void {
     this.isLoading.set(true);
-    
+
     this.departmentsService.getDepartments({
       page: this.pageIndex() + 1,
       pageSize: this.pageSize(),
@@ -75,7 +79,6 @@ export class DepartmentsListComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: () => {
-        this.notification.error('Failed to load departments');
         this.isLoading.set(false);
       }
     });
@@ -90,8 +93,8 @@ export class DepartmentsListComponent implements OnInit {
   deleteDepartment(dept: Department): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       data: {
-        title: 'Delete Department',
-        message: `Are you sure you want to delete ${dept.name}?`,
+        title: this.i18n.translate('departments.deleteTitle'),
+        message: this.i18n.translate('departments.deleteMessage', { name: dept.name }),
         danger: true
       }
     });
@@ -100,10 +103,9 @@ export class DepartmentsListComponent implements OnInit {
       if (confirmed) {
         this.departmentsService.deleteDepartment(dept.id).subscribe({
           next: () => {
-            this.notification.success('Department deleted successfully');
+            this.notification.success(this.i18n.translate('departments.deletedSuccess'));
             this.loadDepartments();
-          },
-          error: () => this.notification.error('Failed to delete department')
+          }
         });
       }
     });

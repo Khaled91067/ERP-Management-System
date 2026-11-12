@@ -11,17 +11,20 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
-import { CurrencyPipe, DatePipe } from '@angular/common';
 
 import { OrdersService } from '../orders.service';
 import { Order } from '../models/order.model';
 import { InvoicesService } from '@features/invoices/invoices.service';
 import { CustomersService } from '@features/customers/customers.service';
 import { Customer } from '@features/customers/models/customer.model';
+import { AuthService } from '@core/auth/auth.service';
+import { TranslationService } from '@core/i18n/translation.service';
 import { NotificationService } from '@core/services/notification.service';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header.component';
 import { StatusBadgeComponent } from '@shared/components/status-badge/status-badge.component';
 import { ConfirmationDialogComponent } from '@shared/components/confirmation-dialog/confirmation-dialog.component';
+import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { LocaleCurrencyPipe, LocaleDatePipe, toDateOnlyIsoString } from '@shared/pipes/localized-formatting.pipes';
 
 @Component({
   selector: 'app-orders-list',
@@ -39,8 +42,9 @@ import { ConfirmationDialogComponent } from '@shared/components/confirmation-dia
     MatDialogModule,
     PageHeaderComponent,
     StatusBadgeComponent,
-    CurrencyPipe,
-    DatePipe
+    TranslatePipe,
+    LocaleCurrencyPipe,
+    LocaleDatePipe
   ],
   templateUrl: './orders-list.component.html',
   styleUrl: './orders-list.component.scss'
@@ -51,6 +55,8 @@ export class OrdersListComponent implements OnInit {
   private readonly customersService = inject(CustomersService);
   private readonly notification = inject(NotificationService);
   private readonly dialog = inject(MatDialog);
+  private readonly i18n = inject(TranslationService);
+  readonly authService = inject(AuthService);
   readonly router = inject(Router);
 
   readonly columns = ['id', 'customer', 'date', 'total', 'status', 'actions'];
@@ -75,18 +81,18 @@ export class OrdersListComponent implements OnInit {
         this.pageIndex.set(0);
         this.loadOrders();
       });
-      
+
     this.customerControl.valueChanges.subscribe(() => {
       this.pageIndex.set(0);
       this.loadOrders();
     });
-    
+
     this.statusControl.valueChanges.subscribe(() => {
       this.pageIndex.set(0);
       this.loadOrders();
     });
   }
-  
+
   loadCustomers(): void {
     this.customersService.getCustomers({ page: 1, pageSize: 100 }).subscribe({
       next: (res) => this.customers.set(res.items)
@@ -95,10 +101,10 @@ export class OrdersListComponent implements OnInit {
 
   loadOrders(): void {
     this.isLoading.set(true);
-    
+
     const customerId = this.customerControl.value;
     const status = this.statusControl.value;
-    
+
     this.ordersService.getOrders({
       page: this.pageIndex() + 1,
       pageSize: this.pageSize(),
@@ -112,7 +118,6 @@ export class OrdersListComponent implements OnInit {
         this.isLoading.set(false);
       },
       error: () => {
-        this.notification.error('Failed to load orders');
         this.isLoading.set(false);
       }
     });
@@ -127,34 +132,34 @@ export class OrdersListComponent implements OnInit {
   updateStatus(order: Order, status: string): void {
     this.ordersService.updateOrderStatus(order.id, status).subscribe({
       next: () => {
-        this.notification.success(`Order status updated to ${status}`);
+        this.notification.success(
+          this.i18n.translate('orders.statusUpdated', { status: this.i18n.translateStatus(status) })
+        );
         this.loadOrders();
-      },
-      error: () => this.notification.error('Failed to update status')
+      }
     });
   }
 
   generateInvoice(order: Order): void {
     const dueDate = new Date();
-    dueDate.setDate(dueDate.getDate() + 30); // 30 days default
-    
+    dueDate.setDate(dueDate.getDate() + 30);
+
     this.invoicesService.generateFromOrder({
       orderId: order.id,
-      dueDate: dueDate.toISOString()
+      dueDate: toDateOnlyIsoString(dueDate)
     }).subscribe({
       next: (invoiceId) => {
-        this.notification.success(`Invoice INV-${invoiceId} successfully created`);
+        this.notification.success(this.i18n.translate('orders.invoiceGenerated', { id: invoiceId }));
         this.router.navigate(['/admin/invoices']);
-      },
-      error: () => this.notification.error('Failed to generate invoice from order')
+      }
     });
   }
 
   deleteOrder(order: Order): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       data: {
-        title: 'Delete Order',
-        message: 'Are you sure you want to delete this order?',
+        title: this.i18n.translate('orders.deleteTitle'),
+        message: this.i18n.translate('orders.deleteMessage'),
         danger: true
       }
     });
@@ -163,10 +168,9 @@ export class OrdersListComponent implements OnInit {
       if (confirmed) {
         this.ordersService.deleteOrder(order.id).subscribe({
           next: () => {
-            this.notification.success('Order deleted successfully');
+            this.notification.success(this.i18n.translate('orders.deletedSuccess'));
             this.loadOrders();
-          },
-          error: () => this.notification.error('Failed to delete order')
+          }
         });
       }
     });

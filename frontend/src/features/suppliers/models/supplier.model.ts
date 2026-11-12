@@ -1,11 +1,8 @@
 export interface Supplier {
   id: number;
-  name: string;
-  contactPerson: string;
+  companyName: string;
+  contactName: string;
   email: string;
   phone: string;
-  address: string;
-  city: string;
-  country: string;
-  taxId: string;
+  paymentTerms: string;
 }

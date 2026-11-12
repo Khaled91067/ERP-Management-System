@@ -1,8 +1,8 @@
 <div class="page-container">
   <app-page-header
-    title="User Management"
+    [title]="'users.title' | translate"
     [breadcrumbs]="[{ label: 'Settings' }, { label: 'Users' }]"
-    actionLabel="New User"
+    [actionLabel]="'users.newUser' | translate"
     actionIcon="person_add"
     (action)="router.navigate(['/admin/users/new'])"
   />
@@ -10,15 +10,15 @@
   <div class="table-toolbar">
     <mat-form-field appearance="outline" class="search-field" subscriptSizing="dynamic">
       <mat-icon matPrefix>search</mat-icon>
-      <input matInput [formControl]="searchControl" placeholder="Search users...">
+      <input matInput [formControl]="searchControl" [placeholder]="'users.searchPlaceholder' | translate">
     </mat-form-field>
   </div>
 
   <div class="table-container mat-elevation-z0">
     <table mat-table [dataSource]="users()" class="full-width">
-      
+
       <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef>User</th>
+        <th mat-header-cell *matHeaderCellDef>{{ 'users.user' | translate }}</th>
         <td mat-cell *matCellDef="let user">
           <div class="user-info">
             <span class="user-name">{{ user.firstName }} {{ user.lastName }}</span>
@@ -28,19 +28,21 @@
       </ng-container>
 
       <ng-container matColumnDef="role">
-        <th mat-header-cell *matHeaderCellDef>Role</th>
+        <th mat-header-cell *matHeaderCellDef>{{ 'users.role' | translate }}</th>
         <td mat-cell *matCellDef="let user">
-          <span class="role-badge">{{ user.roleName || user.role }}</span>
+          <span class="role-badge">{{ i18n.translateRole(user.roleName || user.role) }}</span>
         </td>
       </ng-container>
 
       <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef class="actions-column">Actions</th>
+        <th mat-header-cell *matHeaderCellDef class="actions-column">{{ 'common.actions' | translate }}</th>
         <td mat-cell *matCellDef="let user" class="actions-column">
-          <button mat-icon-button color="primary" [routerLink]="['/admin/users', user.id, 'edit']" matTooltip="Edit User" aria-label="Edit user">
+          <button mat-icon-button color="primary" [routerLink]="['/admin/users', user.id, 'edit']"
+                  [matTooltip]="'users.editUser' | translate" [attr.aria-label]="'users.editUser' | translate">
             <mat-icon>edit</mat-icon>
           </button>
-          <button mat-icon-button color="warn" (click)="deleteUser(user)" matTooltip="Delete User" aria-label="Delete user">
+          <button mat-icon-button color="warn" (click)="deleteUser(user)"
+                  [matTooltip]="'users.deleteUser' | translate" [attr.aria-label]="'users.deleteUser' | translate">
             <mat-icon>delete</mat-icon>
           </button>
         </td>
@@ -48,19 +50,19 @@
 
       <tr mat-header-row *matHeaderRowDef="columns"></tr>
       <tr mat-row *matRowDef="let row; columns: columns;"></tr>
-      
+
       <tr class="mat-row" *matNoDataRow>
         <td class="mat-cell empty-cell" [attr.colspan]="columns.length">
           @if (isLoading()) {
             <div class="table-empty-state">
               <mat-icon>sync</mat-icon>
-              <span class="empty-title">Loading users...</span>
+              <span class="empty-title">{{ 'users.loading' | translate }}</span>
             </div>
           } @else {
             <div class="table-empty-state">
               <mat-icon>manage_accounts</mat-icon>
-              <span class="empty-title">No users found</span>
-              <span class="empty-subtitle">Try adjusting your search query</span>
+              <span class="empty-title">{{ 'users.emptyTitle' | translate }}</span>
+              <span class="empty-subtitle">{{ 'common.tryAdjustingSearch' | translate }}</span>
             </div>
           }
         </td>

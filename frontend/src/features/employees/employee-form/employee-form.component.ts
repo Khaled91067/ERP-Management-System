@@ -12,8 +12,12 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { EmployeesService } from '../employees.service';
 import { DepartmentsService } from '@features/departments/departments.service';
 import { Department } from '@features/departments/models/department.model';
+import { FormValidationService } from '@core/errors/form-validation.service';
+import { TranslationService } from '@core/i18n/translation.service';
 import { NotificationService } from '@core/services/notification.service';
 import { PageHeaderComponent } from '@shared/components/page-header/page-header.component';
+import { TranslatePipe } from '@shared/pipes/translate.pipe';
+import { parseDateSafe, toDateOnlyIsoString } from '@shared/pipes/localized-formatting.pipes';
 
 @Component({
   selector: 'app-employee-form',
@@ -27,7 +31,8 @@ import { PageHeaderComponent } from '@shared/components/page-header/page-header.
     MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    PageHeaderComponent
+    PageHeaderComponent,
+    TranslatePipe
   ],
   templateUrl: './employee-form.component.html',
   styleUrl: './employee-form.component.scss'
@@ -37,6 +42,8 @@ export class EmployeeFormComponent implements OnInit {
   private readonly employeesService = inject(EmployeesService);
   private readonly departmentsService = inject(DepartmentsService);
   private readonly notification = inject(NotificationService);
+  private readonly formValidation = inject(FormValidationService);
+  private readonly i18n = inject(TranslationService);
   private readonly route = inject(ActivatedRoute);
   readonly router = inject(Router);
 
@@ -50,7 +57,7 @@ export class EmployeeFormComponent implements OnInit {
     lastName: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     phone: ['', Validators.required],
-    departmentId: [0 as number | null, Validators.required],
+    departmentId: [null as number | null, Validators.required],
     position: ['', Validators.required],
     hireDate: [new Date(), Validators.required],
     salary: [0, [Validators.required, Validators.min(0)]]
@@ -58,7 +65,7 @@ export class EmployeeFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadDepartments();
-    
+
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.isEditMode.set(true);
@@ -66,11 +73,10 @@ export class EmployeeFormComponent implements OnInit {
       this.loadEmployee(+id);
     }
   }
-  
+
   private loadDepartments(): void {
     this.departmentsService.getDepartments({ page: 1, pageSize: 100 }).subscribe({
-      next: (res) => this.availableDepartments.set(res.items),
-      error: () => this.notification.error('Failed to load departments')
+      next: (res) => this.availableDepartments.set(res.items)
     });
   }
 
@@ -84,23 +90,23 @@ export class EmployeeFormComponent implements OnInit {
           phone: emp.phone,
           departmentId: emp.departmentId,
           position: emp.position,
-          hireDate: new Date(emp.hireDate),
+          hireDate: parseDateSafe(emp.hireDate) ?? new Date(emp.hireDate),
           salary: emp.salary
         });
       },
       error: () => {
-        this.notification.error('Failed to load employee details');
         this.router.navigate(['/admin/employees']);
       }
     });
   }
 
   onSubmit(): void {
+    this.formValidation.prepareFormForSubmission(this.empForm);
     if (this.empForm.invalid) return;
 
     this.isSaving.set(true);
     const formValue = this.empForm.getRawValue();
-    
+
     const requestData = {
       firstName: formValue.firstName,
       lastName: formValue.lastName,
@@ -108,29 +114,27 @@ export class EmployeeFormComponent implements OnInit {
       phone: formValue.phone,
       departmentId: formValue.departmentId as number,
       position: formValue.position,
-      hireDate: new Date(formValue.hireDate).toISOString(),
+      hireDate: toDateOnlyIsoString(formValue.hireDate),
       salary: formValue.salary
     };
 
     if (this.isEditMode() && this.employeeId()) {
       this.employeesService.updateEmployee(this.employeeId()!, { id: this.employeeId()!, ...requestData }).subscribe({
         next: () => {
-          this.notification.success('Employee updated successfully');
+          this.notification.success(this.i18n.translate('employees.updatedSuccess'));
           this.router.navigate(['/admin/employees']);
         },
         error: () => {
-          this.notification.error('Failed to update employee');
           this.isSaving.set(false);
         }
       });
     } else {
       this.employeesService.createEmployee(requestData).subscribe({
         next: () => {
-          this.notification.success('Employee created successfully');
+          this.notification.success(this.i18n.translate('employees.createdSuccess'));
           this.router.navigate(['/admin/employees']);
         },
         error: () => {
-          this.notification.error('Failed to create employee');
           this.isSaving.set(false);
         }
       });

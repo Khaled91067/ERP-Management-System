@@ -6,6 +6,7 @@ export interface OrderLine {
   productName: string;
   quantity: number;
   unitPrice: number;
+  discountPercentage?: number;
   totalPrice: number;
 }
 
@@ -15,6 +16,8 @@ export interface Order {
   customerName: string;
   orderDate: string;
   status: string;
+  paymentMethod?: string;
+  shippingAddress?: string;
   totalAmount: number;
   lines: OrderLine[];
 }
